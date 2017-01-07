@@ -54,10 +54,19 @@ class Cli
     /**
      * @return string
      */
-    public function waitForKey()
+    public function readCharacter()
     {
         $handle = fopen("php://stdin", "r");
         $value = fgetc($handle);
         return trim($value);
+    }
+
+    /**
+     * @return $this
+     */
+    public function waitForKey()
+    {
+        passthru('read -rsn1');
+        return $this;
     }
 }
