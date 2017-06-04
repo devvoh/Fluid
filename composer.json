@@ -20,5 +20,8 @@
       "Parable\\": "src/"
     }
   },
-  "bin": ["parable"]
+  "bin": ["parable"],
+  "require-dev": {
+    "apigen/apigen": "^4.1"
+  }
 }

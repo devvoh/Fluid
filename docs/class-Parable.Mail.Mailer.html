@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Class Parable\Mail\Mailer | Parable Docs</title>
+
+	<link rel="stylesheet" href="resources/bootstrap.min.css?973e37a8502921d56bc02bb55321f45b072b6f71">
+	<link rel="stylesheet" href="resources/style.css?70c1d062672daa3f906b72e4f5d03d4bc5c4174d">
+
+</head>
+
+<body>
+	<nav id="navigation" class="navbar navbar-default navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a href="index.html" class="navbar-brand">Parable Docs</a>
+			</div>
+			<div class="collapse navbar-collapse">
+
+                <form id="search" class="navbar-form navbar-left" role="search">
+                    <input type="hidden" name="cx" value="">
+                    <input type="hidden" name="ie" value="UTF-8">
+                    <div class="form-group">
+                        <input type="text" name="q" class="search-query form-control" placeholder="Search">
+					</div>
+				</form>
+
+				<ul class="nav navbar-nav">
+					<li>
+						<a href="namespace-Parable.Mail.html" title="Summary of Parable\Mail"><span>Namespace</span></a>
+					</li>
+					<li class="active">
+<span>Class</span>					</li>
+
+
+
+
+
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div id="left">
+	<div id="menu">
+
+		<div id="groups">
+				<h3>Namespaces</h3>
+			<ul>
+					<li class="active">
+						<a href="namespace-Parable.html">
+							Parable<span></span>
+						</a>
+							<ul>
+					<li>
+						<a href="namespace-Parable.Console.html">
+							Console<span></span>
+						</a>
+							<ul>
+					<li>
+						<a href="namespace-Parable.Console.Command.html">
+							Command						</a>
+							</li>
+								</ul></li>
+					<li>
+						<a href="namespace-Parable.DI.html">
+							DI						</a>
+							</li>
+					<li>
+						<a href="namespace-Parable.Event.html">
+							Event						</a>
+							</li>
+					<li>
+						<a href="namespace-Parable.Filesystem.html">
+							Filesystem						</a>
+							</li>
+					<li>
+						<a href="namespace-Parable.Framework.html">
+							Framework<span></span>
+						</a>
+							<ul>
+					<li>
+						<a href="namespace-Parable.Framework.Config.html">
+							Config						</a>
+							</li>
+					<li>
+						<a href="namespace-Parable.Framework.Mail.html">
+							Mail						</a>
+							</li>
+					<li>
+						<a href="namespace-Parable.Framework.Routing.html">
+							Routing						</a>
+							</li>
+								</ul></li>
+					<li>
+						<a href="namespace-Parable.Http.html">
+							Http<span></span>
+						</a>
+							<ul>
+					<li>
+						<a href="namespace-Parable.Http.Output.html">
+							Output						</a>
+							</li>
+					<li>
+						<a href="namespace-Parable.Http.Values.html">
+							Values						</a>
+							</li>
+								</ul></li>
+					<li class="active">
+						<a href="namespace-Parable.Mail.html">
+							Mail						</a>
+							</li>
+					<li>
+						<a href="namespace-Parable.ORM.html">
+							ORM<span></span>
+						</a>
+							<ul>
+					<li>
+						<a href="namespace-Parable.ORM.Query.html">
+							Query						</a>
+							</li>
+								</ul></li>
+					<li>
+						<a href="namespace-Parable.Routing.html">
+							Routing						</a>
+							</li>
+					<li>
+						<a href="namespace-Parable.Tool.html">
+							Tool						</a>
+							</li>
+								</ul></li>
+			</ul>
+		</div>
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li class="active"><a href="class-Parable.Mail.Mailer.html">Mailer</a></li>
+			</ul>
+
+
+
+			<h3>Exceptions</h3>
+			<ul>
+				<li><a href="class-Parable.Mail.Exception.html">Exception</a></li>
+			</ul>
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+	<div id="rightInner">
+<div id="content" class="class">
+	<h1>Class Mailer</h1>
+
+
+
+
+
+	<div>
+		<h3>Direct known subclasses</h3>
+		<p class="elementList">
+			<code><a href="class-Parable.Framework.Mail.Mailer.html">Parable\Framework\Mail\Mailer</a></code>
+		</p>
+	</div>
+
+
+
+
+
+
+	<div class="alert alert-info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-Parable.html">Parable</a>\<a href="namespace-Parable.Mail.html">Mail</a><br>
+		
+
+			<b>Located at</b> <a href="source-class-Parable.Mail.Mailer.html#5-302" title="Go to source code">Mail/Mailer.php</a>
+		<br>
+	</div>
+
+
+
+		<div class="panel panel-default">
+			<div class="panel-heading"><h2>Methods summary</h2></div>
+			<table class="summary table table-bordered table-striped methods" id="methods">
+		<tr data-order="setFrom" id="_setFrom">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_setFrom">#</a>
+			<code><a href="source-class-Parable.Mail.Mailer.html#30-49" title="Go to source code">setFrom</a>( <span>string <var>$email</var></span>, <span>null|string <var>$name</var> = <span class="php-keyword1">null</span></span> )</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$email</var></dt>
+						<dd></dd>
+						<dt><var>$name</var></dt>
+						<dd></dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						<br>$this
+					</div>
+
+					<h4>Throws</h4>
+					<div class="list">
+						<code><a href="class-Parable.Mail.Exception.html">Parable\Mail\Exception</a></code>
+					</div>
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="addAddress" id="_addAddress">
+
+			<td class="attributes"><code>
+				 protected 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_addAddress">#</a>
+			<code><a href="source-class-Parable.Mail.Mailer.html#51-70" title="Go to source code">addAddress</a>( <span>string <var>$type</var></span>, <span>string <var>$email</var></span>, <span>null|string <var>$name</var> = <span class="php-keyword1">null</span></span> )</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$type</var></dt>
+						<dd></dd>
+						<dt><var>$email</var></dt>
+						<dd></dd>
+						<dt><var>$name</var></dt>
+						<dd></dd>
+					</dl></div>
+
+
+					<h4>Throws</h4>
+					<div class="list">
+						<code><a href="class-Parable.Mail.Exception.html">Parable\Mail\Exception</a></code>
+					</div>
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="getAddresses" id="_getAddresses">
+
+			<td class="attributes"><code>
+				 protected 
+				string
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getAddresses">#</a>
+			<code><a href="source-class-Parable.Mail.Mailer.html#72-93" title="Go to source code">getAddresses</a>( <span>string <var>$type</var></span> )</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$type</var></dt>
+						<dd></dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						string
+					</div>
+
+					<h4>Throws</h4>
+					<div class="list">
+						<code><a href="class-Parable.Mail.Exception.html">Parable\Mail\Exception</a></code>
+					</div>
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="addTo" id="_addTo">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_addTo">#</a>
+			<code><a href="source-class-Parable.Mail.Mailer.html#95-105" title="Go to source code">addTo</a>( <span>string <var>$email</var></span>, <span>string <var>$name</var> = <span class="php-quote">''</span></span> )</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$email</var></dt>
+						<dd></dd>
+						<dt><var>$name</var></dt>
+						<dd></dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						<br>$this
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="addCc" id="_addCc">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_addCc">#</a>
+			<code><a href="source-class-Parable.Mail.Mailer.html#107-117" title="Go to source code">addCc</a>( <span>string <var>$email</var></span>, <span>string <var>$name</var> = <span class="php-quote">''</span></span> )</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$email</var></dt>
+						<dd></dd>
+						<dt><var>$name</var></dt>
+						<dd></dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						<br>$this
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="addBcc" id="_addBcc">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_addBcc">#</a>
+			<code><a href="source-class-Parable.Mail.Mailer.html#119-129" title="Go to source code">addBcc</a>( <span>string <var>$email</var></span>, <span>string <var>$name</var> = <span class="php-quote">''</span></span> )</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$email</var></dt>
+						<dd></dd>
+						<dt><var>$name</var></dt>
+						<dd></dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						<br>$this
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="setSubject" id="_setSubject">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_setSubject">#</a>
+			<code><a href="source-class-Parable.Mail.Mailer.html#131-140" title="Go to source code">setSubject</a>( <span>string <var>$subject</var></span> )</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$subject</var></dt>
+						<dd></dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						<br>$this
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="getSubject" id="_getSubject">
+
+			<td class="attributes"><code>
+				 public 
+				string
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getSubject">#</a>
+			<code><a href="source-class-Parable.Mail.Mailer.html#142-148" title="Go to source code">getSubject</a>( )</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+
+
+					<h4>Returns</h4>
+					<div class="list">
+						string
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="setBody" id="_setBody">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_setBody">#</a>
+			<code><a href="source-class-Parable.Mail.Mailer.html#150-159" title="Go to source code">setBody</a>( <span>string <var>$body</var></span> )</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$body</var></dt>
+						<dd></dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						<br>$this
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="getBody" id="_getBody">
+
+			<td class="attributes"><code>
+				 public 
+				string
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getBody">#</a>
+			<code><a href="source-class-Parable.Mail.Mailer.html#161-167" title="Go to source code">getBody</a>( )</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+
+
+					<h4>Returns</h4>
+					<div class="list">
+						string
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="addRequiredHeader" id="_addRequiredHeader">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_addRequiredHeader">#</a>
+			<code><a href="source-class-Parable.Mail.Mailer.html#169-178" title="Go to source code">addRequiredHeader</a>( <span>string <var>$header</var></span> )</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$header</var></dt>
+						<dd></dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						<br>$this
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="getRequiredHeaders" id="_getRequiredHeaders">
+
+			<td class="attributes"><code>
+				 public 
+				array
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getRequiredHeaders">#</a>
+			<code><a href="source-class-Parable.Mail.Mailer.html#180-186" title="Go to source code">getRequiredHeaders</a>( )</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+
+
+					<h4>Returns</h4>
+					<div class="list">
+						array
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="addHeader" id="_addHeader">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_addHeader">#</a>
+			<code><a href="source-class-Parable.Mail.Mailer.html#188-197" title="Go to source code">addHeader</a>( <span>string <var>$header</var></span> )</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$header</var></dt>
+						<dd></dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						<br>$this
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="getHeaders" id="_getHeaders">
+
+			<td class="attributes"><code>
+				 public 
+				array
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getHeaders">#</a>
+			<code><a href="source-class-Parable.Mail.Mailer.html#199-205" title="Go to source code">getHeaders</a>( )</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+
+
+					<h4>Returns</h4>
+					<div class="list">
+						array
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="send" id="_send">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_send">#</a>
+			<code><a href="source-class-Parable.Mail.Mailer.html#207-249" title="Go to source code">send</a>( )</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+
+
+					<h4>Returns</h4>
+					<div class="list">
+						<br>$this
+					</div>
+
+					<h4>Throws</h4>
+					<div class="list">
+						<code><a href="class-Parable.Mail.Exception.html">Parable\Mail\Exception</a></code>
+					</div>
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="resetMailData" id="_resetMailData">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_resetMailData">#</a>
+			<code><a href="source-class-Parable.Mail.Mailer.html#251-263" title="Go to source code">resetMailData</a>( )</code>
+
+			<div class="description short">
+				<p>Reset just the subject, body, headers</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Reset just the subject, body, headers</p>
+
+
+
+					<h4>Returns</h4>
+					<div class="list">
+						<br>$this
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="resetRecipients" id="_resetRecipients">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_resetRecipients">#</a>
+			<code><a href="source-class-Parable.Mail.Mailer.html#265-277" title="Go to source code">resetRecipients</a>( )</code>
+
+			<div class="description short">
+				<p>Reset all the addresses currently stored to receive
+the e-mail.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Reset all the addresses currently stored to receive
+the e-mail.</p>
+
+
+
+					<h4>Returns</h4>
+					<div class="list">
+						<br>$this
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="resetSender" id="_resetSender">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_resetSender">#</a>
+			<code><a href="source-class-Parable.Mail.Mailer.html#279-288" title="Go to source code">resetSender</a>( )</code>
+
+			<div class="description short">
+				<p>Reset the sender email and name.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Reset the sender email and name.</p>
+
+
+
+					<h4>Returns</h4>
+					<div class="list">
+						<br>$this
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="reset" id="_reset">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_reset">#</a>
+			<code><a href="source-class-Parable.Mail.Mailer.html#290-301" title="Go to source code">reset</a>( )</code>
+
+			<div class="description short">
+				<p>Reset the class so it can be re-used for another, different
+e-mail. This resets everything BUT the sender email and name.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Reset the class so it can be re-used for another, different
+e-mail. This resets everything BUT the sender email and name.</p>
+
+
+
+					<h4>Returns</h4>
+					<div class="list">
+						<br>$this
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+			</table>
+		</div>
+
+
+
+
+
+
+
+
+
+
+
+		<div class="panel panel-default">
+            <div class="panel-heading"><h2>Properties summary</h2></div>
+			<table class="summary table table-bordered table-striped properties" id="properties">
+		<tr data-order="addresses" id="$addresses">
+			<td class="attributes"><code>
+				protected  
+				array
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-Parable.Mail.Mailer.html#7-13" title="Go to source code"><var>$addresses</var></a>
+
+				<div class="description short">
+					
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+			<td class="value">
+				<div>
+					<a href="#$addresses" class="anchor">#</a>
+					<code>[
+    <span class="php-quote">'to'</span>   =&gt; [],
+    <span class="php-quote">'cc'</span>   =&gt; [],
+    <span class="php-quote">'bcc'</span>  =&gt; [],
+    <span class="php-quote">'from'</span> =&gt; [],
+]</code>
+				</div>
+			</td>
+		</tr>
+		<tr data-order="subject" id="$subject">
+			<td class="attributes"><code>
+				protected  
+				string
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-Parable.Mail.Mailer.html#15-16" title="Go to source code"><var>$subject</var></a>
+
+				<div class="description short">
+					
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+			<td class="value">
+				<div>
+					<a href="#$subject" class="anchor">#</a>
+					<code></code>
+				</div>
+			</td>
+		</tr>
+		<tr data-order="body" id="$body">
+			<td class="attributes"><code>
+				protected  
+				string
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-Parable.Mail.Mailer.html#18-19" title="Go to source code"><var>$body</var></a>
+
+				<div class="description short">
+					
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+			<td class="value">
+				<div>
+					<a href="#$body" class="anchor">#</a>
+					<code></code>
+				</div>
+			</td>
+		</tr>
+		<tr data-order="requiredHeaders" id="$requiredHeaders">
+			<td class="attributes"><code>
+				protected  
+				array
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-Parable.Mail.Mailer.html#21-25" title="Go to source code"><var>$requiredHeaders</var></a>
+
+				<div class="description short">
+					
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+			<td class="value">
+				<div>
+					<a href="#$requiredHeaders" class="anchor">#</a>
+					<code>[
+    <span class="php-quote">&quot;MIME-Version: 1.0&quot;</span>,
+    <span class="php-quote">&quot;Content-type: text/html; charset=UTF-8&quot;</span>,
+]</code>
+				</div>
+			</td>
+		</tr>
+		<tr data-order="headers" id="$headers">
+			<td class="attributes"><code>
+				protected  
+				array
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-Parable.Mail.Mailer.html#27-28" title="Go to source code"><var>$headers</var></a>
+
+				<div class="description short">
+					
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+			<td class="value">
+				<div>
+					<a href="#$headers" class="anchor">#</a>
+					<code>[]</code>
+				</div>
+			</td>
+		</tr>
+			</table>
+		</div>
+
+
+
+
+
+
+</div>
+	</div>
+
+	<div id="footer">
+		Parable Docs API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+<script src="resources/combined.js"></script>
+<script src="elementlist.js"></script>
+</body>
+</html>

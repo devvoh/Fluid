@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Class Parable\Console\App | Parable Docs</title>
+
+	<link rel="stylesheet" href="resources/bootstrap.min.css?973e37a8502921d56bc02bb55321f45b072b6f71">
+	<link rel="stylesheet" href="resources/style.css?70c1d062672daa3f906b72e4f5d03d4bc5c4174d">
+
+</head>
+
+<body>
+	<nav id="navigation" class="navbar navbar-default navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a href="index.html" class="navbar-brand">Parable Docs</a>
+			</div>
+			<div class="collapse navbar-collapse">
+
+                <form id="search" class="navbar-form navbar-left" role="search">
+                    <input type="hidden" name="cx" value="">
+                    <input type="hidden" name="ie" value="UTF-8">
+                    <div class="form-group">
+                        <input type="text" name="q" class="search-query form-control" placeholder="Search">
+					</div>
+				</form>
+
+				<ul class="nav navbar-nav">
+					<li>
+						<a href="namespace-Parable.Console.html" title="Summary of Parable\Console"><span>Namespace</span></a>
+					</li>
+					<li class="active">
+<span>Class</span>					</li>
+
+
+
+
+
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div id="left">
+	<div id="menu">
+
+		<div id="groups">
+				<h3>Namespaces</h3>
+			<ul>
+					<li class="active">
+						<a href="namespace-Parable.html">
+							Parable<span></span>
+						</a>
+							<ul>
+					<li class="active">
+						<a href="namespace-Parable.Console.html">
+							Console<span></span>
+						</a>
+							<ul>
+					<li>
+						<a href="namespace-Parable.Console.Command.html">
+							Command						</a>
+							</li>
+								</ul></li>
+					<li>
+						<a href="namespace-Parable.DI.html">
+							DI						</a>
+							</li>
+					<li>
+						<a href="namespace-Parable.Event.html">
+							Event						</a>
+							</li>
+					<li>
+						<a href="namespace-Parable.Filesystem.html">
+							Filesystem						</a>
+							</li>
+					<li>
+						<a href="namespace-Parable.Framework.html">
+							Framework<span></span>
+						</a>
+							<ul>
+					<li>
+						<a href="namespace-Parable.Framework.Config.html">
+							Config						</a>
+							</li>
+					<li>
+						<a href="namespace-Parable.Framework.Mail.html">
+							Mail						</a>
+							</li>
+					<li>
+						<a href="namespace-Parable.Framework.Routing.html">
+							Routing						</a>
+							</li>
+								</ul></li>
+					<li>
+						<a href="namespace-Parable.Http.html">
+							Http<span></span>
+						</a>
+							<ul>
+					<li>
+						<a href="namespace-Parable.Http.Output.html">
+							Output						</a>
+							</li>
+					<li>
+						<a href="namespace-Parable.Http.Values.html">
+							Values						</a>
+							</li>
+								</ul></li>
+					<li>
+						<a href="namespace-Parable.Mail.html">
+							Mail						</a>
+							</li>
+					<li>
+						<a href="namespace-Parable.ORM.html">
+							ORM<span></span>
+						</a>
+							<ul>
+					<li>
+						<a href="namespace-Parable.ORM.Query.html">
+							Query						</a>
+							</li>
+								</ul></li>
+					<li>
+						<a href="namespace-Parable.Routing.html">
+							Routing						</a>
+							</li>
+					<li>
+						<a href="namespace-Parable.Tool.html">
+							Tool						</a>
+							</li>
+								</ul></li>
+			</ul>
+		</div>
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li class="active"><a href="class-Parable.Console.App.html">App</a></li>
+				<li><a href="class-Parable.Console.Command.html">Command</a></li>
+				<li><a href="class-Parable.Console.Input.html">Input</a></li>
+				<li><a href="class-Parable.Console.Output.html">Output</a></li>
+				<li><a href="class-Parable.Console.Parameter.html">Parameter</a></li>
+			</ul>
+
+
+
+			<h3>Exceptions</h3>
+			<ul>
+				<li><a href="class-Parable.Console.Exception.html">Exception</a></li>
+			</ul>
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+	<div id="rightInner">
+<div id="content" class="class">
+	<h1>Class App</h1>
+
+
+
+
+
+
+
+
+
+
+
+	<div class="alert alert-info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-Parable.html">Parable</a>\<a href="namespace-Parable.Console.html">Console</a><br>
+		
+
+			<b>Located at</b> <a href="source-class-Parable.Console.App.html#5-135" title="Go to source code">Console/App.php</a>
+		<br>
+	</div>
+
+
+
+		<div class="panel panel-default">
+			<div class="panel-heading"><h2>Methods summary</h2></div>
+			<table class="summary table table-bordered table-striped methods" id="methods">
+		<tr data-order="__construct" id="___construct">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#___construct">#</a>
+			<code><a href="source-class-Parable.Console.App.html#28-40" title="Go to source code">__construct</a>( <span><code><a href="class-Parable.Console.Output.html">Parable\Console\Output</a></code> <var>$output</var></span>, <span><code><a href="class-Parable.Console.Input.html">Parable\Console\Input</a></code> <var>$input</var></span>, <span><code><a href="class-Parable.Console.Parameter.html">Parable\Console\Parameter</a></code> <var>$parameter</var></span> )</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+
+
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="setName" id="_setName">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_setName">#</a>
+			<code><a href="source-class-Parable.Console.App.html#42-51" title="Go to source code">setName</a>( <span>string <var>$name</var></span> )</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$name</var></dt>
+						<dd></dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						<br>$this
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="getName" id="_getName">
+
+			<td class="attributes"><code>
+				 public 
+				string
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getName">#</a>
+			<code><a href="source-class-Parable.Console.App.html#53-59" title="Go to source code">getName</a>( )</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+
+
+					<h4>Returns</h4>
+					<div class="list">
+						string
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="addCommand" id="_addCommand">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_addCommand">#</a>
+			<code><a href="source-class-Parable.Console.App.html#61-70" title="Go to source code">addCommand</a>( <span><code><a href="class-Parable.Console.Command.html">Parable\Console\Command</a></code> <var>$command</var></span> )</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$command</var></dt>
+						<dd></dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						<br>$this
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="setDefaultCommand" id="_setDefaultCommand">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_setDefaultCommand">#</a>
+			<code><a href="source-class-Parable.Console.App.html#72-83" title="Go to source code">setDefaultCommand</a>( <span>string <var>$commandName</var></span>, <span>boolean <var>$onlyCommand</var> = <span class="php-keyword1">false</span></span> )</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$commandName</var></dt>
+						<dd></dd>
+						<dt><var>$onlyCommand</var></dt>
+						<dd></dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						<br>$this
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="getCommand" id="_getCommand">
+
+			<td class="attributes"><code>
+				 public 
+				null|<code><a href="class-Parable.Console.Command.html">Parable\Console\Command</a></code>
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getCommand">#</a>
+			<code><a href="source-class-Parable.Console.App.html#85-96" title="Go to source code">getCommand</a>( <span>string <var>$commandName</var></span> )</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$commandName</var></dt>
+						<dd></dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						null|<code><a href="class-Parable.Console.Command.html">Parable\Console\Command</a></code>
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="getCommands" id="_getCommands">
+
+			<td class="attributes"><code>
+				 public 
+				<code><a href="class-Parable.Console.Command.html">Parable\Console\Command</a>[]</code>
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getCommands">#</a>
+			<code><a href="source-class-Parable.Console.App.html#98-104" title="Go to source code">getCommands</a>( )</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+
+
+					<h4>Returns</h4>
+					<div class="list">
+						<code><a href="class-Parable.Console.Command.html">Parable\Console\Command</a>[]</code>
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="run" id="_run">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_run">#</a>
+			<code><a href="source-class-Parable.Console.App.html#106-134" title="Go to source code">run</a>( )</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+
+
+					<h4>Returns</h4>
+					<div class="list">
+						<br>$this
+					</div>
+
+					<h4>Throws</h4>
+					<div class="list">
+						<code><a href="class-Parable.Console.Exception.html">Parable\Console\Exception</a></code>
+					</div>
+
+
+
+			</div>
+			</div></td>
+		</tr>
+			</table>
+		</div>
+
+
+
+
+
+
+
+
+
+
+
+		<div class="panel panel-default">
+            <div class="panel-heading"><h2>Properties summary</h2></div>
+			<table class="summary table table-bordered table-striped properties" id="properties">
+		<tr data-order="output" id="$output">
+			<td class="attributes"><code>
+				protected  
+				<code><a href="class-Parable.Console.Output.html">Parable\Console\Output</a></code>
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-Parable.Console.App.html#7-8" title="Go to source code"><var>$output</var></a>
+
+				<div class="description short">
+					
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+			<td class="value">
+				<div>
+					<a href="#$output" class="anchor">#</a>
+					<code></code>
+				</div>
+			</td>
+		</tr>
+		<tr data-order="input" id="$input">
+			<td class="attributes"><code>
+				protected  
+				<code><a href="class-Parable.Console.Input.html">Parable\Console\Input</a></code>
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-Parable.Console.App.html#10-11" title="Go to source code"><var>$input</var></a>
+
+				<div class="description short">
+					
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+			<td class="value">
+				<div>
+					<a href="#$input" class="anchor">#</a>
+					<code></code>
+				</div>
+			</td>
+		</tr>
+		<tr data-order="parameter" id="$parameter">
+			<td class="attributes"><code>
+				protected  
+				<code><a href="class-Parable.Console.Parameter.html">Parable\Console\Parameter</a></code>
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-Parable.Console.App.html#13-14" title="Go to source code"><var>$parameter</var></a>
+
+				<div class="description short">
+					
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+			<td class="value">
+				<div>
+					<a href="#$parameter" class="anchor">#</a>
+					<code></code>
+				</div>
+			</td>
+		</tr>
+		<tr data-order="name" id="$name">
+			<td class="attributes"><code>
+				protected  
+				string
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-Parable.Console.App.html#16-17" title="Go to source code"><var>$name</var></a>
+
+				<div class="description short">
+					
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+			<td class="value">
+				<div>
+					<a href="#$name" class="anchor">#</a>
+					<code></code>
+				</div>
+			</td>
+		</tr>
+		<tr data-order="commands" id="$commands">
+			<td class="attributes"><code>
+				protected  
+				<code><a href="class-Parable.Console.Command.html">Parable\Console\Command</a>[]</code>
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-Parable.Console.App.html#19-20" title="Go to source code"><var>$commands</var></a>
+
+				<div class="description short">
+					
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+			<td class="value">
+				<div>
+					<a href="#$commands" class="anchor">#</a>
+					<code>[]</code>
+				</div>
+			</td>
+		</tr>
+		<tr data-order="defaultCommand" id="$defaultCommand">
+			<td class="attributes"><code>
+				protected  
+				string
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-Parable.Console.App.html#22-23" title="Go to source code"><var>$defaultCommand</var></a>
+
+				<div class="description short">
+					
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+			<td class="value">
+				<div>
+					<a href="#$defaultCommand" class="anchor">#</a>
+					<code></code>
+				</div>
+			</td>
+		</tr>
+		<tr data-order="onlyCommand" id="$onlyCommand">
+			<td class="attributes"><code>
+				protected  
+				boolean
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-Parable.Console.App.html#25-26" title="Go to source code"><var>$onlyCommand</var></a>
+
+				<div class="description short">
+					
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+			<td class="value">
+				<div>
+					<a href="#$onlyCommand" class="anchor">#</a>
+					<code><span class="php-keyword1">false</span></code>
+				</div>
+			</td>
+		</tr>
+			</table>
+		</div>
+
+
+
+
+
+
+</div>
+	</div>
+
+	<div id="footer">
+		Parable Docs API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+<script src="resources/combined.js"></script>
+<script src="elementlist.js"></script>
+</body>
+</html>

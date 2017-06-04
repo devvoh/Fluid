@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Class Parable\Framework\View | Parable Docs</title>
+
+	<link rel="stylesheet" href="resources/bootstrap.min.css?973e37a8502921d56bc02bb55321f45b072b6f71">
+	<link rel="stylesheet" href="resources/style.css?70c1d062672daa3f906b72e4f5d03d4bc5c4174d">
+
+</head>
+
+<body>
+	<nav id="navigation" class="navbar navbar-default navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a href="index.html" class="navbar-brand">Parable Docs</a>
+			</div>
+			<div class="collapse navbar-collapse">
+
+                <form id="search" class="navbar-form navbar-left" role="search">
+                    <input type="hidden" name="cx" value="">
+                    <input type="hidden" name="ie" value="UTF-8">
+                    <div class="form-group">
+                        <input type="text" name="q" class="search-query form-control" placeholder="Search">
+					</div>
+				</form>
+
+				<ul class="nav navbar-nav">
+					<li>
+						<a href="namespace-Parable.Framework.html" title="Summary of Parable\Framework"><span>Namespace</span></a>
+					</li>
+					<li class="active">
+<span>Class</span>					</li>
+
+
+
+
+
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div id="left">
+	<div id="menu">
+
+		<div id="groups">
+				<h3>Namespaces</h3>
+			<ul>
+					<li class="active">
+						<a href="namespace-Parable.html">
+							Parable<span></span>
+						</a>
+							<ul>
+					<li>
+						<a href="namespace-Parable.Console.html">
+							Console<span></span>
+						</a>
+							<ul>
+					<li>
+						<a href="namespace-Parable.Console.Command.html">
+							Command						</a>
+							</li>
+								</ul></li>
+					<li>
+						<a href="namespace-Parable.DI.html">
+							DI						</a>
+							</li>
+					<li>
+						<a href="namespace-Parable.Event.html">
+							Event						</a>
+							</li>
+					<li>
+						<a href="namespace-Parable.Filesystem.html">
+							Filesystem						</a>
+							</li>
+					<li class="active">
+						<a href="namespace-Parable.Framework.html">
+							Framework<span></span>
+						</a>
+							<ul>
+					<li>
+						<a href="namespace-Parable.Framework.Config.html">
+							Config						</a>
+							</li>
+					<li>
+						<a href="namespace-Parable.Framework.Mail.html">
+							Mail						</a>
+							</li>
+					<li>
+						<a href="namespace-Parable.Framework.Routing.html">
+							Routing						</a>
+							</li>
+								</ul></li>
+					<li>
+						<a href="namespace-Parable.Http.html">
+							Http<span></span>
+						</a>
+							<ul>
+					<li>
+						<a href="namespace-Parable.Http.Output.html">
+							Output						</a>
+							</li>
+					<li>
+						<a href="namespace-Parable.Http.Values.html">
+							Values						</a>
+							</li>
+								</ul></li>
+					<li>
+						<a href="namespace-Parable.Mail.html">
+							Mail						</a>
+							</li>
+					<li>
+						<a href="namespace-Parable.ORM.html">
+							ORM<span></span>
+						</a>
+							<ul>
+					<li>
+						<a href="namespace-Parable.ORM.Query.html">
+							Query						</a>
+							</li>
+								</ul></li>
+					<li>
+						<a href="namespace-Parable.Routing.html">
+							Routing						</a>
+							</li>
+					<li>
+						<a href="namespace-Parable.Tool.html">
+							Tool						</a>
+							</li>
+								</ul></li>
+			</ul>
+		</div>
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-Parable.Framework.App.html">App</a></li>
+				<li><a href="class-Parable.Framework.Authentication.html">Authentication</a></li>
+				<li><a href="class-Parable.Framework.Autoloader.html">Autoloader</a></li>
+				<li><a href="class-Parable.Framework.Config.html">Config</a></li>
+				<li><a href="class-Parable.Framework.Debug.html">Debug</a></li>
+				<li><a href="class-Parable.Framework.Dispatcher.html">Dispatcher</a></li>
+				<li><a href="class-Parable.Framework.Log.html">Log</a></li>
+				<li><a href="class-Parable.Framework.Toolkit.html">Toolkit</a></li>
+				<li class="active"><a href="class-Parable.Framework.View.html">View</a></li>
+			</ul>
+
+
+
+			<h3>Exceptions</h3>
+			<ul>
+				<li><a href="class-Parable.Framework.Exception.html">Exception</a></li>
+			</ul>
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+	<div id="rightInner">
+<div id="content" class="class">
+	<h1>Class View</h1>
+
+
+	<div class="description">
+	<p>The following magic properties are available in template (.phtml) files through $this->...property</p>
+	</div>
+
+
+
+
+
+
+
+
+
+	<div class="alert alert-info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-Parable.html">Parable</a>\<a href="namespace-Parable.Framework.html">Framework</a><br>
+		
+
+			<b>Located at</b> <a href="source-class-Parable.Framework.View.html#5-127" title="Go to source code">Framework/View.php</a>
+		<br>
+	</div>
+
+
+
+		<div class="panel panel-default">
+			<div class="panel-heading"><h2>Methods summary</h2></div>
+			<table class="summary table table-bordered table-striped methods" id="methods">
+		<tr data-order="__construct" id="___construct">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#___construct">#</a>
+			<code><a href="source-class-Parable.Framework.View.html#50-58" title="Go to source code">__construct</a>( <span><code><a href="class-Parable.Framework.Toolkit.html">Parable\Framework\Toolkit</a></code> <var>$toolkit</var></span>, <span><code><a href="class-Parable.Filesystem.Path.html">Parable\Filesystem\Path</a></code> <var>$path</var></span>, <span><code><a href="class-Parable.Http.Response.html">Parable\Http\Response</a></code> <var>$response</var></span> )</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+
+
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="setTemplatePath" id="_setTemplatePath">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_setTemplatePath">#</a>
+			<code><a href="source-class-Parable.Framework.View.html#60-69" title="Go to source code">setTemplatePath</a>( <span>string <var>$templatePath</var></span> )</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$templatePath</var></dt>
+						<dd></dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						<br>$this
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="partial" id="_partial">
+
+			<td class="attributes"><code>
+				 public 
+				string
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_partial">#</a>
+			<code><a href="source-class-Parable.Framework.View.html#71-81" title="Go to source code">partial</a>( <span>string <var>$templatePath</var></span> )</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$templatePath</var></dt>
+						<dd></dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						string
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="render" id="_render">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_render">#</a>
+			<code><a href="source-class-Parable.Framework.View.html#83-92" title="Go to source code">render</a>( )</code>
+
+			<div class="description short">
+				<p>Render the template from the configured templatePath</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Render the template from the configured templatePath</p>
+
+
+
+					<h4>Returns</h4>
+					<div class="list">
+						<br>$this
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="loadTemplatePath" id="_loadTemplatePath">
+
+			<td class="attributes"><code>
+				 protected 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_loadTemplatePath">#</a>
+			<code><a href="source-class-Parable.Framework.View.html#94-110" title="Go to source code">loadTemplatePath</a>( <span>string <var>$templatePath</var></span> )</code>
+
+			<div class="description short">
+				<p>Attempt to load the templatePath</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Attempt to load the templatePath</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$templatePath</var></dt>
+						<dd></dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						<br>$this
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="__get" id="___get">
+
+			<td class="attributes"><code>
+				 public 
+				null|object
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#___get">#</a>
+			<code><a href="source-class-Parable.Framework.View.html#112-126" title="Go to source code">__get</a>( <span>string <var>$property</var></span> )</code>
+
+			<div class="description short">
+				<p>Magic get function to pass through all calls to DI-able classes.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Magic get function to pass through all calls to DI-able classes.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$property</var></dt>
+						<dd></dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						null|object
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+			</table>
+		</div>
+
+
+
+
+
+
+
+
+
+
+
+		<div class="panel panel-default">
+            <div class="panel-heading"><h2>Properties summary</h2></div>
+			<table class="summary table table-bordered table-striped properties" id="properties">
+		<tr data-order="toolkit" id="$toolkit">
+			<td class="attributes"><code>
+				protected  
+				<code><a href="class-Parable.Framework.Toolkit.html">Parable\Framework\Toolkit</a></code>
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-Parable.Framework.View.html#38-39" title="Go to source code"><var>$toolkit</var></a>
+
+				<div class="description short">
+					
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+			<td class="value">
+				<div>
+					<a href="#$toolkit" class="anchor">#</a>
+					<code></code>
+				</div>
+			</td>
+		</tr>
+		<tr data-order="path" id="$path">
+			<td class="attributes"><code>
+				protected  
+				<code><a href="class-Parable.Filesystem.Path.html">Parable\Filesystem\Path</a></code>
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-Parable.Framework.View.html#41-42" title="Go to source code"><var>$path</var></a>
+
+				<div class="description short">
+					
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+			<td class="value">
+				<div>
+					<a href="#$path" class="anchor">#</a>
+					<code></code>
+				</div>
+			</td>
+		</tr>
+		<tr data-order="response" id="$response">
+			<td class="attributes"><code>
+				protected  
+				<code><a href="class-Parable.Http.Response.html">Parable\Http\Response</a></code>
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-Parable.Framework.View.html#44-45" title="Go to source code"><var>$response</var></a>
+
+				<div class="description short">
+					
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+			<td class="value">
+				<div>
+					<a href="#$response" class="anchor">#</a>
+					<code></code>
+				</div>
+			</td>
+		</tr>
+		<tr data-order="templatePath" id="$templatePath">
+			<td class="attributes"><code>
+				protected  
+				string
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-Parable.Framework.View.html#47-48" title="Go to source code"><var>$templatePath</var></a>
+
+				<div class="description short">
+					
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+			<td class="value">
+				<div>
+					<a href="#$templatePath" class="anchor">#</a>
+					<code></code>
+				</div>
+			</td>
+		</tr>
+			</table>
+		</div>
+
+
+
+		<div class="panel panel-default">
+            <div class="panel-heading"><h3>Magic properties</h3></div>
+			<table class="summary table table-bordered table-striped properties" id="magicProperties">
+		<tr data-order="dock" id="m$dock">
+			<td class="attributes"><code>
+				public  
+				<code><a href="class-Parable.Event.Dock.html">Parable\Event\Dock</a></code>
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-Parable.Framework.View.html#8" title="Go to source code"><var>$dock</var></a>
+
+				<div class="description short">
+					
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+		</tr>
+		<tr data-order="hook" id="m$hook">
+			<td class="attributes"><code>
+				public  
+				<code><a href="class-Parable.Event.Hook.html">Parable\Event\Hook</a></code>
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-Parable.Framework.View.html#9" title="Go to source code"><var>$hook</var></a>
+
+				<div class="description short">
+					
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+		</tr>
+		<tr data-order="path" id="m$path">
+			<td class="attributes"><code>
+				public  
+				<code><a href="class-Parable.Filesystem.Path.html">Parable\Filesystem\Path</a></code>
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-Parable.Framework.View.html#10" title="Go to source code"><var>$path</var></a>
+
+				<div class="description short">
+					
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+		</tr>
+		<tr data-order="app" id="m$app">
+			<td class="attributes"><code>
+				public  
+				<code><a href="class-Parable.Framework.App.html">Parable\Framework\App</a></code>
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-Parable.Framework.View.html#11" title="Go to source code"><var>$app</var></a>
+
+				<div class="description short">
+					
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+		</tr>
+		<tr data-order="authentication" id="m$authentication">
+			<td class="attributes"><code>
+				public  
+				<code><a href="class-Parable.Framework.Authentication.html">Parable\Framework\Authentication</a></code>
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-Parable.Framework.View.html#12" title="Go to source code"><var>$authentication</var></a>
+
+				<div class="description short">
+					
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+		</tr>
+		<tr data-order="config" id="m$config">
+			<td class="attributes"><code>
+				public  
+				<code><a href="class-Parable.Framework.Config.html">Parable\Framework\Config</a></code>
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-Parable.Framework.View.html#13" title="Go to source code"><var>$config</var></a>
+
+				<div class="description short">
+					
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+		</tr>
+		<tr data-order="debug" id="m$debug">
+			<td class="attributes"><code>
+				public  
+				<code><a href="class-Parable.Framework.Debug.html">Parable\Framework\Debug</a></code>
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-Parable.Framework.View.html#14" title="Go to source code"><var>$debug</var></a>
+
+				<div class="description short">
+					
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+		</tr>
+		<tr data-order="dispatcher" id="m$dispatcher">
+			<td class="attributes"><code>
+				public  
+				<code><a href="class-Parable.Framework.Dispatcher.html">Parable\Framework\Dispatcher</a></code>
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-Parable.Framework.View.html#15" title="Go to source code"><var>$dispatcher</var></a>
+
+				<div class="description short">
+					
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+		</tr>
+		<tr data-order="log" id="m$log">
+			<td class="attributes"><code>
+				public  
+				<code><a href="class-Parable.Framework.Log.html">Parable\Framework\Log</a></code>
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-Parable.Framework.View.html#16" title="Go to source code"><var>$log</var></a>
+
+				<div class="description short">
+					
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+		</tr>
+		<tr data-order="toolkit" id="m$toolkit">
+			<td class="attributes"><code>
+				public  
+				<code><a href="class-Parable.Framework.Toolkit.html">Parable\Framework\Toolkit</a></code>
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-Parable.Framework.View.html#17" title="Go to source code"><var>$toolkit</var></a>
+
+				<div class="description short">
+					
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+		</tr>
+		<tr data-order="view" id="m$view">
+			<td class="attributes"><code>
+				public  
+				<code><a href="class-Parable.Framework.View.html">Parable\Framework\View</a></code>
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-Parable.Framework.View.html#18" title="Go to source code"><var>$view</var></a>
+
+				<div class="description short">
+					
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+		</tr>
+		<tr data-order="mailer" id="m$mailer">
+			<td class="attributes"><code>
+				public  
+				<code><a href="class-Parable.Framework.Mail.Mailer.html">Parable\Framework\Mail\Mailer</a></code>
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-Parable.Framework.View.html#19" title="Go to source code"><var>$mailer</var></a>
+
+				<div class="description short">
+					
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+		</tr>
+		<tr data-order="templateVariables" id="m$templateVariables">
+			<td class="attributes"><code>
+				public  
+				<code><a href="class-Parable.Framework.Mail.TemplateVariables.html">Parable\Framework\Mail\TemplateVariables</a></code>
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-Parable.Framework.View.html#20" title="Go to source code"><var>$templateVariables</var></a>
+
+				<div class="description short">
+					
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+		</tr>
+		<tr data-order="request" id="m$request">
+			<td class="attributes"><code>
+				public  
+				<code><a href="class-Parable.Http.Request.html">Parable\Http\Request</a></code>
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-Parable.Framework.View.html#21" title="Go to source code"><var>$request</var></a>
+
+				<div class="description short">
+					
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+		</tr>
+		<tr data-order="response" id="m$response">
+			<td class="attributes"><code>
+				public  
+				<code><a href="class-Parable.Http.Response.html">Parable\Http\Response</a></code>
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-Parable.Framework.View.html#22" title="Go to source code"><var>$response</var></a>
+
+				<div class="description short">
+					
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+		</tr>
+		<tr data-order="sessionMessage" id="m$sessionMessage">
+			<td class="attributes"><code>
+				public  
+				<code><a href="class-Parable.Http.SessionMessage.html">Parable\Http\SessionMessage</a></code>
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-Parable.Framework.View.html#23" title="Go to source code"><var>$sessionMessage</var></a>
+
+				<div class="description short">
+					
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+		</tr>
+		<tr data-order="url" id="m$url">
+			<td class="attributes"><code>
+				public  
+				<code><a href="class-Parable.Http.Url.html">Parable\Http\Url</a></code>
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-Parable.Framework.View.html#24" title="Go to source code"><var>$url</var></a>
+
+				<div class="description short">
+					
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+		</tr>
+		<tr data-order="values" id="m$values">
+			<td class="attributes"><code>
+				public  
+				<code><a href="class-Parable.Http.Values.html">Parable\Http\Values</a></code>
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-Parable.Framework.View.html#25" title="Go to source code"><var>$values</var></a>
+
+				<div class="description short">
+					
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+		</tr>
+		<tr data-order="cookie" id="m$cookie">
+			<td class="attributes"><code>
+				public  
+				<code><a href="class-Parable.Http.Values.Cookie.html">Parable\Http\Values\Cookie</a></code>
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-Parable.Framework.View.html#26" title="Go to source code"><var>$cookie</var></a>
+
+				<div class="description short">
+					
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+		</tr>
+		<tr data-order="get" id="m$get">
+			<td class="attributes"><code>
+				public  
+				<code><a href="class-Parable.Http.Values.Get.html">Parable\Http\Values\Get</a></code>
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-Parable.Framework.View.html#27" title="Go to source code"><var>$get</var></a>
+
+				<div class="description short">
+					
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+		</tr>
+		<tr data-order="internal" id="m$internal">
+			<td class="attributes"><code>
+				public  
+				<code><a href="class-Parable.Http.Values.Internal.html">Parable\Http\Values\Internal</a></code>
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-Parable.Framework.View.html#28" title="Go to source code"><var>$internal</var></a>
+
+				<div class="description short">
+					
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+		</tr>
+		<tr data-order="post" id="m$post">
+			<td class="attributes"><code>
+				public  
+				<code><a href="class-Parable.Http.Values.Post.html">Parable\Http\Values\Post</a></code>
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-Parable.Framework.View.html#29" title="Go to source code"><var>$post</var></a>
+
+				<div class="description short">
+					
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+		</tr>
+		<tr data-order="session" id="m$session">
+			<td class="attributes"><code>
+				public  
+				<code><a href="class-Parable.Http.Values.Session.html">Parable\Http\Values\Session</a></code>
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-Parable.Framework.View.html#30" title="Go to source code"><var>$session</var></a>
+
+				<div class="description short">
+					
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+		</tr>
+		<tr data-order="query" id="m$query">
+			<td class="attributes"><code>
+				public  
+				<code><a href="class-Parable.ORM.Query.html">Parable\ORM\Query</a></code>
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-Parable.Framework.View.html#31" title="Go to source code"><var>$query</var></a>
+
+				<div class="description short">
+					
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+		</tr>
+		<tr data-order="database" id="m$database">
+			<td class="attributes"><code>
+				public  
+				<code><a href="class-Parable.ORM.Database.html">Parable\ORM\Database</a></code>
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-Parable.Framework.View.html#32" title="Go to source code"><var>$database</var></a>
+
+				<div class="description short">
+					
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+		</tr>
+		<tr data-order="router" id="m$router">
+			<td class="attributes"><code>
+				public  
+				<code><a href="class-Parable.Routing.Router.html">Parable\Routing\Router</a></code>
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-Parable.Framework.View.html#33" title="Go to source code"><var>$router</var></a>
+
+				<div class="description short">
+					
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+		</tr>
+		<tr data-order="rights" id="m$rights">
+			<td class="attributes"><code>
+				public  
+				<code><a href="class-Parable.Tool.Rights.html">Parable\Tool\Rights</a></code>
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-Parable.Framework.View.html#34" title="Go to source code"><var>$rights</var></a>
+
+				<div class="description short">
+					
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+		</tr>
+			</table>
+		</div>
+
+
+
+</div>
+	</div>
+
+	<div id="footer">
+		Parable Docs API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+<script src="resources/combined.js"></script>
+<script src="elementlist.js"></script>
+</body>
+</html>
