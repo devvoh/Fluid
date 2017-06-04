@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Class Parable\Http\Values\GetSet | Parable Docs</title>
+
+	<link rel="stylesheet" href="resources/bootstrap.min.css?973e37a8502921d56bc02bb55321f45b072b6f71">
+	<link rel="stylesheet" href="resources/style.css?70c1d062672daa3f906b72e4f5d03d4bc5c4174d">
+
+</head>
+
+<body>
+	<nav id="navigation" class="navbar navbar-default navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a href="index.html" class="navbar-brand">Parable Docs</a>
+			</div>
+			<div class="collapse navbar-collapse">
+
+                <form id="search" class="navbar-form navbar-left" role="search">
+                    <input type="hidden" name="cx" value="">
+                    <input type="hidden" name="ie" value="UTF-8">
+                    <div class="form-group">
+                        <input type="text" name="q" class="search-query form-control" placeholder="Search">
+					</div>
+				</form>
+
+				<ul class="nav navbar-nav">
+					<li>
+						<a href="namespace-Parable.Http.Values.html" title="Summary of Parable\Http\Values"><span>Namespace</span></a>
+					</li>
+					<li class="active">
+<span>Class</span>					</li>
+
+
+
+
+
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div id="left">
+	<div id="menu">
+
+		<div id="groups">
+				<h3>Namespaces</h3>
+			<ul>
+					<li class="active">
+						<a href="namespace-Parable.html">
+							Parable<span></span>
+						</a>
+							<ul>
+					<li>
+						<a href="namespace-Parable.Console.html">
+							Console<span></span>
+						</a>
+							<ul>
+					<li>
+						<a href="namespace-Parable.Console.Command.html">
+							Command						</a>
+							</li>
+								</ul></li>
+					<li>
+						<a href="namespace-Parable.DI.html">
+							DI						</a>
+							</li>
+					<li>
+						<a href="namespace-Parable.Event.html">
+							Event						</a>
+							</li>
+					<li>
+						<a href="namespace-Parable.Filesystem.html">
+							Filesystem						</a>
+							</li>
+					<li>
+						<a href="namespace-Parable.Framework.html">
+							Framework<span></span>
+						</a>
+							<ul>
+					<li>
+						<a href="namespace-Parable.Framework.Config.html">
+							Config						</a>
+							</li>
+					<li>
+						<a href="namespace-Parable.Framework.Mail.html">
+							Mail						</a>
+							</li>
+					<li>
+						<a href="namespace-Parable.Framework.Routing.html">
+							Routing						</a>
+							</li>
+								</ul></li>
+					<li class="active">
+						<a href="namespace-Parable.Http.html">
+							Http<span></span>
+						</a>
+							<ul>
+					<li>
+						<a href="namespace-Parable.Http.Output.html">
+							Output						</a>
+							</li>
+					<li class="active">
+						<a href="namespace-Parable.Http.Values.html">
+							Values						</a>
+							</li>
+								</ul></li>
+					<li>
+						<a href="namespace-Parable.Mail.html">
+							Mail						</a>
+							</li>
+					<li>
+						<a href="namespace-Parable.ORM.html">
+							ORM<span></span>
+						</a>
+							<ul>
+					<li>
+						<a href="namespace-Parable.ORM.Query.html">
+							Query						</a>
+							</li>
+								</ul></li>
+					<li>
+						<a href="namespace-Parable.Routing.html">
+							Routing						</a>
+							</li>
+					<li>
+						<a href="namespace-Parable.Tool.html">
+							Tool						</a>
+							</li>
+								</ul></li>
+			</ul>
+		</div>
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-Parable.Http.Values.Cookie.html">Cookie</a></li>
+				<li><a href="class-Parable.Http.Values.Get.html">Get</a></li>
+				<li class="active"><a href="class-Parable.Http.Values.GetSet.html">GetSet</a></li>
+				<li><a href="class-Parable.Http.Values.Internal.html">Internal</a></li>
+				<li><a href="class-Parable.Http.Values.Post.html">Post</a></li>
+				<li><a href="class-Parable.Http.Values.Session.html">Session</a></li>
+			</ul>
+
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+	<div id="rightInner">
+<div id="content" class="class">
+	<h1>Class GetSet</h1>
+
+
+
+
+
+	<div>
+		<h3>Direct known subclasses</h3>
+		<p class="elementList">
+			<code><a href="class-Parable.Framework.Mail.TemplateVariables.html">Parable\Framework\Mail\TemplateVariables</a></code>, 
+			<code><a href="class-Parable.Http.Values.Cookie.html">Parable\Http\Values\Cookie</a></code>, 
+			<code><a href="class-Parable.Http.Values.Get.html">Parable\Http\Values\Get</a></code>, 
+			<code><a href="class-Parable.Http.Values.Internal.html">Parable\Http\Values\Internal</a></code>, 
+			<code><a href="class-Parable.Http.Values.Post.html">Parable\Http\Values\Post</a></code>, 
+			<code><a href="class-Parable.Http.Values.Session.html">Parable\Http\Values\Session</a></code>
+		</p>
+	</div>
+
+
+
+
+
+
+	<div class="alert alert-info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-Parable.html">Parable</a>\<a href="namespace-Parable.Http.html">Http</a>\<a href="namespace-Parable.Http.Values.html">Values</a><br>
+		
+
+			<b>Located at</b> <a href="source-class-Parable.Http.Values.GetSet.html#5-175" title="Go to source code">Http/Values/GetSet.php</a>
+		<br>
+	</div>
+
+
+
+		<div class="panel panel-default">
+			<div class="panel-heading"><h2>Methods summary</h2></div>
+			<table class="summary table table-bordered table-striped methods" id="methods">
+		<tr data-order="getResource" id="_getResource">
+
+			<td class="attributes"><code>
+				 public 
+				null|string
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getResource">#</a>
+			<code><a href="source-class-Parable.Http.Values.GetSet.html#16-24" title="Go to source code">getResource</a>( )</code>
+
+			<div class="description short">
+				<p>Returns the resource type</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Returns the resource type</p>
+
+
+
+					<h4>Returns</h4>
+					<div class="list">
+						null|string
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="getAll" id="_getAll">
+
+			<td class="attributes"><code>
+				 public 
+				array
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getAll">#</a>
+			<code><a href="source-class-Parable.Http.Values.GetSet.html#26-40" title="Go to source code">getAll</a>( )</code>
+
+			<div class="description short">
+				<p>Get all from resource if resource set</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Get all from resource if resource set</p>
+
+
+
+					<h4>Returns</h4>
+					<div class="list">
+						array
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="get" id="_get">
+
+			<td class="attributes"><code>
+				 public 
+				mixed|null
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_get">#</a>
+			<code><a href="source-class-Parable.Http.Values.GetSet.html#42-65" title="Go to source code">get</a>( <span>string <var>$key</var></span> )</code>
+
+			<div class="description short">
+				<p>Get specific value by key if resource set</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Get specific value by key if resource set</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$key</var></dt>
+						<dd></dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						mixed|null
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="getAllAndReset" id="_getAllAndReset">
+
+			<td class="attributes"><code>
+				 public 
+				array
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getAllAndReset">#</a>
+			<code><a href="source-class-Parable.Http.Values.GetSet.html#67-75" title="Go to source code">getAllAndReset</a>( )</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+
+
+					<h4>Returns</h4>
+					<div class="list">
+						array
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="getAndRemove" id="_getAndRemove">
+
+			<td class="attributes"><code>
+				 public 
+				mixed|null
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getAndRemove">#</a>
+			<code><a href="source-class-Parable.Http.Values.GetSet.html#77-89" title="Go to source code">getAndRemove</a>( <span>string <var>$key</var></span> )</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$key</var></dt>
+						<dd></dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						mixed|null
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="count" id="_count">
+
+			<td class="attributes"><code>
+				 public 
+				integer
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_count">#</a>
+			<code><a href="source-class-Parable.Http.Values.GetSet.html#91-97" title="Go to source code">count</a>( )</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+
+
+					<h4>Returns</h4>
+					<div class="list">
+						integer
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="set" id="_set">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_set">#</a>
+			<code><a href="source-class-Parable.Http.Values.GetSet.html#99-118" title="Go to source code">set</a>( <span>string <var>$key</var></span>, <span>mixed <var>$value</var></span> )</code>
+
+			<div class="description short">
+				<p>Set specific value by key if resource set</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Set specific value by key if resource set</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$key</var></dt>
+						<dd></dd>
+						<dt><var>$value</var></dt>
+						<dd></dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						<br>$this
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="setMany" id="_setMany">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_setMany">#</a>
+			<code><a href="source-class-Parable.Http.Values.GetSet.html#120-135" title="Go to source code">setMany</a>( <span>array <var>$values</var></span> )</code>
+
+			<div class="description short">
+				<p>Set all key/value pairs in $values if resource is set and $values is an array</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Set all key/value pairs in $values if resource is set and $values is an array</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$values</var></dt>
+						<dd></dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						<br>$this
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="setAll" id="_setAll">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_setAll">#</a>
+			<code><a href="source-class-Parable.Http.Values.GetSet.html#137-154" title="Go to source code">setAll</a>( <span>array <var>$values</var></span> )</code>
+
+			<div class="description short">
+				<p>Set entire array onto the resource</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Set entire array onto the resource</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$values</var></dt>
+						<dd></dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						<br>$this
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="remove" id="_remove">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_remove">#</a>
+			<code><a href="source-class-Parable.Http.Values.GetSet.html#156-165" title="Go to source code">remove</a>( <span>string <var>$key</var></span> )</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$key</var></dt>
+						<dd></dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						<br>$this
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="reset" id="_reset">
+
+			<td class="attributes"><code>
+				 public 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_reset">#</a>
+			<code><a href="source-class-Parable.Http.Values.GetSet.html#167-174" title="Go to source code">reset</a>( )</code>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+
+
+					<h4>Returns</h4>
+					<div class="list">
+						<br>$this
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+			</table>
+		</div>
+
+
+
+
+
+
+
+
+
+
+
+		<div class="panel panel-default">
+            <div class="panel-heading"><h2>Properties summary</h2></div>
+			<table class="summary table table-bordered table-striped properties" id="properties">
+		<tr data-order="resource" id="$resource">
+			<td class="attributes"><code>
+				protected  
+				null|string
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-Parable.Http.Values.GetSet.html#7-8" title="Go to source code"><var>$resource</var></a>
+
+				<div class="description short">
+					
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+			<td class="value">
+				<div>
+					<a href="#$resource" class="anchor">#</a>
+					<code></code>
+				</div>
+			</td>
+		</tr>
+		<tr data-order="useLocalResource" id="$useLocalResource">
+			<td class="attributes"><code>
+				protected  
+				boolean
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-Parable.Http.Values.GetSet.html#10-11" title="Go to source code"><var>$useLocalResource</var></a>
+
+				<div class="description short">
+					
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+			<td class="value">
+				<div>
+					<a href="#$useLocalResource" class="anchor">#</a>
+					<code><span class="php-keyword1">false</span></code>
+				</div>
+			</td>
+		</tr>
+		<tr data-order="localResource" id="$localResource">
+			<td class="attributes"><code>
+				protected  
+				array
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-Parable.Http.Values.GetSet.html#13-14" title="Go to source code"><var>$localResource</var></a>
+
+				<div class="description short">
+					
+				</div>
+
+				<div class="description detailed hidden">
+					
+
+				</div>
+			</td>
+			<td class="value">
+				<div>
+					<a href="#$localResource" class="anchor">#</a>
+					<code>[]</code>
+				</div>
+			</td>
+		</tr>
+			</table>
+		</div>
+
+
+
+
+
+
+</div>
+	</div>
+
+	<div id="footer">
+		Parable Docs API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+<script src="resources/combined.js"></script>
+<script src="elementlist.js"></script>
+</body>
+</html>

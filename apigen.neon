@@ -1,0 +1,5 @@
+title: "Parable Docs"
+source: src
+destination: docs
+exclude: [Bootstrap.php]
+templateTheme: bootstrap
