@@ -175,7 +175,7 @@ class Route
             return false;
         }
 
-        if ($this->url === $url) {
+        if (rtrim($this->url, "/") === rtrim($url, "/")) {
             return true;
         }
         return false;

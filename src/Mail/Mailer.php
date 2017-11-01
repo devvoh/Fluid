@@ -243,13 +243,9 @@ class Mailer
         $this->addHeader("From: {$from}");
 
         $headers = array_merge($this->requiredHeaders, $this->headers);
+        $headers = implode("\r\n", $headers);
 
-        return $this->sendMail(
-            $to,
-            $this->subject,
-            $this->body,
-            implode("\r\n", $headers)
-        );
+        return $this->sendMail($to, $this->subject, $this->body, $headers);
     }
 
     /**

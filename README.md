@@ -4,6 +4,7 @@
 [![Latest Stable Version](https://poser.pugx.org/devvoh/parable/v/stable)](https://packagist.org/packages/devvoh/parable)
 [![Latest Unstable Version](https://poser.pugx.org/devvoh/parable/v/unstable)](https://packagist.org/packages/devvoh/parable)
 [![License](https://poser.pugx.org/devvoh/parable/license)](https://packagist.org/packages/devvoh/parable)
+[![StyleCI](https://styleci.io/repos/37279417/shield?branch=master)](https://styleci.io/repos/37279417)
 
 Parable is a small and no-nonsense PHP framework, meant to be fast, readable and written in a way where it's not bogging 
 you down with unnecessary rules and limitations. Developed with the goal of building small web applications and REST APIs.

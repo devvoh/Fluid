@@ -2,16 +2,19 @@
 
 namespace Parable\Framework;
 
-class Config
+class Config extends \Parable\GetSet\Base
 {
+    /** @var string */
+    protected $resource = 'parable_config';
+
+    /** @var bool */
+    protected $useLocalResource = true;
+
     /** @var string */
     protected $mainConfigClass = \Config\App::class;
 
     /** @var \Parable\Filesystem\Path */
     protected $path;
-
-    /** @var array */
-    protected $config = [];
 
     public function __construct(
         \Parable\Filesystem\Path $path
@@ -32,45 +35,6 @@ class Config
         }
         $this->mainConfigClass = $className;
         return $this;
-    }
-
-    /**
-     * @param array $data
-     * @param array $keys
-     *
-     * @return mixed
-     */
-    public function getNested(array &$data, array $keys)
-    {
-        foreach ($keys as $key) {
-            $data = &$data[$key];
-        }
-        return $data;
-    }
-
-    /**
-     * @param string $key
-     *
-     * @return mixed
-     */
-    public function get($key)
-    {
-        $config = $this->getAll();
-        if (strpos($key, '.') !== false) {
-            return $this->getNested($config, explode('.', $key));
-        }
-        if (isset($config[$key])) {
-            return $config[$key];
-        }
-        return null;
-    }
-
-    /**
-     * @return array
-     */
-    public function getAll()
-    {
-        return $this->config;
     }
 
     /**
@@ -101,7 +65,7 @@ class Config
      */
     public function addConfig(\Parable\Framework\Interfaces\Config $config)
     {
-        $this->config = array_merge($this->config, $config->get());
+        $this->setMany($config->get());
         return $this;
     }
 }

@@ -49,7 +49,7 @@ class App
     protected $database;
 
     /** @var string */
-    protected $version = '0.12.6';
+    protected $version = '0.12.13';
 
     public function __construct(
         \Parable\Filesystem\Path $path,
@@ -88,7 +88,7 @@ class App
         /* Set the basePath on the url based on the config */
         if ($this->config->get('parable.app.homeDir')) {
             $homeDir = trim($this->config->get('parable.app.homeDir'), "/");
-            $this->url->setBasePath("{$homeDir}/index.php");
+            $this->url->setBasePath($homeDir);
         }
 
         /* See if there's any inits defined in the config */
@@ -118,7 +118,7 @@ class App
 
         /* And try to match the route */
         $this->hook->trigger(self::HOOK_ROUTE_MATCH_BEFORE, $currentUrl);
-        $route = $this->router->matchUrl($this->toolkit->getCurrentUrl());
+        $route = $this->router->matchUrl($currentUrl);
         $this->hook->trigger(self::HOOK_ROUTE_MATCH_AFTER, $route);
 
         if ($route) {

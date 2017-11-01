@@ -129,6 +129,7 @@ class LoggerTest extends \Parable\Tests\Base
 
     protected function tearDown()
     {
+        @unlink($this->logFile);
         parent::tearDown();
     }
 }

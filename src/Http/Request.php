@@ -13,16 +13,25 @@ class Request
     /** @var array */
     protected $headers = [];
 
+    /** @var string */
+    protected $body;
+
     /**
      * Set some basic information we're going to need.
      */
     public function __construct()
     {
         if (PHP_SAPI !== "cli") {
-            // @codeCoverageIgnoreStart
-            $this->headers = getallheaders() ?: [];
-            // @codeCoverageIgnoreEnd
+            $this->headers = getallheaders() ?: []; // @codeCoverageIgnore
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function getCurrentUrl()
+    {
+        return $this->getScheme() . "://" . $this->getHttpHost() . "/" . ltrim($this->getRequestUrl(), "/");
     }
 
     /**
@@ -98,10 +107,12 @@ class Request
      */
     public function getHeader($key)
     {
-        if (!isset($this->headers[$key])) {
-            return null;
+        foreach ($this->headers as $header => $content) {
+            if (strtolower($key) == strtolower($header)) {
+                return $content;
+            }
         }
-        return $this->headers[$key];
+        return null;
     }
 
     /**
@@ -140,5 +151,55 @@ class Request
             return "https";
         }
         return "http";
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getHttpHost()
+    {
+        if (isset($_SERVER["HTTP_HOST"]) && isset($_SERVER["SERVER_NAME"])
+            && $_SERVER["HTTP_HOST"] === $_SERVER["SERVER_NAME"]
+        ) {
+            return $_SERVER["HTTP_HOST"];
+        }
+
+        if (isset($_SERVER["HTTP_HOST"])) {
+            return $_SERVER["HTTP_HOST"];
+        }
+
+        // This is the least reliable, due to the ability to spoof it
+        if (isset($_SERVER["SERVER_NAME"])) {
+            return $_SERVER["SERVER_NAME"];
+        }
+
+        return null;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getRequestUrl()
+    {
+        return isset($_SERVER["REQUEST_URI"]) ? $_SERVER["REQUEST_URI"] : null;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getScriptName()
+    {
+        return isset($_SERVER["SCRIPT_NAME"]) ? $_SERVER["SCRIPT_NAME"] : null;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBody()
+    {
+        if ($this->body === null) {
+            $this->body = file_get_contents('php://input');
+        }
+        return $this->body;
     }
 }

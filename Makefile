@@ -10,3 +10,7 @@ tests: dependencies
 coverage: dependencies
 	rm -rf ./coverage
 	vendor/bin/phpunit --coverage-html ./coverage tests
+
+server:
+	@echo Running on http://127.0.0.1:5678
+	php -t ../../.. -S 127.0.0.1:5678 php-server.php

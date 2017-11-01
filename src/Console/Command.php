@@ -118,14 +118,16 @@ class Command
     /**
      * @param string $name
      * @param bool   $required
+     * @param mixed  $defaultValue
      *
      * @return $this
      */
-    public function addArgument($name, $required = false)
+    public function addArgument($name, $required = false, $defaultValue = null)
     {
         $this->arguments[] = [
-            'name'     => $name,
-            'required' => $required,
+            'name'         => $name,
+            'required'     => $required,
+            'defaultValue' => $defaultValue,
         ];
         return $this;
     }

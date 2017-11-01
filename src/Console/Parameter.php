@@ -194,7 +194,9 @@ class Parameter
             ) {
                 throw new \Parable\Console\Exception("Required argument '{$key}:{$argument['name']}' not provided.");
             }
-            $this->parsedArguments[$argument['name']] = $this->rawArguments[$index];
+            if (array_key_exists($index, $this->rawArguments)) {
+                $this->parsedArguments[$argument['name']] = $this->rawArguments[$index];
+            }
         }
     }
 
@@ -237,9 +239,28 @@ class Parameter
     public function getArgument($name)
     {
         if (!array_key_exists($name, $this->parsedArguments)) {
-            return null;
+            $commandArgument = $this->getCommandArgument($name);
+            if (!$commandArgument) {
+                return null;
+            }
+            return $commandArgument["defaultValue"];
         }
         return $this->parsedArguments[$name];
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return array|null
+     */
+    public function getCommandArgument($name)
+    {
+        foreach ($this->commandArguments as $argument) {
+            if ($name === $argument["name"]) {
+                return $argument;
+            }
+        }
+        return null;
     }
 
     /**

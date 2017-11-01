@@ -158,4 +158,71 @@ class GetSetTest extends \Parable\Tests\Base
         $getset = new \Parable\Tests\TestClasses\TestGetSetNoResource();
         $this->assertSame([], $getset->getAll());
     }
+
+    public function testGetSetAndRemoveWithHierarchalKeys()
+    {
+        $this->getSet->reset();
+
+        $this->getSet->set("one", ["this" => "should stay"]);
+        $this->getSet->set("one.two.three.four", "totally nested, yo");
+
+        $this->assertSame(
+            [
+                "this" => "should stay",
+                "two" => [
+                    "three" => [
+                        "four" => "totally nested, yo",
+                    ],
+                ],
+            ],
+            $this->getSet->get("one")
+        );
+
+        $this->assertSame(
+            [
+                "one" => [
+                    "this" => "should stay",
+                    "two" => [
+                        "three" => [
+                            "four" => "totally nested, yo",
+                        ],
+                    ],
+                ],
+            ],
+            $this->getSet->getAll()
+        );
+
+        $this->getSet->remove("one.this");
+
+        $this->assertSame(
+            [
+                "one" => [
+                    "two" => [
+                        "three" => [
+                            "four" => "totally nested, yo",
+                        ],
+                    ],
+                ],
+            ],
+            $this->getSet->getAll()
+        );
+
+        $this->assertSame(
+            [
+                "four" => "totally nested, yo",
+            ],
+            $this->getSet->getAndRemove("one.two.three")
+        );
+
+        // And since "three" is now removed, "two" will be empty.
+        $this->assertSame(
+            [
+                "one" => [
+                    "two" => [
+                    ],
+                ],
+            ],
+            $this->getSet->getAll()
+        );
+    }
 }

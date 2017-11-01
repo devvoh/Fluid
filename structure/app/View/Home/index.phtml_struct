@@ -46,7 +46,7 @@
                 font-size: 4.15rem;
             }
             .container aside {
-                font-size: 0.7rem;
+                font-size: 0.73rem;
                 margin-top: -0.8rem;
                 letter-spacing: 5px;
                 margin-left: 3px;

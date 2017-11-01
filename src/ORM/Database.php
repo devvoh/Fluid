@@ -29,6 +29,9 @@ class Database
     /** @var null|string */
     protected $database;
 
+    /** @var null|string */
+    protected $charset;
+
     /** @var null|\PDO */
     protected $instance;
 
@@ -151,6 +154,29 @@ class Database
     }
 
     /**
+     * Return the charset, if set
+     *
+     * @return null|string
+     */
+    public function getCharset()
+    {
+        return $this->charset;
+    }
+
+    /**
+     * Set the charset for the database connection; if not set, database setting is used
+     *
+     * @param null|string $charset
+     *
+     * @return Database
+     */
+    public function setCharset($charset)
+    {
+        $this->charset = $charset;
+        return $this;
+    }
+
+    /**
      * @return int
      */
     public function getErrorMode()
@@ -195,7 +221,8 @@ class Database
                         $this->getDatabase(),
                         $this->getUsername(),
                         $this->getPassword(),
-                        $this->getErrorMode()
+                        $this->getErrorMode(),
+                        $this->getCharSet()
                     );
                     $this->setInstance($instance);
                     break;
@@ -228,14 +255,18 @@ class Database
      * @param string $username
      * @param string $password
      * @param int    $errorMode
+     * @param string $charset
      *
      * @return \Parable\ORM\Database\PDOMySQL
      *
      * @codeCoverageIgnore
      */
-    protected function createPDOMySQL($location, $database, $username, $password, $errorMode)
+    protected function createPDOMySQL($location, $database, $username, $password, $errorMode, $charset)
     {
         $dsn = 'mysql:host=' . $location . ';dbname=' . $database;
+        if ($charset !== null) {
+            $dsn .= ';charset=' . $charset;
+        }
 
         $db  = new \Parable\ORM\Database\PDOMySQL($dsn, $username, $password);
         $db->setAttribute(\PDO::ATTR_ERRMODE, $errorMode);

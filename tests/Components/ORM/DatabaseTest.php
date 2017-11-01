@@ -62,6 +62,14 @@ class DatabaseTest extends \Parable\Tests\Components\ORM\Base
         $this->assertSame(\PDO::ERRMODE_EXCEPTION, $this->database->getErrorMode());
     }
 
+    public function testSetAndGetCharset()
+    {
+        $this->assertSame(null, $this->database->getCharset());
+
+        $this->database->setCharset("utf-8");
+        $this->assertSame("utf-8", $this->database->getCharset());
+    }
+
     public function testGetInstanceReturnsWorkingPDOInstance()
     {
         $this->assertInstanceOf(\Parable\ORM\Database\PDOSQLite::class, $this->database->getInstance());

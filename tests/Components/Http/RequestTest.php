@@ -12,7 +12,10 @@ class RequestTest extends \Parable\Tests\Base
         parent::setUp();
 
         // We need to set up the $_SERVER array first
-        $GLOBALS['_SERVER']['REQUEST_METHOD'] = "GET";
+        $_SERVER['REQUEST_METHOD'] = "GET";
+        $_SERVER['HTTP_HOST'] = "test.dev";
+        $_SERVER['REQUEST_URI'] = "/folder/being/requested";
+        $_SERVER['SCRIPT_NAME'] = "stuff";
 
         $this->request = new \Parable\Http\Request();
 
@@ -28,8 +31,18 @@ class RequestTest extends \Parable\Tests\Base
 
         $this->assertSame("HTTP/2.0", $this->request->getProtocol());
 
-        // In CLI mode, this value shouldn't be here.
+        // In CLI mode, this value shouldn't be here.x
         unset($_SERVER['SERVER_PROTOCOL']);
+    }
+
+    public function testGetRequestUrl()
+    {
+        $this->assertSame("/folder/being/requested", $this->request->getRequestUrl());
+    }
+
+    public function testGetScriptName()
+    {
+        $this->assertSame("stuff", $this->request->getScriptName());
     }
 
     public function testGetMethod()
@@ -37,13 +50,43 @@ class RequestTest extends \Parable\Tests\Base
         $this->assertSame("GET", $this->request->getMethod());
     }
 
+    public function testGetBody()
+    {
+        // Of course it's empty, since we don't have anything in php://input
+        $this->assertEmpty($this->request->getBody());
+    }
+
+    public function testGetHttpHost()
+    {
+        $oldServer = $_SERVER;
+
+        $_SERVER = ["HTTP_HOST" => "httphost!"];
+        $this->assertSame("httphost!", $this->request->getHttpHost());
+
+        $_SERVER = ["SERVER_NAME" => "httphost!"];
+        $this->assertSame("httphost!", $this->request->getHttpHost());
+
+        $_SERVER = ["SERVER_NAME" => "httphost!", "HTTP_HOST" => "httphost!"];
+        $this->assertSame("httphost!", $this->request->getHttpHost());
+
+        $_SERVER = [];
+        $this->assertNull($this->request->getHttpHost());
+
+        $_SERVER = $oldServer;
+    }
+
+    public function testGetCurrentUrl()
+    {
+        $this->assertSame("http://test.dev/folder/being/requested", $this->request->getCurrentUrl());
+    }
+
     public function testIsMethod()
     {
         $this->assertTrue($this->request->isMethod('GET'));
-        $this->assertfalse($this->request->isMethod('POST'));
-        $this->assertfalse($this->request->isMethod('PUT'));
-        $this->assertfalse($this->request->isMethod('DELETE'));
-        $this->assertfalse($this->request->isMethod('PATCH'));
+        $this->assertFalse($this->request->isMethod('POST'));
+        $this->assertFalse($this->request->isMethod('PUT'));
+        $this->assertFalse($this->request->isMethod('DELETE'));
+        $this->assertFalse($this->request->isMethod('PATCH'));
     }
 
     public function testIsGet()

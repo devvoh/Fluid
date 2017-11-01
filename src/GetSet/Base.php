@@ -42,26 +42,26 @@ abstract class Base
     /**
      * Get specific value by key if resource set
      *
+     * $getSet->get("one.two.three", "value") would return $resource["one"]["two"]["three"];
+     *
      * @param string $key
      *
      * @return mixed|null
      */
     public function get($key)
     {
-        if ($this->getResource()) {
-            // If local resource, set it as reference
-            if ($this->useLocalResource) {
-                $reference = $this->localResource;
-            } else {
-                $reference = $GLOBALS[$this->getResource()];
-            }
+        $resource = $this->getAll();
 
-            // Now check reference and whether the key exists
-            if (isset($reference[$key])) {
-                return $reference[$key];
+        $keys = explode(".", $key);
+        foreach ($keys as $key) {
+            if (!isset($resource[$key])) {
+                $resource = null;
+                break;
             }
+            $resource = &$resource[$key];
         }
-        return null;
+
+        return $resource;
     }
 
     /**
@@ -97,7 +97,9 @@ abstract class Base
     }
 
     /**
-     * Set specific value by key if resource set
+     * Set specific value by key if resource set. It's possible to set using . to separate keys by depth.
+     *
+     * $getSet->set("one.two.three", "value") is equal to $resource["one"]["two"]["three"] = $value;
      *
      * @param string $key
      * @param mixed  $value
@@ -106,14 +108,21 @@ abstract class Base
      */
     public function set($key, $value)
     {
-        if ($this->getResource()) {
-            // Decide where to store this key/value pair
-            if ($this->useLocalResource) {
-                $this->localResource[$key] = $value;
-            } else {
-                $GLOBALS[$this->getResource()][$key] = $value;
+        $keys = explode(".", $key);
+
+        $data = $this->getAll();
+
+        $resource = &$data;
+        foreach ($keys as $key) {
+            if (!isset($resource[$key]) || !is_array($resource[$key])) {
+                $resource[$key] = [];
             }
+            $resource = &$resource[$key];
         }
+        $resource = $value;
+
+        $this->setAll($data);
+
         return $this;
     }
 
@@ -160,14 +169,24 @@ abstract class Base
      */
     public function remove($key)
     {
-        if ($this->getResource()) {
-            // Decide where to store this key/value pair
-            if ($this->useLocalResource) {
-                unset($this->localResource[$key]);
-            } else {
-                unset($GLOBALS[$this->getResource()][$key]);
+        $keys = explode(".", $key);
+
+        $data = $this->getAll();
+
+        $resource = &$data;
+        foreach ($keys as $index => $key) {
+            if (!isset($resource[$key])) {
+                // We bail, the requested key could not be found
+                return $this;
+            }
+            if ($index < (count($keys) - 1)) {
+                $resource = &$resource[$key];
             }
         }
+        unset($resource[$key]);
+
+        $this->setAll($data);
+
         return $this;
     }
 

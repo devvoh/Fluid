@@ -40,4 +40,17 @@ class JsonTest extends \Parable\Tests\Base
 
         $this->assertSame('{"value":"stuff","secondary":"what now"}', $response->getContent());
     }
+
+    public function testInvalidJsonStringStaysString()
+    {
+        /** @var \Parable\Http\Response $response */
+        $response = \Parable\DI\Container::createAll(\Parable\Http\Response::class);
+        $response->setOutput($this->json);
+
+        $response->setContent("{[{[}]}]");
+
+        $this->json->prepare($response);
+
+        $this->assertSame('"{[{[}]}]"', $response->getContent());
+    }
 }

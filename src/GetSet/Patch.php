@@ -2,8 +2,9 @@
 
 namespace Parable\GetSet;
 
-class Patch extends \Parable\GetSet\BaseInput
+/**
+ * @deprecated Use \Parable\GetSet\InputStream directly
+ */
+class Patch extends \Parable\GetSet\InputStream
 {
-    /** @var string */
-    protected $resource = '_PATCH';
 }

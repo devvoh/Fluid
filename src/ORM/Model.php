@@ -54,7 +54,7 @@ class Model
 
         $now = (new \DateTime())->format('Y-m-d H:i:s');
 
-        if ($this->id) {
+        if ($this->{$this->getTableKey()}) {
             $query->setAction('update');
             $query->addValue($this->getTableKey(), $this->id);
 

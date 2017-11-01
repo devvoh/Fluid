@@ -4,6 +4,9 @@ namespace Parable\Tests\Components\Console;
 
 class AppTest extends \Parable\Tests\Base
 {
+    /** @var \Parable\Console\Parameter */
+    protected $parameter;
+
     /** @var \Parable\Console\App */
     protected $app;
 
@@ -21,6 +24,9 @@ class AppTest extends \Parable\Tests\Base
         parent::setUp();
 
         $_SERVER["argv"] = [];
+
+        $this->parameter = new \Parable\Console\Parameter();
+        \Parable\DI\Container::store($this->parameter);
 
         $this->app = \Parable\DI\Container::get(\Parable\Console\App::class);
 
@@ -102,6 +108,24 @@ class AppTest extends \Parable\Tests\Base
         $this->assertSame('OK1', $this->app->run());
     }
 
+    public function testPassCommandOnCommandLineRunsAppropriateCommand()
+    {
+        /** @var \Parable\Console\App $app */
+        $app = new \Parable\Console\App(new \Parable\Console\Output(), new \Parable\Console\Input(), $this->parameter);
+        $app->addCommand($this->command1);
+        $app->addCommand($this->command2);
+
+        // Same as calling 'php test.php test2'
+        $this->parameter->setParameters(['./test.php', 'test2']);
+
+        $this->assertSame("OK2", $app->run());
+
+        // Same as calling 'php test.php test2'
+        $this->parameter->setParameters(['./test.php', 'test1']);
+
+        $this->assertSame("OK1", $app->run());
+    }
+
     /**
      * @dataProvider dpTrueFalse
      *
@@ -109,7 +133,9 @@ class AppTest extends \Parable\Tests\Base
      */
     public function testSetDefaultCommandWithCommandPassedRespectsDefaultOnlyCommand($defaultCommandOnly)
     {
+        // Same as calling 'php test.php test2'
         $_SERVER["argv"] = ['./test.php', 'test2'];
+
         $app = \Parable\DI\Container::createAll(\Parable\Console\App::class);
         $app->addCommand($this->command1);
         $app->addCommand($this->command2);

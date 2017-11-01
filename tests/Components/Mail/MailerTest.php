@@ -236,7 +236,7 @@ class MailerTest extends \Parable\Tests\Base
             ->willReturnCallback(function () {
                 $arguments = func_get_args();
 
-                $this->assertSame("to@test.dev", $arguments[0]);
+                $this->assertSame("to@test.dev, to-again@test.dev", $arguments[0]);
                 $this->assertSame("subject", $arguments[1]);
                 $this->assertSame("body", $arguments[2]);
 
@@ -258,6 +258,7 @@ From: somebody@test.dev",
         $this->mailer->setBody('body');
         $this->mailer->addHeader('Something: Stuff');
         $this->mailer->addTo('to@test.dev');
+        $this->mailer->addTo('to-again@test.dev');
         $this->mailer->addCc('cc@test.dev');
         $this->mailer->addBcc('bcc@test.dev');
 

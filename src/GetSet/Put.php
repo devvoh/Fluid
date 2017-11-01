@@ -2,8 +2,9 @@
 
 namespace Parable\GetSet;
 
-class Put extends \Parable\GetSet\BaseInput
+/**
+ * @deprecated Use \Parable\GetSet\InputStream directly
+ */
+class Put extends \Parable\GetSet\InputStream
 {
-    /** @var string */
-    protected $resource = '_PUT';
 }

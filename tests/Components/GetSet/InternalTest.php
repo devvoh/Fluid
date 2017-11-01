@@ -16,7 +16,7 @@ class InternalTest extends \Parable\Tests\Base
 
     public function testGetResource()
     {
-        $this->assertSame("internal", $this->getSet->getResource());
+        $this->assertSame("parable_internal", $this->getSet->getResource());
     }
 
     public function testGetSetOnResource()

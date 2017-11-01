@@ -266,8 +266,8 @@ class QueryTest extends \Parable\Tests\Components\ORM\Base
     public function dpOrderBys()
     {
         return [
-            ['id', \Parable\ORM\Query::ORDER_ASC, "SELECT * FROM `user` ORDER BY `user`.'id' ASC;"],
-            ['id', \Parable\ORM\Query::ORDER_DESC, "SELECT * FROM `user` ORDER BY `user`.'id' DESC;"],
+            ['id', \Parable\ORM\Query::ORDER_ASC, "SELECT * FROM `user` ORDER BY `user`.`id` ASC;"],
+            ['id', \Parable\ORM\Query::ORDER_DESC, "SELECT * FROM `user` ORDER BY `user`.`id` DESC;"],
         ];
     }
 
@@ -276,7 +276,7 @@ class QueryTest extends \Parable\Tests\Components\ORM\Base
         $this->query->orderBy("id", \Parable\ORM\Query::ORDER_DESC);
         $this->query->orderBy("name", \Parable\ORM\Query::ORDER_ASC);
         $this->assertSame(
-            "SELECT * FROM `user` ORDER BY `user`.'id' DESC, `user`.'name' ASC;",
+            "SELECT * FROM `user` ORDER BY `user`.`id` DESC, `user`.`name` ASC;",
             (string)$this->query
         );
     }
@@ -286,7 +286,7 @@ class QueryTest extends \Parable\Tests\Components\ORM\Base
         $this->query->orderBy("id", \Parable\ORM\Query::ORDER_DESC);
         $this->query->orderBy("name", \Parable\ORM\Query::ORDER_ASC, 'settings');
         $this->assertSame(
-            "SELECT * FROM `user` ORDER BY `user`.'id' DESC, `settings`.'name' ASC;",
+            "SELECT * FROM `user` ORDER BY `user`.`id` DESC, `settings`.`name` ASC;",
             (string)$this->query
         );
     }
@@ -294,21 +294,21 @@ class QueryTest extends \Parable\Tests\Components\ORM\Base
     public function testGroupBy()
     {
         $this->query->groupBy('name');
-        $this->assertSame("SELECT * FROM `user` GROUP BY `user`.'name';", (string)$this->query);
+        $this->assertSame("SELECT * FROM `user` GROUP BY `user`.`name`;", (string)$this->query);
     }
 
     public function testMultipleGroupBys()
     {
         $this->query->groupBy('name');
         $this->query->groupBy('id');
-        $this->assertSame("SELECT * FROM `user` GROUP BY `user`.'name', `user`.'id';", (string)$this->query);
+        $this->assertSame("SELECT * FROM `user` GROUP BY `user`.`name`, `user`.`id`;", (string)$this->query);
     }
 
     public function testMultipleGroupBysFromDifferentTables()
     {
         $this->query->groupBy('name');
         $this->query->groupBy('id', 'settings');
-        $this->assertSame("SELECT * FROM `user` GROUP BY `user`.'name', `settings`.'id';", (string)$this->query);
+        $this->assertSame("SELECT * FROM `user` GROUP BY `user`.`name`, `settings`.`id`;", (string)$this->query);
     }
 
     public function testLimitOffset()
@@ -358,7 +358,7 @@ class QueryTest extends \Parable\Tests\Components\ORM\Base
 
         // Understandably, this query is also ridiculously long
         $this->assertSame(
-            "SELECT * FROM `complex` LEFT JOIN `settings` ON `settings`.`user_id` = `complex`.`id` WHERE (`complex`.`id` = '1' AND `complex`.`active` IS NOT NULL AND (`complex`.`id` != '1' OR `complex`.`active` IS NULL OR `complex`.`created_at` IN ('option1','option2'))) GROUP BY `complex`.'name', `settings`.'id' HAVING (`complex`.`id` != '1' AND `complex`.`active` IS NULL) ORDER BY `complex`.'id' DESC, `settings`.'name' ASC LIMIT 5;",
+            "SELECT * FROM `complex` LEFT JOIN `settings` ON `settings`.`user_id` = `complex`.`id` WHERE (`complex`.`id` = '1' AND `complex`.`active` IS NOT NULL AND (`complex`.`id` != '1' OR `complex`.`active` IS NULL OR `complex`.`created_at` IN ('option1','option2'))) GROUP BY `complex`.`name`, `settings`.`id` HAVING (`complex`.`id` != '1' AND `complex`.`active` IS NULL) ORDER BY `complex`.`id` DESC, `settings`.`name` ASC LIMIT 5;",
             (string)$this->query
         );
     }

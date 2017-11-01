@@ -33,4 +33,26 @@ class UrlTest extends \Parable\Tests\Base
     {
         $this->assertSame('http://www.test.dev/test/stuff/goes/here', $this->url->getUrl('stuff/goes/here'));
     }
+
+    public function testGetBaseUrlWithDifferentBasePath()
+    {
+        $_SERVER["SCRIPT_NAME"] = "/http_docs/index.php";
+
+        $this->assertSame('http://www.test.dev/http_docs', $this->url->getBaseurl());
+
+        $this->url->setBasePath("http_docs");
+
+        $this->assertSame('http://www.test.dev/', $this->url->getBaseurl());
+        $this->assertSame('http://www.test.dev/what', $this->url->getUrl("what"));
+    }
+
+    public function testGetBaseUrlWithNoBasePath()
+    {
+        $_SERVER["SCRIPT_NAME"] = "/index.php";
+
+        $this->url->setBasePath(null);
+
+        $this->assertSame('http://www.test.dev/', $this->url->getBaseurl());
+        $this->assertSame('http://www.test.dev/what', $this->url->getUrl("what"));
+    }
 }

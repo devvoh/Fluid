@@ -323,9 +323,7 @@ class Response
     public function redirect($url)
     {
         if (!headers_sent()) {
-            // @codeCoverageIgnoreStart
-            header("location: {$url}");
-            // @codeCoverageIgnoreEnd
+            header("location: {$url}"); // @codeCoverageIgnore
         }
         $this->terminate();
     }
@@ -355,9 +353,7 @@ class Response
     public function terminate($exitCode = 0)
     {
         if ($this->shouldTerminate()) {
-            // @codeCoverageIgnoreStart
-            exit($exitCode);
-            // @codeCoverageIgnoreEnd
+            exit($exitCode); // @codeCoverageIgnore
         }
     }
 }

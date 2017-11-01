@@ -50,7 +50,7 @@ class Router
         }
         return $this->routes[$name];
     }
-    
+
     /**
      * Try to find a match in all available routes.
      *

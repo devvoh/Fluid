@@ -508,7 +508,7 @@ class Query
 
         $orders = [];
         foreach ($this->orderBy as $orderBy) {
-            $key = $this->quoteIdentifier($orderBy["tableName"]) . "." . $this->quote($orderBy["key"]);
+            $key = $this->quoteIdentifier($orderBy["tableName"]) . "." . $this->quoteIdentifier($orderBy["key"]);
             $orders[] = $key . ' ' . $orderBy['direction'];
         }
         return "ORDER BY " . implode(', ', $orders);
@@ -527,7 +527,7 @@ class Query
 
         $groups = [];
         foreach ($this->groupBy as $groupBy) {
-            $groupBy = $this->quoteIdentifier($groupBy["tableName"]) . "." . $this->quote($groupBy["key"]);
+            $groupBy = $this->quoteIdentifier($groupBy["tableName"]) . "." . $this->quoteIdentifier($groupBy["key"]);
             $groups[] = $groupBy;
         }
         return "GROUP BY " . implode(', ', $groups);

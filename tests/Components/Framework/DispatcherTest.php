@@ -45,5 +45,4 @@ class DispatcherTest extends \Parable\Tests\Components\Framework\Base
 
         $this->assertSame($route, $this->internal->get('parable_dispatch_after'));
     }
-
 }

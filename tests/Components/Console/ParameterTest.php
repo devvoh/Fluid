@@ -155,6 +155,27 @@ class ParameterTest extends \Parable\Tests\Base
         $this->parameter->checkArguments();
     }
 
+    public function testGetArgumentReturnsAppropriateValues()
+    {
+        $this->parameter->setParameters([
+            './test.php',
+            'command-to-run',
+            'arg1',
+            'arg2',
+        ]);
+        $this->parameter->setArguments([
+            ['name' => 'numero1', 'required' => true],
+            ['name' => 'numero2', 'required' => true, 'defaultValue' => 12],
+            ['name' => 'numero3', 'required' => false, 'defaultValue' => 24],
+        ]);
+
+        $this->parameter->checkArguments();
+
+        $this->assertSame("arg1", $this->parameter->getArgument("numero1"));
+        $this->assertSame("arg2", $this->parameter->getArgument("numero2"));
+        $this->assertSame(24, $this->parameter->getArgument("numero3"));
+    }
+
     public function testInvalidArgumentReturnsNull()
     {
         $this->assertNull($this->parameter->getArgument("totally not"));

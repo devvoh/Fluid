@@ -10,8 +10,11 @@ class Url
     /** @var string */
     protected $baseUrl;
 
-    /** @var null|string */
-    protected $basePath = "/public/index.php";
+    /** @var string */
+    protected $basePath = "/public";
+
+    /** @var string */
+    protected $scriptName = "/index.php";
 
     public function __construct(
         \Parable\Http\Request $request
@@ -26,16 +29,27 @@ class Url
      */
     public function setBasePath($basePath)
     {
-        $this->basePath = "/" . trim($basePath, "/");
+        if ($basePath) {
+            $basePath = "/" . trim($basePath, "/");
+        }
+        $this->basePath = $basePath;
         return $this;
     }
 
     /**
-     * @return null|string
+     * @return string
      */
     public function getBasePath()
     {
         return $this->basePath;
+    }
+
+    /**
+     * @return string
+     */
+    public function getScriptName()
+    {
+        return $this->scriptName;
     }
 
     /**
@@ -45,9 +59,21 @@ class Url
      */
     public function buildBaseUrl()
     {
-        $domain = $this->request->getScheme() . '://' . $_SERVER['HTTP_HOST'];
+        $domain = $this->request->getScheme() . '://' . $this->request->getHttpHost();
 
-        $url = str_replace($this->getBasePath(), '', $_SERVER['SCRIPT_NAME']);
+        $url = $this->request->getScriptName();
+
+        // We only want to remove the first occurrence of our base path, and only if base path is valid
+        if ($this->getBasePath()) {
+            $basePathPos = strpos($url, $this->getBasePath());
+            if ($basePathPos !== false) {
+                $url = substr_replace($url, "", $basePathPos, strlen($this->getBasePath()));
+            }
+        }
+
+        // And we want to remove the script name separately, since it's possible base path is empty
+        $url = str_replace($this->getScriptName(), '', $url);
+
         $this->baseUrl = $domain . '/' . ltrim($url, '/');
         return $this;
     }
@@ -57,9 +83,7 @@ class Url
      */
     public function getBaseUrl()
     {
-        if (!$this->baseUrl) {
-            $this->buildBaseUrl();
-        }
+        $this->buildBaseUrl();
         return $this->baseUrl;
     }
 

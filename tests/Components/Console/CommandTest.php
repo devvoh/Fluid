@@ -64,18 +64,20 @@ class CommandTest extends \Parable\Tests\Base
     public function testAddArgumentAndGetArguments()
     {
         $this->command->addArgument('option1', true);
-        $this->command->addArgument('option2', false);
+        $this->command->addArgument('option2', false, 12);
 
         // Arguments aren't actually named properly until they've been parsed by Parameter
         $this->assertSame(
             [
                 [
-                    'name'          => 'option1',
-                    'required'      => true,
+                    'name'         => 'option1',
+                    'required'     => true,
+                    'defaultValue' => null,
                 ],
                 [
-                    'name'          => 'option2',
-                    'required'      => false,
+                    'name'         => 'option2',
+                    'required'     => false,
+                    'defaultValue' => 12,
                 ],
             ],
             $this->command->getArguments()
