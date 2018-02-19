@@ -42,7 +42,6 @@ class HtmlTest extends \Parable\Tests\Base
 
     public function testPrepare()
     {
-        /** @var \Parable\Http\Response $response */
         $response = \Parable\DI\Container::createAll(\Parable\Http\Response::class);
         $response->setOutput($this->html);
 
@@ -62,7 +61,6 @@ class HtmlTest extends \Parable\Tests\Base
         $this->expectException(\Parable\Http\Exception::class);
         $this->expectExceptionMessage("Can only work with string or null content");
 
-        /** @var \Parable\Http\Response $response */
         $response = \Parable\DI\Container::createAll(\Parable\Http\Response::class);
         $response->setOutput($this->html);
 

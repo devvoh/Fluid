@@ -2,16 +2,29 @@
 
 namespace Parable\Tests\Components\ORM;
 
+use \Parable\Tests\TestClasses\Model;
+
 class ModelTest extends \Parable\Tests\Components\ORM\Base
 {
-    /** @var \Parable\Tests\TestClasses\Model */
+    /** @var Model */
     protected $model;
 
     protected function setUp()
     {
         parent::setUp();
 
-        $this->model = new \Parable\Tests\TestClasses\Model($this->database);
+        $this->model = new Model($this->database);
+    }
+
+    public function testCreate()
+    {
+        $model = Model::create();
+
+        // Two different instances are not the same.
+        $this->assertNotSame($model, $this->model);
+
+        // But they _are_ equal.
+        $this->assertEquals($model, $this->model);
     }
 
     public function testModelCreateQuery()
@@ -170,20 +183,5 @@ class ModelTest extends \Parable\Tests\Components\ORM\Base
     {
         $this->model->setTableName('tableName');
         $this->assertSame('tableName', $this->model->getTableName());
-    }
-
-    public function testGuessValueType()
-    {
-        $this->assertTrue(is_string($this->model->guessValueType("nope")));
-        $this->assertFalse(is_float($this->model->guessValueType("nope")));
-        $this->assertFalse(is_int($this->model->guessValueType("nope")));
-
-        $this->assertTrue(is_int($this->model->guessValueType("1")));
-        $this->assertFalse(is_float($this->model->guessValueType("1")));
-        $this->assertFalse(is_string($this->model->guessValueType("1")));
-
-        $this->assertTrue(is_float($this->model->guessValueType("1.23")));
-        $this->assertFalse(is_int($this->model->guessValueType("1.23")));
-        $this->assertFalse(is_string($this->model->guessValueType("1.23")));
     }
 }

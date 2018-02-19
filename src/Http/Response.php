@@ -4,6 +4,9 @@ namespace Parable\Http;
 
 class Response
 {
+    /** @var \Parable\Http\Request */
+    protected $request;
+
     /** @var int */
     protected $httpCode = 200;
 
@@ -84,18 +87,18 @@ class Response
     /** @var bool */
     protected $shouldTerminate = true;
 
-    /**
-     * By default we're going to set the Html Output type.
-     */
     public function __construct(
         \Parable\Http\Request $request
     ) {
         $this->request = $request;
 
+        // By default we're going to set the Html Output, but this can be switched at any time before sending..
         $this->setOutput(new \Parable\Http\Output\Html);
     }
 
     /**
+     * Set the HTTP code to set when the response is sent.
+     *
      * @param int $httpCode
      *
      * @return $this
@@ -111,6 +114,8 @@ class Response
     }
 
     /**
+     * Return the current HTTP code.
+     *
      * @return int
      */
     public function getHttpCode()
@@ -119,6 +124,8 @@ class Response
     }
 
     /**
+     * Return the current HTTP code text.
+     *
      * @return string
      */
     public function getHttpCodeText()
@@ -127,6 +134,8 @@ class Response
     }
 
     /**
+     * Set the content type of the response.
+     *
      * @param string $contentType
      *
      * @return $this
@@ -137,12 +146,19 @@ class Response
         return $this;
     }
 
+    /**
+     * Return the content type currently set.
+     *
+     * @return string
+     */
     public function getContentType()
     {
         return $this->contentType;
     }
 
     /**
+     * Set the output class to use and initialize it with the current response state.
+     *
      * @param \Parable\Http\Output\OutputInterface $output
      *
      * @return $this
@@ -155,7 +171,7 @@ class Response
     }
 
     /**
-     * Send the response
+     * Send the response.
      */
     public function send()
     {
@@ -181,6 +197,8 @@ class Response
     }
 
     /**
+     * Set the content.
+     *
      * @param string|array $content
      *
      * @return $this
@@ -192,6 +210,8 @@ class Response
     }
 
     /**
+     * Return the content.
+     *
      * @return string|array
      */
     public function getContent()
@@ -200,37 +220,56 @@ class Response
     }
 
     /**
-     * @param string $content
+     * Prepend content to the currently set content, whether it's currently array or string data.
      *
-     * @return $this
-     */
-    public function appendContent($content)
-    {
-        if (is_array($this->content)) {
-            $this->content[] = $content;
-        } else {
-            $this->content .= $content;
-        }
-        return $this;
-    }
-
-    /**
      * @param string $content
      *
      * @return $this
      */
     public function prependContent($content)
     {
-        if (is_array($this->content)) {
-            array_unshift($this->content, $content);
-        } else {
-            $this->content = $content . $this->content;
+        if (!empty($content)) {
+            if (is_array($this->content)) {
+                array_unshift($this->content, $content);
+            } else {
+                $this->content = $content . $this->content;
+            }
         }
         return $this;
     }
 
     /**
-     * Start a new output buffer, upping the internal outputBufferLevel
+     * Append content to the currently set content, whether it's currently array or string data.
+     *
+     * @param string $content
+     *
+     * @return $this
+     */
+    public function appendContent($content)
+    {
+        if (!empty($content)) {
+            if (is_array($this->content)) {
+                $this->content[] = $content;
+            } else {
+                $this->content .= $content;
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * Clear the currently set content.
+     *
+     * @return $this
+     */
+    public function clearContent()
+    {
+        $this->content = null;
+        return $this;
+    }
+
+    /**
+     * Start a new output buffer, upping the internal outputBufferLevel.
      *
      * @return $this
      */
@@ -242,7 +281,7 @@ class Response
     }
 
     /**
-     * Return and end the current output buffer if output buffering was started with startOutputBuffer()
+     * Return and end the current output buffer if output buffering was started with startOutputBuffer().
      *
      * @return string
      */
@@ -257,7 +296,7 @@ class Response
     }
 
     /**
-     * Return all open output buffering levels started by Parable
+     * Return all open output buffering levels currently open.
      *
      * @return string
      */
@@ -275,6 +314,8 @@ class Response
     }
 
     /**
+     * Check whether there's currently an output buffer started
+     *
      * @return bool
      */
     public function isOutputBufferingEnabled()
@@ -283,6 +324,8 @@ class Response
     }
 
     /**
+     * Set a header for this response.
+     *
      * @param string $key
      * @param string $value
      *
@@ -295,6 +338,23 @@ class Response
     }
 
     /**
+     * Set an array of headers for this response.
+     *
+     * @param array $headers
+     *
+     * @return $this
+     */
+    public function setHeaders(array $headers)
+    {
+        foreach ($headers as $key => $value) {
+            $this->setHeader($key, $value);
+        }
+        return $this;
+    }
+
+    /**
+     * Return header value by key.
+     *
      * @param string $key
      *
      * @return null|string
@@ -308,6 +368,8 @@ class Response
     }
 
     /**
+     * Return all headers currently set.
+     *
      * @return array
      */
     public function getHeaders()
@@ -316,6 +378,34 @@ class Response
     }
 
     /**
+     * Remove a header by key.
+     *
+     * @param string $key
+     *
+     * @return $this
+     */
+    public function removeHeader($key)
+    {
+        if (isset($this->headers[$key])) {
+            unset($this->headers[$key]);
+        }
+        return $this;
+    }
+
+    /**
+     * Clear previously set headers.
+     *
+     * @return $this
+     */
+    public function clearHeaders()
+    {
+        $this->headers = [];
+        return $this;
+    }
+
+    /**
+     * Redirect to given url and stop processing.
+     *
      * @param string $url
      *
      * @throws \Parable\Http\Exception
@@ -329,6 +419,8 @@ class Response
     }
 
     /**
+     * Set whether terminate should actually terminate or not.
+     *
      * @param bool $shouldTerminate
      *
      * @return $this
@@ -340,6 +432,8 @@ class Response
     }
 
     /**
+     * Check whether terminate should actually terminate or not.
+     *
      * @return bool
      */
     public function shouldTerminate()
@@ -348,6 +442,8 @@ class Response
     }
 
     /**
+     * Terminate (unless specifically told not to) with provided exit code.
+     *
      * @param int $exitCode
      */
     public function terminate($exitCode = 0)

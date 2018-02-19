@@ -11,7 +11,7 @@ class Container
     protected static $relations = [];
 
     /**
-     * Get an already instantiated instance or create a new one.
+     * Return an already instantiated instance or create a new one.
      *
      * @param string $className
      * @param string $parentClassName
@@ -74,7 +74,7 @@ class Container
     }
 
     /**
-     * Instantiate a class and fulfill its dependency requirements
+     * Instantiate a class and fulfill its dependency requirements.
      *
      * @param string $className
      * @param string $parentClassName
@@ -97,14 +97,12 @@ class Container
             throw new \Parable\DI\Exception($message);
         }
 
-        /** @var \ReflectionMethod $construct */
         $construct = $reflection->getConstructor();
 
         if (!$construct) {
             return new $className();
         }
 
-        /** @var \ReflectionParameter[] $parameters */
         $parameters = $construct->getParameters();
 
         $dependencies = [];
@@ -120,7 +118,7 @@ class Container
             }
 
             if ($createAll) {
-                $dependencies[] = self::create($subClassName, $className);
+                $dependencies[] = self::createAll($subClassName, $className);
             } else {
                 $dependencies[] = self::get($subClassName, $className);
             }
@@ -144,6 +142,8 @@ class Container
     }
 
     /**
+     * Check whether an instance with $name is currently stored.
+     *
      * @param string $name
      *
      * @return bool
@@ -154,11 +154,13 @@ class Container
     }
 
     /**
+     * Clean the provided name from any prefixed backslashes.
+     *
      * @param string $name
      *
      * @return string
      */
-    public static function cleanName($name)
+    protected static function cleanName($name)
     {
         if (substr($name, 0, 1) == "\\") {
             $name = ltrim($name, "\\");
@@ -167,7 +169,7 @@ class Container
     }
 
     /**
-     * If the $name exists, unset it
+     * If the $name exists, clear it from our list of stored instances.
      *
      * @param string $name
      */
@@ -179,7 +181,7 @@ class Container
     }
 
     /**
-     * Remove all stored instances but KEEP the passed instance names
+     * Remove all stored instances but KEEP the passed instance names.
      *
      * @param string[] $keepInstanceNames
      */
@@ -193,7 +195,7 @@ class Container
     }
 
     /**
-     * Remove all stored instances
+     * Remove all stored instances.
      */
     public static function clearAll()
     {

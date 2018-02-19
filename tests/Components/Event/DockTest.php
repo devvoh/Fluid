@@ -7,15 +7,11 @@ class DockTest extends \Parable\Tests\Base
     /** @var \Parable\Event\Dock */
     protected $dock;
 
-    /** @var \Parable\Filesystem\Path */
-    protected $path;
-
     protected function setUp()
     {
         parent::setUp();
 
         $this->dock = \Parable\DI\Container::create(\Parable\Event\Dock::class);
-        $this->path = \Parable\DI\Container::get(\Parable\Filesystem\Path::class);
     }
 
     public function testTriggerWithoutAnythingReturnsDock()
@@ -31,7 +27,7 @@ class DockTest extends \Parable\Tests\Base
     public function testIntoAddsCallableAndTemplate()
     {
         $this->dock->into('test_dock_into', function ($event, &$payload) {
-        }, $this->path->getDir('tests/TestTemplates/dock_test_template.phtml'));
+        }, $this->testPath->getDir('tests/TestTemplates/dock_test_template.phtml'));
 
         $docks = $this->liberateProperty($this->dock, 'docks');
         $this->assertCount(1, $docks);
@@ -40,10 +36,10 @@ class DockTest extends \Parable\Tests\Base
         $testDock = $docks['test_dock_into'][0];
 
         $this->assertArrayHasKey('callable', $testDock);
-        $this->assertArrayHasKey('template', $testDock);
+        $this->assertArrayHasKey('templatePath', $testDock);
 
         $callable = $testDock['callable'];
-        $template = $testDock['template'];
+        $template = $testDock['templatePath'];
 
         $this->assertNotEmpty($callable);
         $this->assertNotEmpty($template);
@@ -102,7 +98,7 @@ class DockTest extends \Parable\Tests\Base
 
         $this->dock->into('test_dock_into', function () {
             echo "Hello";
-        }, $this->path->getDir('tests/TestTemplates/dock_test_template.phtml'));
+        }, $this->testPath->getDir('tests/TestTemplates/dock_test_template.phtml'));
 
         $this->dock->trigger('test_dock_into');
     }

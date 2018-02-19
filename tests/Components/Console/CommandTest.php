@@ -39,49 +39,41 @@ class CommandTest extends \Parable\Tests\Base
 
     public function testAddOptionAndGetOptions()
     {
-        $this->command->addOption('option1', true, true, 'stupid');
-        $this->command->addOption('option2', false, false, 'smart');
-
-        $this->assertSame(
-            [
-                'option1' => [
-                    'name'          => 'option1',
-                    'required'      => true,
-                    'valueRequired' => true,
-                    'defaultValue'  => 'stupid',
-                ],
-                'option2' => [
-                    'name'          => 'option2',
-                    'required'      => false,
-                    'valueRequired' => false,
-                    'defaultValue'  => 'smart',
-                ],
-            ],
-            $this->command->getOptions()
+        $this->command->addOption(
+            'option1',
+            \Parable\Console\Parameter::OPTION_VALUE_REQUIRED,
+            'smart'
         );
+
+        $options = $this->command->getOptions();
+
+        $option1 = $options["option1"];
+
+        $this->assertInstanceOf(\Parable\Console\Parameter\Option::class, $option1);
+        $this->assertSame("option1", $option1->getName());
+        $this->assertTrue($option1->isValueRequired());
+        $this->assertSame("smart", $option1->getDefaultValue());
     }
 
     public function testAddArgumentAndGetArguments()
     {
-        $this->command->addArgument('option1', true);
-        $this->command->addArgument('option2', false, 12);
+        $this->command->addArgument('arg1', \Parable\Console\Parameter::PARAMETER_REQUIRED);
+        $this->command->addArgument('arg2', \Parable\Console\Parameter::PARAMETER_OPTIONAL, 12);
 
-        // Arguments aren't actually named properly until they've been parsed by Parameter
-        $this->assertSame(
-            [
-                [
-                    'name'         => 'option1',
-                    'required'     => true,
-                    'defaultValue' => null,
-                ],
-                [
-                    'name'         => 'option2',
-                    'required'     => false,
-                    'defaultValue' => 12,
-                ],
-            ],
-            $this->command->getArguments()
-        );
+        $arguments = $this->command->getArguments();
+
+        $argument1 = $arguments[0];
+        $argument2 = $arguments[1];
+
+        $this->assertInstanceOf(\Parable\Console\Parameter\Argument::class, $argument1);
+        $this->assertSame("arg1", $argument1->getName());
+        $this->assertTrue($argument1->isRequired());
+        $this->assertSame(null, $argument1->getDefaultValue());
+
+        $this->assertInstanceOf(\Parable\Console\Parameter\Argument::class, $argument2);
+        $this->assertSame("arg2", $argument2->getName());
+        $this->assertFalse($argument2->isRequired());
+        $this->assertSame(12, $argument2->getDefaultValue());
     }
 
     public function testPrepareAcceptsAndPassesInstancesToCallbackProperly()
@@ -130,7 +122,42 @@ class CommandTest extends \Parable\Tests\Base
 
     public function testCommandRunWithoutCallableReturnsFalse()
     {
-        $command = new \Parable\Console\Command();
+        $command = $this->createNewCommand();
         $this->assertFalse($command->run());
+    }
+
+    public function testGetUsageWithNothingSetIsEmptyString()
+    {
+        $command = $this->createNewCommand();
+        $this->assertEmpty($command->getUsage());
+    }
+
+    public function testGetUsageWithEveryCombination()
+    {
+        $command = $this->createNewCommand("test-command");
+        $command->addOption("opt1", \Parable\Console\Parameter::OPTION_VALUE_OPTIONAL);
+        $command->addOption("opt2", \Parable\Console\Parameter::OPTION_VALUE_REQUIRED);
+        $command->addArgument("arg1", \Parable\Console\Parameter::PARAMETER_REQUIRED);
+        $command->addArgument("arg2", \Parable\Console\Parameter::PARAMETER_OPTIONAL);
+
+        $this->assertSame(
+            "test-command arg1 [arg2] [--opt1[=value]] [--opt2=value]",
+            $command->getUsage()
+        );
+    }
+
+    protected function createNewCommand($name = null)
+    {
+        $command = new \Parable\Console\Command();
+        $command->prepare(
+            \Parable\DI\Container::create(\Parable\Console\App::class),
+            \Parable\DI\Container::create(\Parable\Console\Output::class),
+            \Parable\DI\Container::create(\Parable\Console\Input::class),
+            \Parable\DI\Container::create(\Parable\Console\Parameter::class)
+        );
+        if ($name) {
+            $command->setName($name);
+        }
+        return $command;
     }
 }

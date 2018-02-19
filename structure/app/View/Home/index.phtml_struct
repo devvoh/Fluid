@@ -1,78 +1,108 @@
 <?php /** @var $this \Parable\Framework\View */ ?>
-<!DOCTYPE HTML>
-<html>
+<!DOCTYPE html>
+<html lang="en">
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta charset="UTF-8">
 
         <title>Hello from <?=$this->config->get('parable.app.title');?> <?=$this->app->getVersion();?></title>
 
-        <!-- Raleway font from google fonts -->
-        <link href='https://fonts.googleapis.com/css?family=Raleway:100,400' rel='stylesheet' type='text/css'>
-
-        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-
-        <link rel="icon" type="image/png" href="<?=$this->url->getUrl('images/icon-32.png');?>" />
-
+        <link href="https://fonts.googleapis.com/css?family=Montserrat:100,200" rel="stylesheet" />
         <style>
             * {
-                font-family: 'Raleway', sans-serif;
-                font-weight: 400;
-            }
-            .container {
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                margin: auto;
-                width: 100%;
-                height: 4rem;
-                line-height: 4rem;
-
-                text-align: center;
-                color: #4533b7;
-
-                animation: fade-in 2s forwards;
-            }
-            a {
-                color: #7e5deb;
-                text-decoration: none;
-            }
-            a:hover {
-                text-decoration: underline;
-            }
-            .container header {
+                font-family: "Montserrat", sans-serif;
                 font-weight: 100;
-                font-size: 4.15rem;
-            }
-            .container aside {
-                font-size: 0.73rem;
-                margin-top: -0.8rem;
-                letter-spacing: 5px;
-                margin-left: 3px;
+                font-size: 18px;
             }
             @keyframes fade-in {
                 from {opacity: 0;}
                 to   {opacity: 1;}
             }
+            @keyframes drop-in {
+                from {margin-top: -1rem;}
+                to   {margin-top: 0;}
+            }
+            html, body {
+                margin: 0;
+                overflow: hidden;
+            }
+            body {
+                background-color: #4533b7;
+
+                animation: 0.5s drop-in ease-out forwards;
+            }
+            header, aside, nav {
+                text-align: center;
+            }
+            header, aside {
+                color: #fff;
+            }
+            header {
+                max-height: 50vh;
+                text-align: center;
+                animation: 1s fade-in forwards;
+            }
+            header article {
+                margin-top: 23vh;
+                font-size: 6rem;
+            }
+            header aside {
+                width: 100%;
+                text-align: center;
+
+                position: relative;
+                top: -0.8rem;
+                font-size: 1.3rem;
+                letter-spacing: 0.52rem;
+                margin-left: 0.25rem;
+
+                animation: 0.5s drop-in ease-out forwards;
+            }
+            header p {
+                padding-top: 4rem;
+                opacity: 0.8;
+                animation: 0.5s drop-in ease-out forwards;
+                font-size: 1.2rem;
+                letter-spacing: 0.4rem;
+            }
+            nav {
+                animation: 2.5s fade-in forwards;
+                color: #fff;
+                position: absolute;
+                bottom: 1rem;
+                left: 0;
+                right: 0;
+            }
+            a {
+                color: #aba1ef;
+                text-decoration: none;
+            }
+            a:hover {
+                background: white;
+                color: #4533b7;
+            }
         </style>
     </head>
     <body>
 
-        <section class="cover">
+    <header>
+        <article>
+            parable
+        </article>
+        <aside>
+            php framework
+        </aside>
+        <p>
+            version <?=$this->app->getVersion();?>
+        </p>
+    </header>
 
-            <article class="container">
-                <header>
-                    <?=$this->config->get('parable.app.title');?> <?=$this->app->getVersion();?>
-                </header>
-                <aside>
-                    PHP framework by <a href="http://devvoh.com">devvoh</a>
-                    -
-                    <a href="https://github.com/devvoh/parable">github page</a>
-                </aside>
-            </article>
-
-        </section>
+    <nav>
+        <a href="http://devvoh.com">by devvoh</a>
+        //
+        <a href="http://devvoh.com/parable/docs">parable documentation</a>
+        //
+        <a href="https://github.com/devvoh/parable">github</a>
+    </nav>
 
     </body>
 </html>

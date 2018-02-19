@@ -27,7 +27,6 @@ class JsonTest extends \Parable\Tests\Base
 
     public function testPrepare()
     {
-        /** @var \Parable\Http\Response $response */
         $response = \Parable\DI\Container::createAll(\Parable\Http\Response::class);
         $response->setOutput($this->json);
 
@@ -43,7 +42,6 @@ class JsonTest extends \Parable\Tests\Base
 
     public function testInvalidJsonStringStaysString()
     {
-        /** @var \Parable\Http\Response $response */
         $response = \Parable\DI\Container::createAll(\Parable\Http\Response::class);
         $response->setOutput($this->json);
 

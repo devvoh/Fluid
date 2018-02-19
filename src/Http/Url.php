@@ -23,6 +23,8 @@ class Url
     }
 
     /**
+     * Set the base path to build all urls on.
+     *
      * @param string $basePath
      *
      * @return $this
@@ -37,6 +39,8 @@ class Url
     }
 
     /**
+     * Return the base path.
+     *
      * @return string
      */
     public function getBasePath()
@@ -45,6 +49,8 @@ class Url
     }
 
     /**
+     * Return the script name.
+     *
      * @return string
      */
     public function getScriptName()
@@ -53,7 +59,7 @@ class Url
     }
 
     /**
-     * Initialize the correct baseUrl
+     * Build the correct baseUrl, based on data from the request.
      *
      * @return $this
      */
@@ -75,10 +81,13 @@ class Url
         $url = str_replace($this->getScriptName(), '', $url);
 
         $this->baseUrl = $domain . '/' . ltrim($url, '/');
+
         return $this;
     }
 
     /**
+     * Return the base url.
+     *
      * @return string
      */
     public function getBaseUrl()
@@ -88,6 +97,8 @@ class Url
     }
 
     /**
+     * Return the url, built upon the base url.
+     *
      * @param string $url
      *
      * @return string

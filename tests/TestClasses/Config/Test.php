@@ -11,10 +11,10 @@ class Test implements
             "parable" => [
                 "app" => [
                     "title" => "Parable",
-                    "homeDir" => "public",
+                    "homedir" => "public",
                 ],
                 "session" => [
-                    "autoEnable" => true,
+                    "auto-enable" => true,
                 ],
                 "database" => [
                     "type" => \Parable\ORM\Database::TYPE_MYSQL,

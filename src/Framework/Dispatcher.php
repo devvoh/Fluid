@@ -4,8 +4,10 @@ namespace Parable\Framework;
 
 class Dispatcher
 {
-    const HOOK_DISPATCH_BEFORE = "parable_dispatch_before";
-    const HOOK_DISPATCH_AFTER  = "parable_dispatch_after";
+    const HOOK_DISPATCH_BEFORE          = "parable_dispatch_before";
+    const HOOK_DISPATCH_AFTER           = "parable_dispatch_after";
+    const HOOK_DISPATCH_TEMPLATE_BEFORE = "parable_dispatch_template_before";
+    const HOOK_DISPATCH_TEMPLATE_AFTER  = "parable_dispatch_template_after";
 
     /** @var \Parable\Event\Hook */
     protected $hook;
@@ -18,6 +20,9 @@ class Dispatcher
 
     /** @var \Parable\Http\Response */
     protected $response;
+
+    /** @var \Parable\Routing\Route|null */
+    protected $dispatchedRoute;
 
     public function __construct(
         \Parable\Event\Hook $hook,
@@ -32,61 +37,80 @@ class Dispatcher
     }
 
     /**
+     * Dispatch the provided route.
+     *
      * @param \Parable\Routing\Route $route
      *
      * @return $this
      */
     public function dispatch(\Parable\Routing\Route $route)
     {
+        $this->dispatchedRoute = $route;
+
         $this->hook->trigger(self::HOOK_DISPATCH_BEFORE, $route);
         $controller = null;
 
-        /* Start output buffering and set $content to null */
+        // Start output buffering and set $content to null
         $content = null;
         $this->response->startOutputBuffer();
 
-        /* Build the parameters array */
-        $parameters = [$route];
+        // Build the parameters array
+        $parameters = [];
         foreach ($route->getValues() as $value) {
             $parameters[] = $value;
         }
 
-        /* Call the relevant code */
-        if ($route->controller && $route->action) {
-            $controller = \Parable\DI\Container::get($route->controller);
-            $content = $controller->{$route->action}(...$parameters);
-        } elseif ($route->callable) {
-            $call = $route->callable;
-            $content = $call(...$parameters);
+        // Call the relevant code
+        if ($route->hasControllerAndAction()) {
+            $controller = \Parable\DI\Container::get($route->getController());
+            $content = $controller->{$route->getAction()}(...$parameters);
+        } elseif ($route->hasCallable()) {
+            $callable = $route->getCallable();
+            $content = $callable(...$parameters);
         }
 
-        /* Try to get the relevant view */
-        $templateFile = null;
-        if ($route->template) {
-            $templateFile = $this->path->getDir($route->template);
-        } else {
-            if ($controller) {
-                $reflection = new \ReflectionClass($controller);
-                $controllerName = str_replace('\\', '/', $reflection->getName());
-                $controllerName = str_replace('Controller/', '', $controllerName);
-                $templateFile = $this->path->getDir(
-                    "app/View/{$controllerName}/{$route->action}.phtml"
-                );
+        $this->hook->trigger(self::HOOK_DISPATCH_TEMPLATE_BEFORE, $route);
+
+        // If the route has no template path, attempt to build one based on controller/action.phtml
+        if (!$route->hasTemplatePath() && $route->hasControllerAndAction()) {
+            $reflection = new \ReflectionClass($controller);
+            $controllerName = str_replace('\\', '/', $reflection->getName());
+            $controllerName = str_replace('Controller/', '', $controllerName);
+
+            $templatePathGenerated = $this->path->getDir(
+                "app/View/{$controllerName}/{$route->getAction()}.phtml"
+            );
+
+            if (file_exists($templatePathGenerated)) {
+                $route->setTemplatePath($templatePathGenerated);
             }
         }
 
-        if ($templateFile && file_exists($templateFile)) {
-            $this->view->setTemplatePath($templateFile);
+        // And check again, now that we might have a magic template path
+        if ($route->hasTemplatePath()) {
+            $templatePath = $this->path->getDir($route->getTemplatePath());
+            $this->view->setTemplatePath($templatePath);
             $this->view->render();
         }
 
-        /* Get the output buffer content and check if $content holds anything. If so, append it to the $bufferContent */
+        // Get the output buffer content and check if $content holds anything. If so, append it to the $bufferContent
         $content = $this->response->returnOutputBuffer() . $content;
 
-        /* And append the content to the response object */
+        // And append the content to the response object
         $this->response->appendContent($content);
 
+        $this->hook->trigger(self::HOOK_DISPATCH_TEMPLATE_AFTER, $route);
         $this->hook->trigger(self::HOOK_DISPATCH_AFTER, $route);
         return $this;
+    }
+
+    /**
+     * Return the route we've dispatched, if any.
+     *
+     * @return \Parable\Routing\Route|null
+     */
+    public function getDispatchedRoute()
+    {
+        return $this->dispatchedRoute;
     }
 }

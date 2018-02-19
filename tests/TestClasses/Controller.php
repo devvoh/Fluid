@@ -4,17 +4,22 @@ namespace Parable\Tests\TestClasses;
 
 class Controller
 {
-    public function index(\Parable\Routing\Route $route)
+    public function index()
     {
     }
 
-    public function simple(\Parable\Routing\Route $route)
+    public function simple()
     {
-        return [$route];
+        return "simple action";
     }
 
-    public function complex(\Parable\Routing\Route $route, $id, $name)
+    public function complex($id, $name)
     {
-        return [$route, $id, $name];
+        return [$id, $name];
+    }
+
+    public static function staticIndex()
+    {
+        return "static index here!";
     }
 }

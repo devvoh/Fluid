@@ -29,7 +29,7 @@ class Toolkit
     }
 
     /**
-     * Create a repository to work with model of type $modelName (full namespaced name)
+     * Create a repository to work with model of type $modelName (full namespaced name).
      *
      * @param string $modelName
      *
@@ -37,14 +37,7 @@ class Toolkit
      */
     public function getRepository($modelName)
     {
-        /** @var \Parable\ORM\Model $model */
-        $model = \Parable\DI\Container::create($modelName);
-
-        /** @var \Parable\ORM\Repository $repository */
-        $repository = \Parable\DI\Container::create(\Parable\ORM\Repository::class);
-
-        $repository->setModel($model);
-        return $repository;
+        return \Parable\ORM\Repository::createForModelName($modelName);
     }
 
     /**
@@ -65,6 +58,8 @@ class Toolkit
     }
 
     /**
+     * Return full url from a route by $name, passing $parameters on (as [key => value]).
+     *
      * @param string $name
      * @param array  $parameters
      *
@@ -72,10 +67,16 @@ class Toolkit
      */
     public function getFullRouteUrlByName($name, array $parameters = [])
     {
-        return $this->url->getUrl($this->router->getRouteUrlByName($name, $parameters));
+        $routeUrl = $this->router->getRouteUrlByName($name, $parameters);
+        if ($routeUrl === null) {
+            return null;
+        }
+        return $this->url->getUrl($routeUrl);
     }
 
     /**
+     * Return the current url as interpreted by Parable.
+     *
      * @return string
      */
     public function getCurrentUrl()
@@ -87,6 +88,8 @@ class Toolkit
     }
 
     /**
+     * Return the current url as interpreted by Parable, as a full url.
+     *
      * @return string
      */
     public function getCurrentUrlFull()

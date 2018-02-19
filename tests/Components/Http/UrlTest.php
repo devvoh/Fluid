@@ -26,7 +26,7 @@ class UrlTest extends \Parable\Tests\Base
 
     public function testGetBaseUrl()
     {
-        $this->assertSame('http://www.test.dev/test', $this->url->getBaseurl());
+        $this->assertSame('http://www.test.dev/test', $this->url->getBaseUrl());
     }
 
     public function testGetUrl()
@@ -38,11 +38,11 @@ class UrlTest extends \Parable\Tests\Base
     {
         $_SERVER["SCRIPT_NAME"] = "/http_docs/index.php";
 
-        $this->assertSame('http://www.test.dev/http_docs', $this->url->getBaseurl());
+        $this->assertSame('http://www.test.dev/http_docs', $this->url->getBaseUrl());
 
         $this->url->setBasePath("http_docs");
 
-        $this->assertSame('http://www.test.dev/', $this->url->getBaseurl());
+        $this->assertSame('http://www.test.dev/', $this->url->getBaseUrl());
         $this->assertSame('http://www.test.dev/what', $this->url->getUrl("what"));
     }
 
@@ -52,7 +52,7 @@ class UrlTest extends \Parable\Tests\Base
 
         $this->url->setBasePath(null);
 
-        $this->assertSame('http://www.test.dev/', $this->url->getBaseurl());
+        $this->assertSame('http://www.test.dev/', $this->url->getBaseUrl());
         $this->assertSame('http://www.test.dev/what', $this->url->getUrl("what"));
     }
 }

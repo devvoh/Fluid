@@ -11,7 +11,7 @@ class Config extends \Parable\GetSet\Base
     protected $useLocalResource = true;
 
     /** @var string */
-    protected $mainConfigClass = \Config\App::class;
+    protected $mainConfigClass = '\Config\App';
 
     /** @var \Parable\Filesystem\Path */
     protected $path;
@@ -23,6 +23,8 @@ class Config extends \Parable\GetSet\Base
     }
 
     /**
+     * Set the main config name to use.
+     *
      * @param string $className
      *
      * @return $this
@@ -38,6 +40,9 @@ class Config extends \Parable\GetSet\Base
     }
 
     /**
+     * Load the main config and load all its values. If there are any child configs defined under
+     * "parable.configs", load all of those too.
+     *
      * @return $this
      */
     public function load()
@@ -45,7 +50,6 @@ class Config extends \Parable\GetSet\Base
         try {
             $this->addConfig(\Parable\DI\Container::get($this->mainConfigClass));
         } catch (\Exception $e) {
-            // We don't throw here since the file isn't required to exist, but we do stop here
             return $this;
         }
 
@@ -59,6 +63,8 @@ class Config extends \Parable\GetSet\Base
     }
 
     /**
+     * Add a config and load all of its values.
+     *
      * @param \Parable\Framework\Interfaces\Config $config
      *
      * @return $this

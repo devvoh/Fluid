@@ -49,9 +49,6 @@ class Query
     /** @var null|string */
     protected $tableName;
 
-    /** @var null|string */
-    protected $tableKey;
-
     /** @var \Parable\ORM\Database */
     protected $database;
 
@@ -68,7 +65,7 @@ class Query
     }
 
     /**
-     * Set the tableName to work on
+     * Set the tableName to work with.
      *
      * @param string $tableName
      *
@@ -81,7 +78,7 @@ class Query
     }
 
     /**
-     * Get the currently set tableName
+     * Return the currently set tableName.
      *
      * @return string
      */
@@ -91,7 +88,7 @@ class Query
     }
 
     /**
-     * Get the currently set tableName, quoted
+     * Return the currently set tableName, quoted.
      *
      * @return null|string
      */
@@ -101,28 +98,7 @@ class Query
     }
 
     /**
-     * Set the tableKey to work with (for delete & update)
-     *
-     * @param string $key
-     *
-     * @return $this
-     */
-    public function setTableKey($key)
-    {
-        $this->tableKey = $key;
-        return $this;
-    }
-
-    /**
-     * @return null|string
-     */
-    public function getTableKey()
-    {
-        return $this->tableKey;
-    }
-
-    /**
-     * Set the type of query we're going to do
+     * Set the type of query we're going to do.
      *
      * @param string $action
      *
@@ -140,7 +116,7 @@ class Query
     }
 
     /**
-     * Return the action
+     * Return the action.
      *
      * @return string
      */
@@ -150,7 +126,7 @@ class Query
     }
 
     /**
-     * In case of a select, what we're going to select (default *)
+     * In case of a select, what we're going to select (default *).
      *
      * @param array $select
      *
@@ -163,6 +139,8 @@ class Query
     }
 
     /**
+     * Add a where condition set.
+     *
      * @param \Parable\ORM\Query\ConditionSet $set
      * @return $this
      */
@@ -173,6 +151,8 @@ class Query
     }
 
     /**
+     * Add an array of where condition sets.
+     *
      * @param \Parable\ORM\Query\ConditionSet[] $sets
      */
     public function whereMany(array $sets)
@@ -183,6 +163,8 @@ class Query
     }
 
     /**
+     * Add a having condition set.
+     *
      * @param \Parable\ORM\Query\ConditionSet $set
      *
      * @return $this
@@ -194,6 +176,8 @@ class Query
     }
 
     /**
+     * Add an array of having condition sets.
+     *
      * @param \Parable\ORM\Query\ConditionSet[] $sets
      */
     public function havingMany(array $sets)
@@ -204,6 +188,8 @@ class Query
     }
 
     /**
+     * Return a new AND condition set.
+     *
      * @param \Parable\ORM\Query\Condition[] $conditions
      *
      * @return \Parable\ORM\Query\Condition\AndSet
@@ -214,6 +200,8 @@ class Query
     }
 
     /**
+     * Return a new OR condition set.
+     *
      * @param \Parable\ORM\Query\Condition[] $conditions
      *
      * @return \Parable\ORM\Query\Condition\OrSet
@@ -224,6 +212,8 @@ class Query
     }
 
     /**
+     * Add a join to the query.
+     *
      * @param int    $type
      * @param string $tableName
      * @param string $key
@@ -241,7 +231,6 @@ class Query
         $value = null,
         $shouldCompareFields = true
     ) {
-        /** @var \Parable\ORM\Query\Condition $condition */
         $condition = new \Parable\ORM\Query\Condition();
         $condition
             ->setTableName($this->getTableName())
@@ -257,6 +246,8 @@ class Query
     }
 
     /**
+     * Add an inner join to the query.
+     *
      * @param string $tableName
      * @param string $key
      * @param string $comparator
@@ -271,6 +262,8 @@ class Query
     }
 
     /**
+     * Add a left join to the query.
+     *
      * @param string $tableName
      * @param string $key
      * @param string $comparator
@@ -285,6 +278,8 @@ class Query
     }
 
     /**
+     * Add a right join to the query.
+     *
      * @param string $tableName
      * @param string $key
      * @param string $comparator
@@ -299,6 +294,8 @@ class Query
     }
 
     /**
+     * Add a full join to the query.
+     *
      * @param string $tableName
      * @param string $key
      * @param string $comparator
@@ -313,7 +310,7 @@ class Query
     }
 
     /**
-     * Adds a value to update/insert queries
+     * Adds a value to update/insert queries.
      *
      * @param string $key
      * @param mixed  $value
@@ -327,7 +324,22 @@ class Query
     }
 
     /**
-     * Sets the order for select queries
+     * Adds an array of values to update/insert queries.
+     *
+     * @param array $values
+     *
+     * @return $this
+     */
+    public function addValues(array $values)
+    {
+        foreach ($values as $key => $value) {
+            $this->addValue($key, $value);
+        }
+        return $this;
+    }
+
+    /**
+     * Sets the order for select queries.
      *
      * @param string      $key
      * @param string      $direction
@@ -345,7 +357,7 @@ class Query
     }
 
     /**
-     * Sets the group by for select queries
+     * Sets the group by for select queries.
      *
      * @param string      $key
      * @param null|string $tableName
@@ -362,7 +374,7 @@ class Query
     }
 
     /**
-     * Sets the limitOffset
+     * Sets the limitOffset.
      *
      * @param int      $limit
      * @param null|int $offset
@@ -384,27 +396,24 @@ class Query
      */
     public function quote($string)
     {
-        if (!$this->database->getInstance()) {
-            $string = str_replace("'", "", $string);
-            return "'{$string}'";
-        }
         return $this->database->quote($string);
     }
 
     /**
+     * Quote the provided string with back-ticks.
+     *
      * @param string $string
      *
      * @return string
      */
     public function quoteIdentifier($string)
     {
-        if (!$this->database->getInstance()) {
-            return "`{$string}`";
-        }
         return $this->database->quoteIdentifier($string);
     }
 
     /**
+     * Build and return the select string.
+     *
      * @return string
      */
     protected function buildSelect()
@@ -431,7 +440,7 @@ class Query
     }
 
     /**
-     * Build JOIN string if they're available
+     * Build and return the join strings.
      *
      * @return string
      */
@@ -464,7 +473,7 @@ class Query
     }
 
     /**
-     * Build WHERE string if they're available
+     * Build and return the where string.
      *
      * @return string
      */
@@ -480,7 +489,7 @@ class Query
     }
 
     /**
-     * Build HAVING string if they're available
+     * Build and return the having string.
      *
      * @return string
      */
@@ -496,7 +505,7 @@ class Query
     }
 
     /**
-     * Build ORDER BY string if it's available
+     * Build and return the order by string.
      *
      * @return string
      */
@@ -515,7 +524,7 @@ class Query
     }
 
     /**
-     * Build GROUP BY string if it's available
+     * Build and return the group by string.
      *
      * @return string
      */
@@ -534,7 +543,7 @@ class Query
     }
 
     /**
-     * Build LIMIT/OFFSET string if it's available
+     * Build and return the limit/offset string.
      *
      * @return string
      */
@@ -557,6 +566,8 @@ class Query
     }
 
     /**
+     * Create and return an instance of this model implementation.
+     *
      * @return $this
      */
     public static function createInstance()
@@ -565,7 +576,7 @@ class Query
     }
 
     /**
-     * Outputs the actual query for use, empty string if invalid/incomplete values given
+     * Outputs the actual query for use, empty string if invalid/incomplete values given.
      *
      * @return string
      */
@@ -574,7 +585,7 @@ class Query
         $query = [];
 
         if ($this->action === 'select') {
-            if (count($this->select) == 0) {
+            if (count($this->select) === 0) {
                 return '';
             }
 
@@ -587,58 +598,41 @@ class Query
             $query[] = $this->buildOrderBy();
             $query[] = $this->buildLimitOffset();
         } elseif ($this->action === 'delete') {
-            if (count($this->where) == 0) {
+            if (count($this->where) === 0) {
                 return '';
             }
 
             $query[] = "DELETE FROM " . $this->getQuotedTableName();
             $query[] = $this->buildWheres();
         } elseif ($this->action === 'update') {
-            if (count($this->values) == 0) {
+            if (count($this->values) === 0 || count($this->where) === 0) {
                 return '';
             }
 
             $query[] = "UPDATE " . $this->getQuotedTableName();
 
-            // Set the table values to defaults
-            $tableKey = 'id';
-            $tableKeyValue = null;
-
             $values = [];
             foreach ($this->values as $key => $value) {
-                // skip id, since we'll use that as a where condition
-                if ($key !== $this->tableKey) {
-                    if ($value === null) {
-                        $correctValue = 'NULL';
-                    } else {
-                        $correctValue = $this->quote($value);
-                    }
-                    // Quote the key
-                    $key =  $this->quoteIdentifier($key);
-
-                    // Add key & value combo to the array
-                    $values[] = $key . " = " . $correctValue;
+                if ($value === null) {
+                    $correctValue = 'NULL';
                 } else {
-                    $tableKey = $key;
-                    $tableKeyValue = $value;
+                    $correctValue = $this->quote($value);
                 }
+                $key = $this->quoteIdentifier($key);
+                $values[] = $key . " = " . $correctValue;
             }
             $query[] = "SET " . implode(', ', $values);
-            $query[] = "WHERE " . $this->getQuotedTableName() . '.' . $this->quoteIdentifier($tableKey);
-            $query[] = " = " . $this->quote($tableKeyValue);
+            $query[] = $this->buildWheres();
         } elseif ($this->action === 'insert') {
-            if (count($this->values) == 0) {
+            if (count($this->values) === 0) {
                 return '';
             }
 
-            // set insert to the proper table
             $query[] = "INSERT INTO " . $this->getQuotedTableName();
 
-            // now get the values
             $keys = [];
             $values = [];
             foreach ($this->values as $key => $value) {
-                // Quote the key
                 $keys[] = $this->quoteIdentifier($key);
 
                 if ($value === null) {

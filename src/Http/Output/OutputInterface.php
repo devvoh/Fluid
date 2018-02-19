@@ -5,7 +5,7 @@ namespace Parable\Http\Output;
 interface OutputInterface
 {
     /**
-     * When the output is initialized, it's possible to set certain things.
+     * When the output is initialized, it's possible to set certain values to set up the proper output values.
      *
      * @param \Parable\Http\Response $response
      *

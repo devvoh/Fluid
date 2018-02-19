@@ -21,8 +21,6 @@ class GetTest extends \Parable\Tests\Base
 
     public function testGetSetOnResource()
     {
-        $this->getSet->reset();
-
         $this->getSet->set("stuff", "here");
 
         $this->assertSame(
@@ -40,8 +38,6 @@ class GetTest extends \Parable\Tests\Base
 
     public function testSetAndRemove()
     {
-        $this->getSet->reset();
-
         $this->getSet->set('test', 'value');
 
         $this->assertSame('value', $this->getSet->get('test'));
@@ -49,5 +45,12 @@ class GetTest extends \Parable\Tests\Base
         $this->getSet->remove('test');
 
         $this->assertNull($this->getSet->get('test'));
+    }
+
+    public function tearDown()
+    {
+        parent::tearDown();
+
+        $this->getSet->reset();
     }
 }

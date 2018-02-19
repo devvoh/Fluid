@@ -88,20 +88,19 @@ class DatabaseTest extends \Parable\Tests\Components\ORM\Base
         $this->assertSame("'test'", $this->database->quote('test'));
     }
 
-    public function testThrowsExceptionWhenQuotingValueWithoutInstance()
+    public function testThrowsExceptionWhenQuotingValueWithoutInstanceAndSoftQuotingDisallowed()
     {
-        /** @var \Parable\ORM\Database $database */
         $database = \Parable\DI\Container::create(\Parable\ORM\Database::class);
+        $database->setSoftQuoting(false);
         $this->assertNull($database->getInstance());
 
         $this->expectException(\Parable\ORM\Exception::class);
-        $this->expectExceptionMessage("Can't quote value without a database instance.");
+        $this->expectExceptionMessage("Can't quote without a database instance.");
         $database->quote("test");
     }
 
     public function testThrowsExceptionWhenRunningQueryWithoutInstance()
     {
-        /** @var \Parable\ORM\Database $database */
         $database = \Parable\DI\Container::create(\Parable\ORM\Database::class);
         $this->assertNull($database->getInstance());
 
@@ -134,7 +133,6 @@ class DatabaseTest extends \Parable\Tests\Components\ORM\Base
 
     public function testGetInstanceWithMySQL()
     {
-        /** @var \Parable\ORM\Database $database */
         $database = $this->createPartialMock(\Parable\ORM\Database::class, ['createPDOMySQL']);
 
         $database
@@ -210,5 +208,29 @@ class DatabaseTest extends \Parable\Tests\Components\ORM\Base
             'database' => 'database',
         ]);
         $database->getInstance();
+    }
+
+    public function testSoftQuotingSettingRespected()
+    {
+        $database = $this->createPartialMock(\Parable\ORM\Database::class, ['createPDOMySQL']);
+
+        $database
+            ->method('createPDOMySQL')
+            ->withAnyParameters()
+            ->willReturn(new \Parable\Tests\TestClasses\FakePDOMySQL());
+
+        // Make sure there's no instance
+        $this->assertNull($database->getInstance());
+
+        $database->setConfig([
+            'type'         => \Parable\ORM\Database::TYPE_MYSQL,
+            'location'     => 'localhost',
+            'username'     => 'username',
+            'password'     => 'password',
+            'database'     => 'database',
+            'soft-quoting' => false,
+        ]);
+
+        $this->assertFalse($database->getSoftQuoting());
     }
 }

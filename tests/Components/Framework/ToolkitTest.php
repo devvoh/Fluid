@@ -22,7 +22,7 @@ class ToolkitTest extends \Parable\Tests\Components\Framework\Base
         \Parable\DI\Container::store($this->responseMock, \Parable\Http\Response::class);
 
         $this->router = \Parable\DI\Container::get(\Parable\Routing\Router::class);
-        $this->router->addRoute('simple', [
+        $this->router->addRouteFromArray('simple', [
             'methods' => ['GET'],
             'url' => '/',
             'controller' => \Parable\Tests\TestClasses\Controller::class,
@@ -44,10 +44,10 @@ class ToolkitTest extends \Parable\Tests\Components\Framework\Base
     public function testRedirectToRouteThrowsExceptionOnNonExistingRouteName()
     {
         $this->expectException(\Parable\Framework\Exception::class);
-        $this->expectExceptionMessage("Can't redirect to route, 'thisaintnoroute' does not exist.");
+        $this->expectExceptionMessage("Can't redirect to route, 'this-aint-no-route' does not exist.");
 
         $this->responseMock->expects($this->never())->method('terminate');
-        $this->toolkit->redirectToRoute("thisaintnoroute");
+        $this->toolkit->redirectToRoute("this-aint-no-route");
     }
 
     public function testGetFullRouteUrlByName()
@@ -55,6 +55,25 @@ class ToolkitTest extends \Parable\Tests\Components\Framework\Base
         $routeUrl = $this->toolkit->getFullRouteUrlByName("simple");
 
         $this->assertSame("http://www.test.dev/test/", $routeUrl);
+    }
+
+    public function testGetFullRouteUrlByNameReturnsNullOnNonExistingRouteName()
+    {
+        $routeUrl = $this->toolkit->getFullRouteUrlByName("does-not-exist");
+
+        $this->assertNull($routeUrl);
+    }
+
+    public function testAppQuickRouteAndGetFullRouteUrlByName()
+    {
+        $app = \Parable\DI\Container::create(\Parable\Framework\App::class);
+        $app->get("/test-route/{id}", function () {
+            return "yeah";
+        }, "test-route");
+
+        $url = $this->toolkit->getFullRouteUrlByName("test-route", ["id" => 1337]);
+
+        $this->assertSame("http://www.test.dev/test/test-route/1337", $url);
     }
 
     public function testGetCurrentUrl()

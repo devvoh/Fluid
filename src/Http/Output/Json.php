@@ -38,6 +38,8 @@ class Json implements \Parable\Http\Output\OutputInterface
     }
 
     /**
+     * Attempt to check whether the provided string is json or not.
+     *
      * @param string $data
      *
      * @return bool

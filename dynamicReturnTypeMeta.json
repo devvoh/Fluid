@@ -1,0 +1,27 @@
+{
+  "methodCalls": [
+    {
+      "class": "\\Parable\\DI\\Container",
+      "method": "get",
+      "position": 0
+    },
+    {
+      "class": "\\Parable\\DI\\Container",
+      "method": "create",
+      "position": 0
+    },
+    {
+      "class": "\\Parable\\DI\\Container",
+      "method": "createAll",
+      "position": 0
+    },
+    {
+      "class": "\\PHPUnit_Framework_TestCase",
+      "method": "createPartialMock",
+      "position": 0,
+      "mask": "%s|\\PHPUnit_Framework_MockObject_MockObject"
+    }
+  ],
+  "functionCalls": [
+  ]
+}

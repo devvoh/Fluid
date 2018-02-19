@@ -8,6 +8,8 @@ class Session extends \Parable\GetSet\Base
     protected $resource = '_SESSION';
 
     /**
+     * Start the session.
+     *
      * @return $this
      * @throws \Parable\GetSet\Exception
      */
@@ -22,6 +24,8 @@ class Session extends \Parable\GetSet\Base
     }
 
     /**
+     * Regenerate the session id.
+     *
      * @param bool $deleteOldSession
      *
      * @return $this
@@ -33,6 +37,8 @@ class Session extends \Parable\GetSet\Base
     }
 
     /**
+     * Destroy the current session.
+     *
      * @return $this
      */
     public function destroy()

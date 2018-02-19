@@ -8,23 +8,26 @@ class Router
     protected $routes = [];
 
     /**
-     * Add a route to the routes list.
+     * Add a Route object to the routes list as $name.
      *
-     * @param string $name
-     * @param array $routeArray
+     * @param string                 $name
+     * @param \Parable\Routing\Route $route
      *
      * @return $this
      */
-    public function addRoute($name, array $routeArray)
+    public function addRoute($name, \Parable\Routing\Route $route)
     {
-        $route = new \Parable\Routing\Route();
-        $route->setData($routeArray);
+        // Call checkValidProperties because invalid Routes have no place here.
+        $route->checkValidProperties();
+
         $this->routes[$name] = $route;
         return $this;
     }
 
     /**
-     * @param array $routes
+     * Add an array of routes to the routes list, where key is the route name.
+     *
+     * @param \Parable\Routing\Route[] $routes
      *
      * @return $this
      */
@@ -34,6 +37,49 @@ class Router
             $this->addRoute($name, $route);
         }
         return $this;
+    }
+
+    /**
+     * Add a route to the routes list from array data.
+     *
+     * @param string $name
+     * @param array $routeArray
+     *
+     * @return $this
+     */
+    public function addRouteFromArray($name, array $routeArray)
+    {
+        $route = \Parable\Routing\Route::createFromDataArray($routeArray);
+        $route->setName($name);
+
+        $this->addRoute($name, $route);
+
+        return $this;
+    }
+
+    /**
+     * Add an array of routes defined by array data to the router.
+     *
+     * @param array $routes
+     *
+     * @return $this
+     */
+    public function addRoutesFromArray(array $routes)
+    {
+        foreach ($routes as $name => $route) {
+            $this->addRouteFromArray($name, $route);
+        }
+        return $this;
+    }
+
+    /**
+     * Return all routes currently set.
+     *
+     * @return \Parable\Routing\Route[]
+     */
+    public function getRoutes()
+    {
+        return $this->routes;
     }
 
     /**
@@ -61,10 +107,12 @@ class Router
     public function matchUrl($url)
     {
         $url = '/' . ltrim($url, '/');
-        if ($route = $this->matchUrlDirectly($url)) {
+        $url = $this->sanitizeUrl($url);
+
+        if ($url && $route = $this->matchUrlDirectly($url)) {
             return $route;
         }
-        if ($route = $this->matchUrlWithParameters($url)) {
+        if ($url && $route = $this->matchUrlWithParameters($url)) {
             return $route;
         }
         return null;
@@ -105,6 +153,8 @@ class Router
     }
 
     /**
+     * Return a url based on the $name provided, with $parameters passed (as [key => value]).
+     *
      * @param string $name
      * @param array  $parameters
      *
@@ -117,5 +167,17 @@ class Router
             return null;
         }
         return $route->buildUrlWithParameters($parameters);
+    }
+
+    /**
+     * Sanitize the Url, removing html characters and other special characters.
+     *
+     * @param string $url
+     *
+     * @return false|string
+     */
+    protected function sanitizeUrl($url)
+    {
+        return filter_var($url, FILTER_SANITIZE_STRING);
     }
 }

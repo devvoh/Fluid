@@ -68,7 +68,35 @@ class RightsTest extends \Parable\Tests\Base
 
     public function testCombine()
     {
-        $value = $this->rights->combine(['10000', '00001']);
-        $this->assertSame('10001', $value);
+        $value = $this->rights->combine(['10000', '00001', "00100"]);
+        $this->assertSame('10101', $value);
+    }
+
+    public function testGetNamesFromRights()
+    {
+        $this->assertSame(
+            ["create", "update"],
+            $this->rights->getNamesFromRights("0101")
+        );
+    }
+
+    public function testGetRightsFromNames()
+    {
+        $this->assertSame(
+            "0101",
+            $this->rights->getRightsFromNames(["create", "update"])
+        );
+    }
+
+    public function testGetRightsFromNamesWithCustomRightsWorksToo()
+    {
+        $this->rights->addRight("test");
+        $this->rights->addRight("hello");
+        $this->rights->addRight("destroy_humanity");
+
+        $this->assertSame(
+            "1100101",
+            $this->rights->getRightsFromNames(["create", "update", "hello", "destroy_humanity"])
+        );
     }
 }

@@ -2,13 +2,18 @@
 
 namespace Parable\Log\Writer;
 
-class File implements \Parable\Log\Writer
+class File implements \Parable\Log\Writer\WriterInterface
 {
     /** @var  */
     protected $logFile;
 
     /**
-     * @inheritdoc
+     * Write a message to the log file configured.
+     *
+     * @param string $message
+     *
+     * @return $this
+     * @throws \Parable\Log\Exception
      */
     public function write($message)
     {
@@ -20,6 +25,8 @@ class File implements \Parable\Log\Writer
     }
 
     /**
+     * Set the log file to write to.
+     *
      * @param string $logFile
      *
      * @return $this
@@ -40,6 +47,8 @@ class File implements \Parable\Log\Writer
     }
 
     /**
+     * Write the message to the log file.
+     *
      * @param string $message
      *
      * @return bool|int

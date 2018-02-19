@@ -17,6 +17,8 @@
             <exclude>
                 <file>./src/Framework/Bootstrap.php</file>
                 <file>./src/Console/Input.php</file>
+                <file>./src/GetSet/Session.php</file>
+                <file>./src/Framework/Command/InitStructure.php</file>
                 <directory suffix=".php">./structure/</directory>
                 <directory suffix=".php">./vendor/</directory>
             </exclude>

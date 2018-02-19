@@ -16,7 +16,7 @@ class RouterTest extends \Parable\Tests\Base
 
         $this->router = \Parable\DI\Container::create(\Parable\Routing\Router::class);
 
-        $this->router->addRoutes([
+        $this->router->addRoutesFromArray([
             'simple' => [
                 'methods' => ['GET'],
                 'url' => '/',
@@ -29,19 +29,13 @@ class RouterTest extends \Parable\Tests\Base
                 'controller' => \Parable\Tests\TestClasses\Controller::class,
                 'action' => 'complex',
             ],
-            'complextyped' => [
-                'methods' => ['GET'],
-                'url' => '/complextyped/{id:int}/{float:float}',
-                'controller' => \Parable\Tests\TestClasses\Controller::class,
-                'action' => 'complextyped',
-            ],
             'callable' => [
                 'methods' => ['GET'],
                 'url' => '/callable/{parameter}',
                 'callable' => function (\Parable\Routing\Route $route, $parameter) {
                     return [$route, $parameter];
                 },
-                'template' => 'test-file.phtml',
+                'templatePath' => 'test-file.phtml',
             ]
         ]);
     }
@@ -51,7 +45,7 @@ class RouterTest extends \Parable\Tests\Base
         $this->expectExceptionMessage("Either a controller/action combination or callable is required.");
         $this->expectException(\Parable\Routing\Exception::class);
 
-        $this->router->addRoute('invalid', []);
+        $this->router->addRouteFromArray('invalid', []);
     }
 
     public function testAddRouteNoMethodsThrowsException()
@@ -59,21 +53,14 @@ class RouterTest extends \Parable\Tests\Base
         $this->expectExceptionMessage("Methods are required and must be passed as an array.");
         $this->expectException(\Parable\Routing\Exception::class);
 
-        $this->router->addRoute('invalid', ['callable' => 'test']);
-    }
-
-    public function testAddRouteInvalidMethodsThrowsException()
-    {
-        $this->expectExceptionMessage("Methods are required and must be passed as an array.");
-        $this->expectException(\Parable\Routing\Exception::class);
-
-        $this->router->addRoute('invalid', ['methods' => 'GET', 'callable' => 'test']);
+        $this->router->addRouteFromArray('invalid', ['callable' => function () {
+        }]);
     }
 
     public function testAddRouteInvalidMethodsAcceptedReturnsNull()
     {
         $_GET['url'] = '/easy';
-        $this->router->addRoute('callable', [
+        $this->router->addRouteFromArray('callable', [
             'methods' => ['GET'],
             'url' => '/easy',
             'callable' => function () {
@@ -82,7 +69,7 @@ class RouterTest extends \Parable\Tests\Base
         $this->assertInstanceOf(\Parable\Routing\Route::class, $this->router->matchUrl('/easy'));
 
         // Now re-add as a POST-only route
-        $this->router->addRoute('callable', [
+        $this->router->addRouteFromArray('callable', [
             'methods' => ['POST'],
             'url' => '/easy',
             'callable' => function () {
@@ -95,13 +82,13 @@ class RouterTest extends \Parable\Tests\Base
     {
         $route = $this->router->getRouteByName('simple');
 
-        $this->assertSame(['GET'], $route->methods);
-        $this->assertSame('/', $route->url);
-        $this->assertSame(\Parable\Tests\TestClasses\Controller::class, $route->controller);
-        $this->assertSame('simple', $route->action);
+        $this->assertSame(['GET'], $route->getMethods());
+        $this->assertSame('/', $route->getUrl());
+        $this->assertSame(\Parable\Tests\TestClasses\Controller::class, $route->getController());
+        $this->assertSame('simple', $route->getAction());
 
-        $this->assertNull($route->callable);
-        $this->assertNull($route->template);
+        $this->assertNull($route->getCallable());
+        $this->assertNull($route->getTemplatePath());
     }
 
     public function testInvalidGetRouteByNameReturnsNull()
@@ -115,15 +102,35 @@ class RouterTest extends \Parable\Tests\Base
 
         $this->assertNotNull($route);
 
-        $this->assertSame(['GET'], $route->methods);
-        $this->assertSame('/', $route->url);
-        $this->assertSame(\Parable\Tests\TestClasses\Controller::class, $route->controller);
-        $this->assertSame('simple', $route->action);
+        $this->assertSame(['GET'], $route->getMethods());
+        $this->assertSame('/', $route->getUrl());
+        $this->assertSame(\Parable\Tests\TestClasses\Controller::class, $route->getController());
+        $this->assertSame('simple', $route->getAction());
 
-        $this->assertNull($route->callable);
-        $this->assertNull($route->template);
+        $this->assertNull($route->getCallable());
+        $this->assertNull($route->getTemplatePath());
 
         $this->assertFalse($route->hasParameters());
+    }
+
+    public function testMatchUrlSanitizesUrlAndStillMatches()
+    {
+        $_GET['url'] = '/<b>this-should-work</b>';
+        $this->router->addRouteFromArray('callable', [
+            'methods' => ['GET'],
+            'url' => '/this-should-work',
+            'callable' => function () {
+                return "it did!";
+            },
+        ]);
+
+        $route = $this->router->matchUrl('/this-should-work');
+
+        $this->assertInstanceOf(\Parable\Routing\Route::class, $route);
+
+        $callable = $route->getCallable();
+
+        $this->assertSame("it did!", $callable());
     }
 
     public function testmatchUrlComplex()
@@ -132,13 +139,13 @@ class RouterTest extends \Parable\Tests\Base
 
         $this->assertNotNull($route);
 
-        $this->assertSame(['GET'], $route->methods);
-        $this->assertSame('/complex/{id}/{name}', $route->url);
-        $this->assertSame(\Parable\Tests\TestClasses\Controller::class, $route->controller);
-        $this->assertSame('complex', $route->action);
+        $this->assertSame(['GET'], $route->getMethods());
+        $this->assertSame('/complex/{id}/{name}', $route->getUrl());
+        $this->assertSame(\Parable\Tests\TestClasses\Controller::class, $route->getController());
+        $this->assertSame('complex', $route->getAction());
 
-        $this->assertNull($route->callable);
-        $this->assertNull($route->template);
+        $this->assertNull($route->getCallable());
+        $this->assertNull($route->getTemplatePath());
 
         $this->assertTrue($route->hasParameters());
 
@@ -151,40 +158,15 @@ class RouterTest extends \Parable\Tests\Base
         );
     }
 
-    public function testmatchUrlComplexTyped()
-    {
-        $route = $this->router->matchUrl('/complextyped/1/1.45');
-
-        $this->assertNotNull($route);
-
-        $this->assertSame(['GET'], $route->methods);
-        $this->assertSame('/complextyped/{id:int}/{float:float}', $route->url);
-        $this->assertSame(\Parable\Tests\TestClasses\Controller::class, $route->controller);
-        $this->assertSame('complextyped', $route->action);
-
-        $this->assertNull($route->callable);
-        $this->assertNull($route->template);
-
-        $this->assertTrue($route->hasParameters());
-
-        $this->assertSame(
-            [
-                'id'    => 1,
-                'float' => 1.45,
-            ],
-            $route->getValues()
-        );
-    }
-
     public function testmatchUrlCallable()
     {
         $route = $this->router->matchUrl('/callable/stuff');
 
         $this->assertNotNull($route);
 
-        $this->assertSame(['GET'], $route->methods);
-        $this->assertSame('/callable/{parameter}', $route->url);
-        $this->assertSame('test-file.phtml', $route->template);
+        $this->assertSame(['GET'], $route->getMethods());
+        $this->assertSame('/callable/{parameter}', $route->getUrl());
+        $this->assertSame('test-file.phtml', $route->getTemplatePath());
         $this->assertSame(
             [
                 'parameter' => 'stuff',
@@ -192,9 +174,9 @@ class RouterTest extends \Parable\Tests\Base
             $route->getValues()
         );
 
-        $this->assertNotNull($route->callable);
+        $this->assertNotNull($route->getCallable());
 
-        $callable = $route->callable;
+        $callable = $route->getCallable();
 
         $parameters = [$route];
         foreach ($route->getValues() as $value) {
@@ -204,56 +186,6 @@ class RouterTest extends \Parable\Tests\Base
         $values = $callable(...$parameters);
 
         $this->assertSame('stuff', $values[1]);
-    }
-
-    public function testParameterTypesMatterForInts()
-    {
-        $this->router->addRoute('callable', [
-            'methods' => ['GET'],
-            'url' => '/int/{int:int}',
-            'callable' => function () {
-            },
-        ]);
-
-        // With an int value we're fine
-        $route = $this->router->matchUrl('/int/1');
-
-        $this->assertSame(1, $route->getValue('int'));
-
-        // But with a string value it should fail
-        $route = $this->router->matchUrl('/int/string');
-
-        $this->assertNull($route);
-
-        // Same for float
-        $route = $this->router->matchUrl('/int/1.45');
-
-        $this->assertNull($route);
-    }
-
-    public function testParameterTypesMatterForFloats()
-    {
-        $this->router->addRoute('callable', [
-            'methods' => ['GET'],
-            'url' => '/float/{float:float}',
-            'callable' => function () {
-            },
-        ]);
-
-        // With an float value we're fine
-        $route = $this->router->matchUrl('/float/1.23');
-
-        $this->assertSame(1.23, $route->getValue('float'));
-
-        // With an int value we're fine, because it CAN be represented as a float
-        $route = $this->router->matchUrl('/float/1');
-
-        $this->assertSame(1.0, $route->getValue('float'));
-
-        // But with a string value it should fail
-        $route = $this->router->matchUrl('/float/string');
-
-        $this->assertNull($route);
     }
 
     public function testMatchNonExistingRoute()
@@ -294,5 +226,106 @@ class RouterTest extends \Parable\Tests\Base
         $this->assertInstanceOf(\Parable\Routing\Route::class, $route);
 
         $this->assertSame('/', $route->buildUrlWithParameters([]));
+    }
+
+    public function testRouteBuildUrlWithParameters()
+    {
+        $route = $this->router->matchUrl('/callable/test');
+
+        $this->assertSame("test", $route->getValue("parameter"));
+
+        $this->assertSame("/callable/test", $route->buildUrlWithParameters(["parameter" => "test"]));
+    }
+
+    public function testGetRoutesReturnsCorrectNumberOfRoutes()
+    {
+        $this->assertCount(3, $this->router->getRoutes());
+    }
+
+    public function testAddRouteDirectly()
+    {
+        $router = \Parable\DI\Container::create(\Parable\Routing\Router::class);
+
+        $this->assertCount(0, $router->getRoutes());
+
+        $route = new \Parable\Routing\Route();
+        $route->setDataFromArray([
+            "methods"  => ["get"],
+            "callable" => function () {
+                return "test";
+            },
+        ]);
+        $router->addRoute("test", $route);
+
+        $this->assertCount(1, $router->getRoutes());
+    }
+
+    public function testAddMultipleRoutesDirectly()
+    {
+        $router = \Parable\DI\Container::create(\Parable\Routing\Router::class);
+
+        $this->assertCount(0, $router->getRoutes());
+
+        $route1 = new \Parable\Routing\Route();
+        $route1->setDataFromArray([
+            "methods"  => ["get"],
+            "callable" => function () {
+                return "test";
+            },
+        ]);
+
+        $route2 = clone $route1;
+
+        $router->addRoutes([
+            "route1" => $route1,
+            "route2" => $route2,
+        ]);
+
+        $this->assertCount(2, $router->getRoutes());
+    }
+
+    public function testAddRouteDirectlyThrowsExceptionOnInvalidRoutePropertiesWithoutMethods()
+    {
+        $this->expectException(\Parable\Routing\Exception::class);
+        $this->expectExceptionMessage("Methods are required and must be passed as an array.");
+
+        $route = new \Parable\Routing\Route();
+        $route->setDataFromArray([
+            "callable" => function () {
+                return "test";
+            },
+        ]);
+        $this->router->addRoute("test", $route);
+    }
+
+    public function testAddRouteDirectlyThrowsExceptionOnInvalidRoutePropertiesWithoutControllerActionCallable()
+    {
+        $this->expectException(\Parable\Routing\Exception::class);
+        $this->expectExceptionMessage("Either a controller/action combination or callable is required.");
+
+        $route = new \Parable\Routing\Route();
+        $route->setDataFromArray([
+            "methods" => ["get"],
+        ]);
+        $this->router->addRoute("test", $route);
+    }
+
+    public function testAddRouteFromArrayReturnsProperRouteObject()
+    {
+        $this->router->addRouteFromArray("this-is-a-route", [
+            "methods" => ["GET"],
+            "url" => "/this-is-a-route",
+            "controller" => \Parable\Tests\TestClasses\Controller::class,
+            "action" => "thisIsARoute",
+        ]);
+        $route = $this->router->matchUrl("/this-is-a-route");
+
+        $this->assertNotNull($route);
+
+        $this->assertSame("this-is-a-route", $route->getName());
+        $this->assertSame(["GET"], $route->getMethods());
+        $this->assertSame("/this-is-a-route", $route->getUrl());
+        $this->assertSame(\Parable\Tests\TestClasses\Controller::class, $route->getController());
+        $this->assertSame("thisIsARoute", $route->getAction());
     }
 }

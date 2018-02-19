@@ -1,10 +1,10 @@
 <?php
 
-namespace Parable\Tests\Components\GetSet;
+namespace Parable\Tests\Components\Framework;
 
 class SessionMessageTest extends \Parable\Tests\Base
 {
-    /** @var \Parable\GetSet\SessionMessage */
+    /** @var \Parable\Framework\SessionMessage */
     protected $sessionMessage;
 
     protected function setUp()
@@ -13,7 +13,7 @@ class SessionMessageTest extends \Parable\Tests\Base
 
         $session = new \Parable\GetSet\Session();
         $session->set(
-            \Parable\GetSet\SessionMessage::SESSION_KEY,
+            \Parable\Framework\SessionMessage::SESSION_KEY,
             [
                 'notice' => [
                     'This is message 1.',
@@ -21,7 +21,7 @@ class SessionMessageTest extends \Parable\Tests\Base
                 ],
             ]
         );
-        $this->sessionMessage = new \Parable\GetSet\SessionMessage($session);
+        $this->sessionMessage = new \Parable\Framework\SessionMessage($session);
     }
 
     public function testGet()

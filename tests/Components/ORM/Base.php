@@ -7,9 +7,6 @@ class Base extends \Parable\Tests\Base
     /** @var \Parable\ORM\Database */
     protected $database;
 
-    /** @var \Parable\Filesystem\Path */
-    protected $path;
-
     protected function setUp()
     {
         parent::setUp();
@@ -17,12 +14,11 @@ class Base extends \Parable\Tests\Base
         $this->skipIfSqliteNotAvailable();
 
         $this->database = \Parable\DI\Container::get(\Parable\ORM\Database::class);
-        $this->path     = \Parable\DI\Container::get(\Parable\Filesystem\Path::class);
 
         $this->database->setType(\Parable\ORM\Database::TYPE_SQLITE);
         $this->database->setLocation(\Parable\ORM\Database::LOCATION_SQLITE_MEMORY);
 
-        $sql = file_get_contents($this->path->getDir('tests/db/test-setup.sql'));
+        $sql = file_get_contents($this->testPath->getDir('tests/db/test-setup.sql'));
         $this->database->getInstance()->exec($sql);
     }
 
@@ -39,7 +35,7 @@ class Base extends \Parable\Tests\Base
 
         $this->skipIfSqliteNotAvailable();
 
-        $sql = file_get_contents($this->path->getDir('tests/db/test-teardown.sql'));
+        $sql = file_get_contents($this->testPath->getDir('tests/db/test-teardown.sql'));
         $this->database->getInstance()->exec($sql);
     }
 }

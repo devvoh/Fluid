@@ -10,14 +10,14 @@ class Repository
     /** @var \Parable\ORM\Model */
     protected $model;
 
-    /** @var bool */
-    protected $onlyCount = false;
-
     /** @var array */
     protected $orderBy = [];
 
     /** @var array */
     protected $limitOffset = [];
+
+    /** @var bool */
+    protected $onlyCount = false;
 
     /** @var bool */
     protected $returnOne = false;
@@ -29,7 +29,7 @@ class Repository
     }
 
     /**
-     * Generate a query set to use the current Model's table name & key
+     * Generate a query set to use the current Model's table name & key.
      *
      * @return \Parable\ORM\Query
      */
@@ -37,7 +37,7 @@ class Repository
     {
         $query = \Parable\ORM\Query::createInstance();
         $query->setTableName($this->getModel()->getTableName());
-        $query->setTableKey($this->getModel()->getTableKey());
+
         if ($this->onlyCount) {
             $query->select(['count(*)']);
         }
@@ -50,11 +50,12 @@ class Repository
         if ($this->returnOne) {
             $query->limitOffset(1);
         }
+
         return $query;
     }
 
     /**
-     * Returns all rows for this model type
+     * Returns all rows for this model type.
      *
      * @return \Parable\ORM\Model[]|\Parable\ORM\Model
      */
@@ -75,7 +76,7 @@ class Repository
     }
 
     /**
-     * Returns a single model
+     * Returns a single model, based on $id.
      *
      * @param int $id
      *
@@ -99,31 +100,24 @@ class Repository
     }
 
     /**
-     * Returns all rows matching specific condition parameters given
+     * Returns all rows matching specific condition parameters given.
      *
      * @param string     $key
      * @param string     $comparator
      * @param mixed|null $value
-     * @param string     $andOr
      *
      * @return \Parable\ORM\Model[]|\Parable\ORM\Model
      * @throws \Parable\ORM\Exception
      */
-    public function getByCondition($key, $comparator, $value = null, $andOr = \Parable\ORM\Query\ConditionSet::SET_AND)
+    public function getByCondition($key, $comparator, $value = null)
     {
         $query = $this->createQuery();
-        if ($andOr === \Parable\ORM\Query\ConditionSet::SET_AND) {
-            $conditionSet = $query->buildAndSet([$key, $comparator, $value]);
-        } elseif ($andOr === \Parable\ORM\Query\ConditionSet::SET_OR) {
-            $conditionSet = $query->buildOrSet([$key, $comparator, $value]);
-        } else {
-            throw new \Parable\ORM\Exception('Invalid andOr type given.');
-        }
+        $conditionSet = $query->buildAndSet([$key, $comparator, $value]);
         return $this->getByConditionSet($conditionSet);
     }
 
     /**
-     * Returns all rows matching specific conditionSet passed
+     * Returns all rows matching specific conditionSet passed.
      *
      * @param \Parable\ORM\Query\ConditionSet $conditionSet
      *
@@ -135,7 +129,7 @@ class Repository
     }
 
     /**
-     * Returns all rows matching all conditions passed
+     * Returns all rows matching all conditions passed.
      *
      * @param array $conditionSets
      *
@@ -159,7 +153,7 @@ class Repository
     }
 
     /**
-     * Allow multiple orders by $key in $direction
+     * Allow multiple orders by $key in $direction.
      *
      * @param string $key
      * @param string $direction ASC by default
@@ -173,7 +167,7 @@ class Repository
     }
 
     /**
-     * Sets the limitOffset
+     * Sets the limitOffset.
      *
      * @param int      $limit
      * @param null|int $offset
@@ -187,7 +181,20 @@ class Repository
     }
 
     /**
-     * Sets the repo to return only one (the first), the same as getById always does
+     * Set onlyCount to true or false.
+     *
+     * @param bool $value
+     *
+     * @return $this
+     */
+    public function setOnlyCount($value = true)
+    {
+        $this->onlyCount = (bool)$value;
+        return $this;
+    }
+
+    /**
+     * Sets the repo to return only one (the first), the same as getById always does.
      *
      * @return $this
      */
@@ -198,7 +205,7 @@ class Repository
     }
 
     /**
-     * Sets the repo to return all values, always in an array (except for getById)
+     * Sets the repo to return all values, always in an array (except for getById).
      *
      * @return $this
      */
@@ -209,7 +216,7 @@ class Repository
     }
 
     /**
-     * Returns a fresh clone of the stored Model, with no values set
+     * Returns a fresh clone of the stored Model, with no values set.
      *
      * @return null|\Parable\ORM\Model
      */
@@ -220,7 +227,7 @@ class Repository
     }
 
     /**
-     * Set a model on the repository. Reset it so there's no unwanted values stored on it.
+     * Set a model on the repository. Reset it so there's no unwanted values stored on it..
      *
      * @param \Parable\ORM\Model $model
      *
@@ -233,7 +240,7 @@ class Repository
     }
 
     /**
-     * Return model
+     * Return model.
      *
      * @return null|\Parable\ORM\Model
      */
@@ -243,19 +250,8 @@ class Repository
     }
 
     /**
-     * Set onlyCount to true or false
+     * Build and return an AND condition set.
      *
-     * @param bool $value
-     *
-     * @return $this
-     */
-    public function onlyCount($value = true)
-    {
-        $this->onlyCount = (bool)$value;
-        return $this;
-    }
-
-    /**
      * @param \Parable\ORM\Query\Condition[] $conditions
      *
      * @return \Parable\ORM\Query\Condition\AndSet
@@ -266,6 +262,8 @@ class Repository
     }
 
     /**
+     * Build and return an OR condition set.
+     *
      * @param \Parable\ORM\Query\Condition[] $conditions
      *
      * @return \Parable\ORM\Query\Condition\OrSet
@@ -276,7 +274,8 @@ class Repository
     }
 
     /**
-     * Handle the result of one of the get functions
+     * Handle the result of one of the get functions. This attempts to create a new model
+     * with the values returned properly set.
      *
      * @param array $result
      *
@@ -295,5 +294,45 @@ class Repository
             $entities[] = $model;
         }
         return $entities;
+    }
+
+    /**
+     * Resets everything but the query and model class to their default values.
+     */
+    public function reset()
+    {
+        $this->orderBy = [];
+        $this->limitOffset = [];
+        $this->setOnlyCount(false);
+        $this->returnAll();
+    }
+
+    /**
+     * Create an instance of the repository class for given $modelName.
+     *
+     * @param string $modelName
+     *
+     * @return \Parable\ORM\Repository
+     */
+    public static function createForModelName($modelName)
+    {
+        if (!class_exists($modelName)) {
+            throw new Exception("Model '{$modelName}' does not exist.");
+        }
+        return self::createForModel($modelName::create());
+    }
+
+    /**
+     * Create an instance of the repository class for given $model.
+     *
+     * @param \Parable\ORM\Model $model
+     *
+     * @return Repository
+     */
+    public static function createForModel(\Parable\ORM\Model $model)
+    {
+        $repository = \Parable\DI\Container::create(static::class);
+        $repository->setModel($model);
+        return $repository;
     }
 }

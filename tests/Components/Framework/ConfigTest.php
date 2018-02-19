@@ -28,6 +28,13 @@ class ConfigTest extends \Parable\Tests\Components\Framework\Base
         $this->assertSame($this->config, $this->config->load());
     }
 
+    public function testLoadFailsSilentlyIfBaseClassDoesNotExist()
+    {
+        // Set the baseConfigClass to a non-existing class to mimic the default config not existing
+        $this->mockProperty($this->config, "mainConfigClass", "Bubaloo");
+        $this->assertSame($this->config, $this->config->load());
+    }
+
     public function testSetMainConfigClassThrowsExceptionIfNotExist()
     {
         $this->expectException(\Parable\Framework\Exception::class);

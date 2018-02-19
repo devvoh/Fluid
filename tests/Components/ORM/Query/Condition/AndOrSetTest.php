@@ -16,7 +16,6 @@ class AndOrSetTest extends \Parable\Tests\Components\ORM\Base
 
         $this->query = \Parable\ORM\Query::createInstance();
         $this->query->setTableName('user');
-        $this->query->setTableKey('id');
     }
 
     public function testCreateNewAndConditionSetWithArrayConditions()

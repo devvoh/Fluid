@@ -2,11 +2,9 @@
 
 namespace Routing;
 
-class App implements
-    \Parable\Framework\Interfaces\Routing
+class App extends \Parable\Framework\Routing\AbstractRouting
 {
-    public function get()
+    public function load()
     {
-        return [];
     }
 }

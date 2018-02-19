@@ -2,38 +2,39 @@
 
 namespace Routing;
 
-class App implements
-    \Parable\Framework\Interfaces\Routing
+use \Parable\Http\Request;
+
+class App extends \Parable\Framework\Routing\AbstractRouting
 {
-    public function get()
+    public function load()
     {
-        return [
-            /*
-             * Valid method values are GET, POST, PUT, DELETE, PATCH. If the route is requested
-             * through a method it does not support, a 404 is thrown.
-             */
-            'index' => [
-                'methods' => ['GET'],
-                'url' => '/',
-                'controller' => \Controller\Home::class,
-                'action' => 'index',
-            ],
-            /*
-             * If you add parameters to a URL by adding {param} anywhere, it is REQUIRED. Leaving
-             * the parameter off in the requested URL will cause a 404 to be thrown.
-             *
-             * Within a URL, you may specify what type a parameter is required to be.
-             *
-             * Valid values: {param:int}, {param:string}, {param:float}
-             *
-             * If the value passed is invalid, a 404 is thrown.
-             */
-            'test-parameters' => [
-                'methods' => ['GET'],
-                'url' => '/test/{id:int}/{name}',
-                'controller' => \Controller\Home::class,
-                'action' => 'test',
-            ],
-        ];
+        /*
+         * Valid methods are GET/POST/PUT/PATCH/DELETE/OPTIONS (see Request::VALID_METHODS).
+         * If a url matches but the method doesn't, a 404 is thrown. It's possible to define
+         * a url twice, once for GET and once for POST, and both methods will be handled only
+         * on the appropriate requests. Use this to separate GET and POST logic more clearly,
+         * for example.
+         */
+        $this->app->get("/", [\Controller\Home::class, "index"], "index");
+
+        /*
+         * By calling ->any(), you're saying that the method doesn't matter. As long as
+         * Parable accepts the method, it'll match if the url does.
+         */
+        $this->app->any("/test/{id}/{name}", [\Controller\Home::class, "test"], "test");
+
+        /*
+         * It's also possible to specify multiple methods to respond to. Also, callables.
+         */
+        $this->app->multiple([Request::METHOD_GET, Request::METHOD_POST], "/callable", function () {
+            $request = \Parable\DI\Container::get(\Parable\Http\Request::class);
+            if ($request->isPost()) {
+                return "It's a POST!";
+            } elseif ($request->isGet()) {
+                return "It's a GET!";
+            } else {
+                return "Well this is awkward, this shouldn't be possible.";
+            }
+        }, "callable");
     }
 }

@@ -4,16 +4,25 @@ namespace Parable\Log;
 
 class Logger
 {
-    /** @var \Parable\Log\Writer */
+    /** @var \Parable\Log\Writer\WriterInterface */
     protected $writer;
 
-    public function setWriter(\Parable\Log\Writer $writer)
+    /**
+     * Set a writer class to use.
+     *
+     * @param \Parable\Log\Writer\WriterInterface $writer
+     *
+     * @return $this
+     */
+    public function setWriter(\Parable\Log\Writer\WriterInterface $writer)
     {
         $this->writer = $writer;
         return $this;
     }
 
     /**
+     * Write a message to the log writer.
+     *
      * @param mixed $message
      *
      * @return $this
@@ -31,6 +40,8 @@ class Logger
     }
 
     /**
+     * Write an array of messages to the log writer.
+     *
      * @param array $messages
      *
      * @return $this
@@ -48,6 +59,8 @@ class Logger
     }
 
     /**
+     * Stringify a message so it can be written.
+     *
      * @param mixed $message
      *
      * @return string

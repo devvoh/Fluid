@@ -29,7 +29,7 @@ class Model
     }
 
     /**
-     * Generate a query set to use the current Model's table name & key
+     * Generate a query set to use the current Model's table name & key.
      *
      * @return \Parable\ORM\Query
      */
@@ -37,12 +37,11 @@ class Model
     {
         $query = \Parable\ORM\Query::createInstance();
         $query->setTableName($this->getTableName());
-        $query->setTableKey($this->getTableKey());
         return $query;
     }
 
     /**
-     * Saves the model, either inserting (no id) or updating (id)
+     * Saves the model, either inserting (no id) or updating (id).
      *
      * @return bool
      */
@@ -56,7 +55,9 @@ class Model
 
         if ($this->{$this->getTableKey()}) {
             $query->setAction('update');
-            $query->addValue($this->getTableKey(), $this->id);
+            $query->where($query->buildAndSet([
+                [$this->getTableKey(), "=", $this->id],
+            ]));
 
             foreach ($array as $key => $value) {
                 $query->addValue($key, $value);
@@ -90,7 +91,7 @@ class Model
     }
 
     /**
-     * Deletes the current model from the database
+     * Deletes the current model from the database.
      *
      * @return bool
      */
@@ -105,7 +106,7 @@ class Model
     }
 
     /**
-     * Populates the current model with the data provided
+     * Populates the current model with the data provided.
      *
      * @param array $data
      *
@@ -115,14 +116,14 @@ class Model
     {
         foreach ($data as $property => $value) {
             if (property_exists($this, $property)) {
-                $this->$property = $this->guessValueType($value);
+                $this->{$property} = $value;
             }
         }
         return $this;
     }
 
     /**
-     * Set the tableName
+     * Set the tableName.
      *
      * @param string $tableName
      *
@@ -135,7 +136,7 @@ class Model
     }
 
     /**
-     * Return the tableName
+     * Return the tableName.
      *
      * @return null|string
      */
@@ -145,7 +146,7 @@ class Model
     }
 
     /**
-     * Set the tableKey
+     * Set the tableKey.
      *
      * @param string $tableKey
      *
@@ -158,7 +159,7 @@ class Model
     }
 
     /**
-     * Return the tableKey
+     * Return the tableKey.
      *
      * @return null|string
      */
@@ -168,7 +169,7 @@ class Model
     }
 
     /**
-     * Set the mapper
+     * Set the mapper.
      *
      * @param array $mapper
      *
@@ -181,7 +182,7 @@ class Model
     }
 
     /**
-     * Return the mapper
+     * Return the mapper.
      *
      * @return array
      */
@@ -191,7 +192,7 @@ class Model
     }
 
     /**
-     * Returns the exportable array
+     * Returns the exportable array.
      *
      * @return array
      */
@@ -201,24 +202,7 @@ class Model
     }
 
     /**
-     * Attempts to guess the value type. Will return int, float or string.
-     *
-     * @param string $value
-     *
-     * @return int|float|string
-     */
-    public function guessValueType($value)
-    {
-        if (is_numeric($value) && (int)$value == $value) {
-            return (int)$value;
-        } elseif (is_numeric($value) && (float)$value == $value) {
-            return (float)$value;
-        }
-        return $value;
-    }
-
-    /**
-     * Generates an array of the current model, without the protected values
+     * Generates an array of the current model, without the protected values.
      *
      * @param bool $keepNullValue
      *
@@ -253,7 +237,7 @@ class Model
     }
 
     /**
-     * Generates an array of the current model, but removes empty values
+     * Generates an array of the current model, but removes empty values.
      *
      * @return array
      */
@@ -303,6 +287,8 @@ class Model
     }
 
     /**
+     * Export to array without empty values (anything corresponding to empty which is not 0).
+     *
      * @return array
      */
     public function exportToArrayWithoutEmptyValues()
@@ -311,6 +297,8 @@ class Model
     }
 
     /**
+     * Remove all values that are not 0 and empty.
+     *
      * @param array $array
      * @return array
      */
@@ -325,7 +313,7 @@ class Model
     }
 
     /**
-     * Reset all public properties to null
+     * Reset all public properties to null.
      *
      * @return $this
      */
@@ -338,5 +326,15 @@ class Model
             }
         }
         return $this;
+    }
+
+    /**
+     * Create an instance using DI.
+     *
+     * @return static
+     */
+    public static function create()
+    {
+        return \Parable\DI\Container::create(static::class);
     }
 }

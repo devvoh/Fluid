@@ -5,57 +5,266 @@ namespace Parable\Routing;
 class Route
 {
     /** @var array */
-    public $methods = [];
+    protected $methods = [];
 
     /** @var null|string */
-    public $name;
+    protected $name;
 
     /** @var null|string */
-    public $url;
+    protected $url;
 
     /** @var null|string */
-    public $controller;
+    protected $controller;
 
     /** @var null|string */
-    public $action;
+    protected $action;
 
     /** @var null|callable */
-    public $callable;
+    protected $callable;
 
     /** @var null|string */
-    public $template;
+    protected $templatePath;
 
     /** @var array */
-    public $parameters = [];
+    protected $parameters = [];
 
     /** @var array */
-    public $values = [];
-
-    /** @var array */
-    public $cleanValues = [];
+    protected $values = [];
 
     /**
+     * Set data from array. Can only set values that have a corresponding setProperty method.
+     *
      * @param array $data
      *
      * @throws \Parable\Routing\Exception
      */
-    public function setData(array $data)
+    public function setDataFromArray(array $data)
     {
-        $this->methods    = isset($data['methods'])    ? $data['methods']    : [];
-        $this->url        = isset($data['url'])        ? $data['url']        : null;
-        $this->controller = isset($data['controller']) ? $data['controller'] : null;
-        $this->action     = isset($data['action'])     ? $data['action']     : null;
-        $this->callable   = isset($data['callable'])   ? $data['callable']   : null;
-        $this->template   = isset($data['template'])   ? $data['template']   : null;
+        foreach ($data as $property => $value) {
+            $method = 'set' . ucfirst($property);
+            if (method_exists($this, $method)) {
+                $this->$method($value);
+            } else {
+                throw new \Parable\Routing\Exception(
+                    "Tried to set non-existing property '{$property}' with value '{$value}' on Route."
+                );
+            }
+        }
 
+        $this->checkValidProperties();
+        $this->parseUrlParameters();
+    }
+
+    /**
+     * Set the methods accepted by this Route (POST, GET, PUT, etc.) and make sure they're uppercase.
+     *
+     * @param stringp[ $methods
+     *
+     * @return $this
+     */
+    public function setMethods(array $methods)
+    {
+        foreach ($methods as &$method) {
+            $method = strtoupper($method);
+        }
+        $this->methods = $methods;
+        return $this;
+    }
+
+    /**
+     * Return the methods accepted by this Route
+     *
+     * @return array
+     */
+    public function getMethods()
+    {
+        return $this->methods;
+    }
+
+    /**
+     * Set the url this route is matched on.
+     *
+     * @param string $url
+     *
+     * @return $this
+     */
+    public function setUrl($url)
+    {
+        if (strpos($url, "/") !== 0) {
+            $url = "/" . $url;
+        }
+        $this->url = $url;
+        return $this;
+    }
+
+    /**
+     * Return the url this route is matched on.
+     *
+     * @return null|string
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
+     * Set the controller name for this Route.
+     *
+     * @param string $controller
+     *
+     * @return $this
+     */
+    public function setController($controller)
+    {
+        $this->controller = $controller;
+        return $this;
+    }
+
+    /**
+     * Return the controller name for this Route.
+     *
+     * @return null|string
+     */
+    public function getController()
+    {
+        return $this->controller;
+    }
+
+    /**
+     * Set the action for this Route.
+     *
+     * @param string $action
+     *
+     * @return $this
+     */
+    public function setAction($action)
+    {
+        $this->action = $action;
+        return $this;
+    }
+
+    /**
+     * Return the action for this Route.
+     *
+     * @return null|string
+     */
+    public function getAction()
+    {
+        return $this->action;
+    }
+
+    /**
+     * Set the name for this Route.
+     *
+     * @param $name
+     *
+     * @return $this
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * Return the name for this Route.
+     *
+     * @return null|string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set the callable for this Route.
+     *
+     * @param callable $callable
+     *
+     * @return $this
+     */
+    public function setCallable(callable $callable)
+    {
+        $this->callable = $callable;
+        return $this;
+    }
+
+    /**
+     * Return the callable for this Route.
+     *
+     * @return callable|null
+     */
+    public function getCallable()
+    {
+        return $this->callable;
+    }
+
+    /**
+     * Set the template path for this Route.
+     *
+     * @param string $templatePath
+     *
+     * @return $this
+     */
+    public function setTemplatePath($templatePath)
+    {
+        $this->templatePath = $templatePath;
+        return $this;
+    }
+
+    /**
+     * Return the template path for this Route.
+     *
+     * @return mixed
+     */
+    public function getTemplatePath()
+    {
+        return $this->templatePath;
+    }
+
+    /**
+     * Check whether a valid set of properties is set.
+     *
+     * @throws \Parable\Routing\Exception
+     */
+    public function checkValidProperties()
+    {
         if (!$this->controller && !$this->action && !$this->callable) {
             throw new \Parable\Routing\Exception('Either a controller/action combination or callable is required.');
         }
-        if (empty($this->methods) || !is_array($data['methods'])) {
+        if (empty($this->methods)) {
             throw new \Parable\Routing\Exception('Methods are required and must be passed as an array.');
         }
+    }
 
-        $this->parseUrlParameters();
+    /**
+     * Return whether the Route has a controller AND an action set.
+     *
+     * @return bool
+     */
+    public function hasControllerAndAction()
+    {
+        return (bool)$this->getController() && (bool)$this->getAction();
+    }
+
+    /**
+     * Return whether the Route has a callable set.
+     *
+     * @return bool
+     */
+    public function hasCallable()
+    {
+        return (bool)$this->getCallable();
+    }
+
+    /**
+     * Return whether the Route has a template path set.
+     *
+     * @return bool
+     */
+    public function hasTemplatePath()
+    {
+        return (bool)$this->getTemplatePath();
     }
 
     /**
@@ -88,57 +297,12 @@ class Route
         $urlParts = explode('/', $url);
         $this->values = [];
         foreach ($this->parameters as $index => $name) {
-            $value = $urlParts[$index];
-
-            $validValue = $this->checkAndApplyParameterValueType($name, $value);
-            if ($validValue === false) {
-                $this->values = [];
-                break;
+            $value = trim($urlParts[$index]);
+            if (!empty($value)) {
+                $this->setValue($name, $value);
             }
-
-            $this->values[$name] = $validValue;
         }
-        $this->cleanValues();
         return $this->values;
-    }
-
-    /**
-     * @param string $name
-     * @param mixed  $value
-     *
-     * @return mixed|bool
-     */
-    protected function checkAndApplyParameterValueType($name, $value)
-    {
-        // If there's no : in the name, then it's not typed.
-        if (strpos($name, ':') === false) {
-            return $value;
-        }
-        list(, $type) = explode(":", $name);
-
-        if ($type === "int") {
-            if (is_numeric($value) && (int)$value == $value) {
-                return (int)$value;
-            }
-        } elseif ($type === "float") {
-            if (is_numeric($value) && (float)$value == $value) {
-                return (float)$value;
-            }
-        }
-
-        return false;
-    }
-
-    protected function removeParameterValueTypeFromName($name)
-    {
-        // If there's no : in the name, then it's not typed.
-        if (strpos($name, ':') === false) {
-            return $name;
-        }
-        list($key) = explode(":", $name);
-
-        // All good, so return just the key
-        return $key;
     }
 
     /**
@@ -190,8 +354,7 @@ class Route
      */
     public function matchWithParameters($url)
     {
-        if (!$this->parameters
-            || !$this->isAcceptedRequestMethod()
+        if (!$this->isAcceptedRequestMethod()
             || !$this->isPartCountSame($url)
             || !$this->hasParameters()
         ) {
@@ -199,15 +362,9 @@ class Route
         }
 
         $this->extractParameterValues($url);
-        if (!$this->values) {
-            return false;
-        }
         $correctedUrl = $this->injectParameters($url);
 
-        if ($this->matchDirectly($correctedUrl)) {
-            return true;
-        }
-        return false;
+        return $this->matchDirectly($correctedUrl);
     }
 
     /**
@@ -217,7 +374,7 @@ class Route
      */
     public function isAcceptedRequestMethod()
     {
-        return in_array($_SERVER['REQUEST_METHOD'], $this->methods);
+        return in_array($_SERVER['REQUEST_METHOD'], $this->getMethods());
     }
 
     /**
@@ -243,20 +400,31 @@ class Route
     }
 
     /**
+     * Set a value on the route.
+     *
+     * @param string $key
+     * @param string $value
+     *
      * @return $this
      */
-    protected function cleanValues()
+    public function setValue($key, $value)
     {
-        foreach ($this->values as $key => $value) {
-            $key = $this->removeParameterValueTypeFromName($key);
-            $this->cleanValues[$key] = $value;
-        }
+        $this->values[$key] = $value;
         return $this;
     }
 
+    /**
+     * @param array $values
+     */
+    public function setValues(array $values)
+    {
+        foreach ($values as $key => $value) {
+            $this->setValue($key, $value);
+        }
+    }
 
     /**
-     * Get a value, if it exists.
+     * Return a value, if it exists.
      *
      * @param string $key
      *
@@ -264,23 +432,25 @@ class Route
      */
     public function getValue($key)
     {
-        if (!isset($this->cleanValues[$key])) {
+        if (!isset($this->values[$key])) {
             return null;
         }
-        return $this->cleanValues[$key];
+        return $this->values[$key];
     }
 
     /**
-     * Get all values
+     * Return all values.
      *
      * @return array
      */
     public function getValues()
     {
-        return $this->cleanValues;
+        return $this->values;
     }
 
     /**
+     * Build a url based on the route, replacing all parameters with the values passed (as [key => value]).
+     *
      * @param array $parameters
      *
      * @return string
@@ -297,5 +467,19 @@ class Route
             $url = str_replace('{' . $key . '}', $value, $url);
         }
         return $url;
+    }
+
+    /**
+     * Create new route based on data from array.
+     *
+     * @param array $data
+     *
+     * @return static
+     */
+    public static function createFromDataArray(array $data)
+    {
+        $route = new static();
+        $route->setDataFromArray($data);
+        return $route;
     }
 }

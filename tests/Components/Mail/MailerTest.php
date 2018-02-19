@@ -4,14 +4,24 @@ namespace Parable\Tests\Components\Mail;
 
 class MailerTest extends \Parable\Tests\Base
 {
-    /** @var \Parable\Mail\Mailer|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var \Parable\Mail\Mailer */
     protected $mailer;
 
     protected function setUp()
     {
         parent::setUp();
 
-        $this->mailer = $this->createPartialMock(\Parable\Mail\Mailer::class, ['sendMail']);
+        $this->mailer = \Parable\DI\Container::create(\Parable\Mail\Mailer::class);
+        $this->mailer->setMailSender(new \Parable\Mail\Sender\NullMailer());
+    }
+
+    public function testMailerThrowsExceptionIfNoSenderSet()
+    {
+        $this->expectException(\Parable\Mail\Exception::class);
+        $this->expectExceptionMessage("No mail sender implementation set.");
+
+        $mailer = \Parable\DI\Container::create(\Parable\Mail\Mailer::class);
+        $mailer->send();
     }
 
     public function testSetFrom()
@@ -230,8 +240,10 @@ class MailerTest extends \Parable\Tests\Base
 
     public function testSend()
     {
-        $this->mailer
-            ->method('sendMail')
+        $mailSender = $this->createPartialMock(\Parable\Mail\Sender\PhpMail::class, ['send']);
+
+        $mailSender
+            ->method('send')
             ->withAnyParameters()
             ->willReturnCallback(function () {
                 $arguments = func_get_args();
@@ -252,6 +264,8 @@ From: somebody@test.dev",
                     $arguments[3]
                 );
             });
+
+        $this->mailer->setMailSender($mailSender);
 
         $this->mailer->setFrom('somebody@test.dev');
         $this->mailer->setSubject('subject');

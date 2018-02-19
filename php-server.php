@@ -31,7 +31,12 @@ ini_set("date.timezone", "Europe/Amsterdam");
 $_SERVER["PHP_SERVER"] = true;
 
 // The built-in webserver does not set these in a way Parable expects it (htaccess redirect) so we do it ourselves
-$_SERVER["SCRIPT_FILENAME"] = str_replace("php-server.php", "public/index.php", $_SERVER["SCRIPT_FILENAME"]);
+if (file_exists("public/index.php")) {
+    $correct = "./public/index.php";
+} else {
+    $correct = "./index.php";
+}
+$_SERVER["SCRIPT_FILENAME"] = str_replace("php-server.php", $correct, $_SERVER["SCRIPT_FILENAME"]);
 $_SERVER["SCRIPT_NAME"] = str_replace(__DIR__, "", $_SERVER["SCRIPT_FILENAME"]);
 
 // Normally the redirect is to index.php?url=REQUEST_URI, but obviously that's not the case here

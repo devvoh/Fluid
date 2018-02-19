@@ -4,6 +4,9 @@ namespace Parable\Mail;
 
 class Mailer
 {
+    /** @var \Parable\Mail\Sender\SenderInterface */
+    protected $mailSender;
+
     /** @var array */
     protected $addresses = [
         'to'   => [],
@@ -28,6 +31,31 @@ class Mailer
     protected $headers = [];
 
     /**
+     * Set the mail sender implementation to use.
+     *
+     * @param Sender\SenderInterface $mailSender
+     *
+     * @return $this
+     */
+    public function setMailSender(\Parable\Mail\Sender\SenderInterface $mailSender)
+    {
+        $this->mailSender = $mailSender;
+        return $this;
+    }
+
+    /**
+     * Return the mail sender implementation currently set.
+     *
+     * @return Sender\SenderInterface
+     */
+    public function getMailSender()
+    {
+        return $this->mailSender;
+    }
+
+    /**
+     * Set the from address.
+     *
      * @param string      $email
      * @param null|string $name
      *
@@ -49,6 +77,50 @@ class Mailer
     }
 
     /**
+     * Add an address to send to.
+     *
+     * @param string      $email
+     * @param string|null $name
+     *
+     * @return $this
+     */
+    public function addTo($email, $name = null)
+    {
+        $this->addAddress('to', $email, $name);
+        return $this;
+    }
+
+    /**
+     * Add an address to send to as CC.
+     *
+     * @param string      $email
+     * @param string|null $name
+     *
+     * @return $this
+     */
+    public function addCc($email, $name = null)
+    {
+        $this->addAddress('cc', $email, $name);
+        return $this;
+    }
+
+    /**
+     * Add an address to send to as BCC.
+     *
+     * @param string      $email
+     * @param string|null $name
+     *
+     * @return $this
+     */
+    public function addBcc($email, $name = null)
+    {
+        $this->addAddress('bcc', $email, $name);
+        return $this;
+    }
+
+    /**
+     * Add an address to the $type stack.
+     *
      * @param string      $type
      * @param string      $email
      * @param null|string $name
@@ -67,6 +139,8 @@ class Mailer
     }
 
     /**
+     * Return all addresses.
+     *
      * @return array
      */
     public function getAddresses()
@@ -75,6 +149,8 @@ class Mailer
     }
 
     /**
+     * Return all addresses for type.
+     *
      * @param string $type
      *
      * @return string
@@ -98,42 +174,8 @@ class Mailer
     }
 
     /**
-     * @param string $email
-     * @param string $name
+     * Set the email subject.
      *
-     * @return $this
-     */
-    public function addTo($email, $name = '')
-    {
-        $this->addAddress('to', $email, $name);
-        return $this;
-    }
-
-    /**
-     * @param string $email
-     * @param string $name
-     *
-     * @return $this
-     */
-    public function addCc($email, $name = '')
-    {
-        $this->addAddress('cc', $email, $name);
-        return $this;
-    }
-
-    /**
-     * @param string $email
-     * @param string $name
-     *
-     * @return $this
-     */
-    public function addBcc($email, $name = '')
-    {
-        $this->addAddress('bcc', $email, $name);
-        return $this;
-    }
-
-    /**
      * @param string $subject
      *
      * @return $this
@@ -145,6 +187,8 @@ class Mailer
     }
 
     /**
+     * Return the email subject.
+     *
      * @return string
      */
     public function getSubject()
@@ -153,6 +197,8 @@ class Mailer
     }
 
     /**
+     * Set the email body.
+     *
      * @param string $body
      *
      * @return $this
@@ -164,6 +210,8 @@ class Mailer
     }
 
     /**
+     * Return the email body.
+     *
      * @return string
      */
     public function getBody()
@@ -172,6 +220,8 @@ class Mailer
     }
 
     /**
+     * Add headers that are considered "required". These will not be cleared after a reset.
+     *
      * @param string $header
      *
      * @return $this
@@ -183,6 +233,8 @@ class Mailer
     }
 
     /**
+     * Return all required headers.
+     *
      * @return array
      */
     public function getRequiredHeaders()
@@ -191,6 +243,8 @@ class Mailer
     }
 
     /**
+     * Add regular headers. These will be cleared after a reset.
+     *
      * @param string $header
      *
      * @return $this
@@ -202,6 +256,8 @@ class Mailer
     }
 
     /**
+     * Return all regular headers.
+     *
      * @return array
      */
     public function getHeaders()
@@ -210,13 +266,19 @@ class Mailer
     }
 
     /**
+     * Send the email.
+     *
      * @return bool
      * @throws \Parable\Mail\Exception
      */
     public function send()
     {
+        if (!$this->mailSender) {
+            throw new \Parable\Mail\Exception('No mail sender implementation set.');
+        }
+
         // Check the basics
-        if (count($this->addresses['to']) == 0) {
+        if (count($this->addresses['to']) === 0) {
             throw new \Parable\Mail\Exception('No to addresses provided.');
         }
         if (empty($this->subject)) {
@@ -245,10 +307,12 @@ class Mailer
         $headers = array_merge($this->requiredHeaders, $this->headers);
         $headers = implode("\r\n", $headers);
 
-        return $this->sendMail($to, $this->subject, $this->body, $headers);
+        return $this->getMailSender()->send($to, $this->subject, $this->body, $headers);
     }
 
     /**
+     * Actually send the email, using php's built-in mail() command.
+     *
      * @param string $to
      * @param string $subject
      * @param string $body

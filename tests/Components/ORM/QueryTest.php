@@ -40,12 +40,6 @@ class QueryTest extends \Parable\Tests\Components\ORM\Base
         $this->assertSame('`sometable`', $this->query->getQuotedTableName());
     }
 
-    public function testSetAndGetTableKey()
-    {
-        $this->query->setTableKey('id');
-        $this->assertSame('id', $this->query->getTableKey());
-    }
-
     public function testSetAndGetAction()
     {
         $this->query->setAction('insert');
@@ -209,21 +203,43 @@ class QueryTest extends \Parable\Tests\Components\ORM\Base
         $this->query->addValue('active', 1);
         $this->query->addValue('thing', null);
 
-        $this->assertSame("INSERT INTO `user` (`name`, `active`, `thing`) VALUES ('test', '1', NULL);", (string)$this->query);
+        $this->assertSame(
+            "INSERT INTO `user` (`name`, `active`, `thing`) VALUES ('test', '1', NULL);",
+            (string)$this->query
+        );
+    }
+
+    public function testInsertWithAddValues()
+    {
+        $this->query->setAction('insert');
+        $this->query->addValues([
+            'name'   => 'test',
+            'active' => 1,
+            'thing'  => null,
+        ]);
+
+        $this->assertSame(
+            "INSERT INTO `user` (`name`, `active`, `thing`) VALUES ('test', '1', NULL);",
+            (string)$this->query
+        );
     }
 
     public function testUpdate()
     {
         $this->query->setAction('update');
-        // By setting the tableKey, query will know what to use for the where
-        $this->query->setTableKey('id');
 
-        $this->query->addValue('id', '3');
         $this->query->addValue('name', 'test');
         $this->query->addValue('active', 1);
         $this->query->addValue('thing', null);
 
-        $this->assertSame("UPDATE `user` SET `name` = 'test', `active` = '1', `thing` = NULL WHERE `user`.`id`  = '3';", (string)$this->query);
+        $this->query->where($this->query->buildAndSet([
+            ["id", "=", 3],
+        ]));
+
+        $this->assertSame(
+            "UPDATE `user` SET `name` = 'test', `active` = '1', `thing` = NULL WHERE (`user`.`id` = '3');",
+            (string)$this->query
+        );
     }
 
     public function testSelectGivesEmptyStringOnNoSelect()
@@ -329,10 +345,10 @@ class QueryTest extends \Parable\Tests\Components\ORM\Base
     public function testRidiculouslyComplexQuery()
     {
         $this->query->setTableName('complex');
-        $this->query->setTableKey('id');
 
         $this->query->where($this->query->buildAndSet([
             ['id', '=', 1],
+            ['name', 'like', "%stuff"],
             ['active', 'is not null'],
             $this->query->buildOrSet([
                 ['id', '!=', 1],
@@ -358,7 +374,7 @@ class QueryTest extends \Parable\Tests\Components\ORM\Base
 
         // Understandably, this query is also ridiculously long
         $this->assertSame(
-            "SELECT * FROM `complex` LEFT JOIN `settings` ON `settings`.`user_id` = `complex`.`id` WHERE (`complex`.`id` = '1' AND `complex`.`active` IS NOT NULL AND (`complex`.`id` != '1' OR `complex`.`active` IS NULL OR `complex`.`created_at` IN ('option1','option2'))) GROUP BY `complex`.`name`, `settings`.`id` HAVING (`complex`.`id` != '1' AND `complex`.`active` IS NULL) ORDER BY `complex`.`id` DESC, `settings`.`name` ASC LIMIT 5;",
+            "SELECT * FROM `complex` LEFT JOIN `settings` ON `settings`.`user_id` = `complex`.`id` WHERE (`complex`.`id` = '1' AND `complex`.`name` LIKE '%stuff' AND `complex`.`active` IS NOT NULL AND (`complex`.`id` != '1' OR `complex`.`active` IS NULL OR `complex`.`created_at` IN ('option1','option2'))) GROUP BY `complex`.`name`, `settings`.`id` HAVING (`complex`.`id` != '1' AND `complex`.`active` IS NULL) ORDER BY `complex`.`id` DESC, `settings`.`name` ASC LIMIT 5;",
             (string)$this->query
         );
     }

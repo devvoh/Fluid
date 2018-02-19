@@ -1,15 +1,33 @@
 #!/usr/bin/env php
 <?php
+// We're going to want to display all errors.
 ini_set('display_errors', '1');
 
-/** @var \Parable\Console\App $app */
-$app = require_once(__DIR__ . '/src/Framework/Bootstrap.php');
+// Require the Composer autoloader
+require_once realpath(__DIR__ . "/../../autoload.php");
 
-$app->setName('Parable');
+/** @var \Parable\Console\App $app */
+$app = \Parable\DI\Container::create(\Parable\Console\App::class);
+
+// Add the default location to the autoloader and register it
+$autoloader = \Parable\DI\Container::create(\Parable\Framework\Autoloader::class);
+$autoloader->addLocation(BASEDIR . DS . 'app');
+$autoloader->register();
+
+// Set the basedir on the path
+$path = \Parable\DI\Container::create(\Parable\Filesystem\Path::class);
+$path->setBaseDir(BASEDIR);
+
+$app->setName("Parable " . \Parable\Framework\App::PARABLE_VERSION);
+
+$helpCommand          = \Parable\DI\Container::get(\Parable\Console\Command\Help::class);
+$initStructureCommand = \Parable\DI\Container::get(\Parable\Framework\Command\InitStructure::class);
 
 // Always add Help & Init
-$app->addCommand(\Parable\DI\Container::get(\Parable\Console\Command\Help::class));
-$app->addCommand(\Parable\DI\Container::get(\Parable\Framework\Command\InitStructure::class));
+$app->addCommands([
+    $helpCommand,
+    $initStructureCommand,
+]);
 
 // Attempt to load commands set by the user
 if (file_exists($path->getDir('app'))) {
@@ -25,5 +43,5 @@ if (file_exists($path->getDir('app'))) {
     }
 }
 
-$app->setDefaultCommand('help');
+$app->setDefaultCommand($helpCommand);
 $app->run();

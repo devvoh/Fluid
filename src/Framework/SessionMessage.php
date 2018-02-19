@@ -1,6 +1,6 @@
 <?php
 
-namespace Parable\GetSet;
+namespace Parable\Framework;
 
 class SessionMessage
 {
@@ -20,7 +20,7 @@ class SessionMessage
     }
 
     /**
-     * Get all messages or all messages of $type
+     * Return all messages or all messages of $type.
      *
      * @param null|string $type
      *
@@ -40,7 +40,7 @@ class SessionMessage
     }
 
     /**
-     * Get all messages or all messages of $type and then clear those messages
+     * Return all messages or all messages of $type and then clear those messages.
      *
      * @param null|string $type
      *
@@ -54,7 +54,7 @@ class SessionMessage
     }
 
     /**
-     * Add a message to type notice by default, or to $type instead
+     * Add a message to type notice by default, or to $type instead.
      *
      * @param null|string $message
      * @param string      $type
@@ -74,7 +74,7 @@ class SessionMessage
     }
 
     /**
-     * Clear all messages or all messages of $type
+     * Clear all messages or all messages of $type.
      *
      * @param null|string $type
      *
@@ -93,7 +93,7 @@ class SessionMessage
     }
 
     /**
-     * Count all messages or all messages of $type
+     * Count all messages or all messages of $type.
      *
      * @param null|string $type
      *
@@ -113,7 +113,7 @@ class SessionMessage
     }
 
     /**
-     * Read messages stored in the session and load them into SessionMessage
+     * Read messages stored in the session and load them into SessionMessage.
      *
      * @return $this
      */
@@ -126,7 +126,7 @@ class SessionMessage
     }
 
     /**
-     * Write messages stored on SessionMessage to the session
+     * Write messages stored on SessionMessage to the session.
      *
      * @return $this
      */

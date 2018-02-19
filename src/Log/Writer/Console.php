@@ -2,13 +2,17 @@
 
 namespace Parable\Log\Writer;
 
-class Terminal implements \Parable\Log\Writer
+class Console implements \Parable\Log\Writer\WriterInterface
 {
     /** @var  */
     protected $file;
 
     /**
-     * @inheritdoc
+     * Write the message to STDOUT.
+     *
+     * @param string $message
+     *
+     * @return $this
      */
     public function write($message)
     {

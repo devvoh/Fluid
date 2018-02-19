@@ -7,7 +7,7 @@ class Authentication
     /** @var string */
     protected $userClassName = '\Model\User';
 
-    /** @var null|object */
+    /** @var object|null */
     protected $user;
 
     /** @var \Parable\Framework\Toolkit */
@@ -56,6 +56,8 @@ class Authentication
     }
 
     /**
+     * Generate a password hash from the provided $password.
+     *
      * @param $password
      *
      * @return bool|string
@@ -66,7 +68,7 @@ class Authentication
     }
 
     /**
-     * Checks whether there's an auth session
+     * Checks whether there's an auth session active at this point.
      *
      * @return bool
      */
@@ -92,7 +94,7 @@ class Authentication
     }
 
     /**
-     * Sets whether there's an authenticated user or not
+     * Sets whether there's an authenticated user or not.
      *
      * @param bool $value
      *
@@ -105,7 +107,7 @@ class Authentication
     }
 
     /**
-     * Checks whether there's an authenticated user or not
+     * Checks whether there's an authenticated user or not.
      *
      * @return bool
      */
@@ -115,7 +117,7 @@ class Authentication
     }
 
     /**
-     * Set the data for the user currently authenticated
+     * Set the data for the user currently authenticated.
      *
      * @param array $data
      *
@@ -128,7 +130,7 @@ class Authentication
     }
 
     /**
-     * Return the authentication data
+     * Return the authentication data.
      *
      * @return array
      */
@@ -138,6 +140,8 @@ class Authentication
     }
 
     /**
+     * Set the class name to use for the user.
+     *
      * @param string $className
      *
      * @return $this
@@ -156,6 +160,8 @@ class Authentication
     }
 
     /**
+     * Return the class name for the user.
+     *
      * @return string
      */
     public function getUserClassName()
@@ -164,6 +170,8 @@ class Authentication
     }
 
     /**
+     * Set the user and check whether it's of the right type.
+     *
      * @param $user
      *
      * @return $this
@@ -179,7 +187,7 @@ class Authentication
     }
 
     /**
-     * Return the user entity, if exists
+     * Return the user entity, if it exists.
      *
      * @return null
      */
@@ -189,7 +197,7 @@ class Authentication
     }
 
     /**
-     * Check whether the provided password matches the password hash
+     * Check whether the provided password matches the password hash.
      *
      * @param string $passwordProvided
      * @param string $passwordHash
@@ -215,7 +223,7 @@ class Authentication
     }
 
     /**
-     * Revoke an existing authentication
+     * Revoke an existing authentication.
      *
      * @return $this
      */

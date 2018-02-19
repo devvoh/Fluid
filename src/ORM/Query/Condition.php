@@ -29,6 +29,8 @@ class Condition
     protected $shouldCompareFields = false;
 
     /**
+     * Set the query.
+     *
      * @param \Parable\ORM\Query $query
      *
      * @return $this
@@ -42,6 +44,8 @@ class Condition
     }
 
     /**
+     * Set the table name.
+     *
      * @param string $tableName
      *
      * @return $this
@@ -53,6 +57,8 @@ class Condition
     }
 
     /**
+     * Return the table name.
+     *
      * @return string
      */
     public function getTableName()
@@ -61,6 +67,8 @@ class Condition
     }
 
     /**
+     * Set the JOIN table name.
+     *
      * @param string $joinTableName
      *
      * @return $this
@@ -72,6 +80,8 @@ class Condition
     }
 
     /**
+     * Return the JOIN table name.
+     *
      * @return string
      */
     public function getJoinTableName()
@@ -80,6 +90,8 @@ class Condition
     }
 
     /**
+     * Set the key.
+     *
      * @param string $key
      *
      * @return $this
@@ -91,6 +103,8 @@ class Condition
     }
 
     /**
+     * Return the key.
+     *
      * @return string
      */
     public function getKey()
@@ -99,6 +113,8 @@ class Condition
     }
 
     /**
+     * Set the comparator.
+     *
      * @param string $comparator
      *
      * @return $this
@@ -110,6 +126,8 @@ class Condition
     }
 
     /**
+     * Return the comparator.
+     *
      * @return string
      */
     public function getComparator()
@@ -118,6 +136,8 @@ class Condition
     }
 
     /**
+     * Set the value.
+     *
      * @param mixed $value
      *
      * @return $this
@@ -129,6 +149,8 @@ class Condition
     }
 
     /**
+     * Return the value.
+     *
      * @return mixed
      */
     public function getValue()
@@ -137,6 +159,8 @@ class Condition
     }
 
     /**
+     * Set whether the value should be quoted.
+     *
      * @param bool $shouldQuoteValues
      *
      * @return $this
@@ -148,6 +172,8 @@ class Condition
     }
 
     /**
+     * Return whether the value should be quoted.
+     *
      * @return bool
      */
     public function shouldQuoteValues()
@@ -156,6 +182,8 @@ class Condition
     }
 
     /**
+     * Set whether the fields should be compared rather than values. If so, quoteValues is set to inverted value.
+     *
      * @param bool $shouldCompareFields
      *
      * @return $this
@@ -170,6 +198,8 @@ class Condition
     }
 
     /**
+     * Return whether we should compare fields rather than values.
+     *
      * @return bool
      */
     protected function shouldCompareFields()
@@ -178,6 +208,8 @@ class Condition
     }
 
     /**
+     * Return whether the comparator is IN or NOT IN.
+     *
      * @return bool
      */
     protected function isComparatorInNotIn()
@@ -186,6 +218,8 @@ class Condition
     }
 
     /**
+     * Return whether the comparator is IS NULL or IS NOT NULL.
+     *
      * @return bool
      */
     protected function isComparatorIsNotNullIsNull()
@@ -194,6 +228,8 @@ class Condition
     }
 
     /**
+     * Return the comparator in uppercase.
+     *
      * @return $this
      */
     protected function uppercaseComparator()
@@ -203,15 +239,18 @@ class Condition
     }
 
     /**
+     * Build the condition to a string.
+     *
      * @return string
      */
     public function build()
     {
         $value = $this->getValue();
 
+        $this->uppercaseComparator();
+
         // Check for IS/IS NOT and set the value to NULL if it is.
         if ($this->isComparatorIsNotNullIsNull()) {
-            $this->uppercaseComparator();
             $value = null;
         }
 

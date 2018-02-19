@@ -4,7 +4,7 @@ namespace Parable\Tests\Components\Console;
 
 class OutputTest extends \Parable\Tests\Base
 {
-    /** @var \Parable\Console\Output */
+    /** @var \Parable\Console\Output|\PHPUnit_Framework_MockObject_MockObject */
     protected $output;
 
     /** @var string */
@@ -15,7 +15,7 @@ class OutputTest extends \Parable\Tests\Base
         parent::setUp();
 
         // We mock out parseTags, because it adds too many escape codes. We'll test parseTags concretely later.
-        $this->output = $this->createPartialMock(\Parable\Console\Output::class, ['parseTags']);
+        $this->output = $this->createPartialMock(\Parable\Console\Output::class, ['parseTags', 'isInteractiveShell']);
 
         $this->output
             ->method('parseTags')
@@ -23,6 +23,12 @@ class OutputTest extends \Parable\Tests\Base
             ->willReturnCallback(function ($string) {
                 return $string . $this->defaultTag;
             });
+
+        // Make sure Output always thinks it's not in an interactive shell
+        $this->output
+            ->method('isInteractiveShell')
+            ->withAnyParameters()
+            ->willReturn(false);
     }
 
     /**
@@ -128,44 +134,55 @@ class OutputTest extends \Parable\Tests\Base
         $this->assertSameWithTag("\e[4;8H", $this->getActualOutputAndClean());
     }
 
+    public function testCursorPlaceDisablesClearLine()
+    {
+        $this->output->write("stuff!");
+        $this->assertTrue($this->output->isClearLineEnabled());
+
+        $this->output->cursorPlace(1, 1);
+        $this->assertFalse($this->output->isClearLineEnabled());
+
+        // This should do nothing
+        $this->output->clearLine();
+
+        // If clear line had worked, there would be many spaces. The string we're expecting does not.
+        $this->assertSame("stuff!\e[0m\e[1;1H\e[0m", $this->getActualOutputAndClean());
+    }
+
     public function testCls()
     {
         $this->output->cls();
         $this->assertSameWithTag("\ec", $this->getActualOutputAndClean());
     }
 
-    /**
-     * This was a surprisingly hard test to do -_-
-     */
     public function testClearLine()
     {
-        $expectedLineLength = strlen($this->addTag('12345'));
-
-        $this->output->write('12345');
-        $this->assertSame($expectedLineLength, $this->output->getLineLength());
-
-        // Clearing the line does multiple things. Moves the cursor back, overwrites the old text with spaces,
-        // and moves the cursor back again, then resets the line length to 0.
+        $this->output->write("12345");
         $this->output->clearLine();
+        $this->output->write("no");
 
-        // Line length should have reset
-        $this->assertSame(0, $this->output->getLineLength());
+        // Use urlencode because the carriage return escape codes are annoying to escape otherwise
+        $output = urlencode($this->getActualOutputAndClean());
 
-        $spaces = str_repeat(" ", $expectedLineLength);
-        $expectedString  = $this->addTag("12345");
-        $expectedString .= $this->addTag("\e[{$expectedLineLength}D{$spaces}");
+        // Check that we've got 2 carriage returns and then remove %0D (carriage return)
+        $this->assertSame(2, substr_count($output, "%0D"));
+        $output = str_replace("%0D", "", $output);
 
-        // The current lineLength is equivalent to the entire expectedString up to this point, since we wrote a string
-        // (+tag), wrote escape codes to move the cursor back (+tag), wrote the appropriate amount of spaces (5+tag)
-        $newExpectedLineLength = strlen($expectedString);
-        $expectedString .= $this->addTag("\e[{$newExpectedLineLength}D");
+        // Straight up remove %1B (backslash) and %5B (square bracket) combinations (the reset style \[0m)
+        $output = str_replace("%1B%5B0m", "", $output);
 
-        $this->assertSame($expectedString, $this->getActualOutputAndClean());
+        // Check that we've got the correct amount of spaces (+)
+        $spaces = str_repeat("+", $this->output->getTerminalWidth());
+
+        $this->assertSame(
+            $output,
+            "12345{$spaces}no"
+        );
     }
 
     public function testWriteErrorBlock()
     {
-        $this->output->writeError('error');
+        $this->output->writeErrorBlock('error');
 
         $output = [
             $this->addTag(""),
@@ -184,7 +201,7 @@ class OutputTest extends \Parable\Tests\Base
 
     public function testWriteInfoBlock()
     {
-        $this->output->writeInfo('info');
+        $this->output->writeInfoBlock('info');
 
         $output = [
             $this->addTag(""),
@@ -203,7 +220,7 @@ class OutputTest extends \Parable\Tests\Base
 
     public function testWriteSuccessBlock()
     {
-        $this->output->writeSuccess('success');
+        $this->output->writeSuccessBlock('success');
 
         $output = [
             $this->addTag(""),
@@ -239,6 +256,44 @@ class OutputTest extends \Parable\Tests\Base
         );
     }
 
+    public function testWriteBlockWithTagsUsingMultipleTags()
+    {
+        $this->output->writeBlockWithTags('any block', ["1", "2", "3"]);
+
+        $output = [
+            $this->addTag(""),
+            $this->addTag(" <1><2><3>┌───────────┐</1></2></3>"),
+            $this->addTag(" <1><2><3>│ any block │</1></2></3>"),
+            $this->addTag(" <1><2><3>└───────────┘</1></2></3>"),
+            $this->addTag(""),
+            "",
+        ];
+
+        $this->assertSame(
+            implode("\n", $output),
+            $this->getActualOutputAndClean()
+        );
+    }
+
+    public function testWriteBlockWithTagsUsingNoTagsOutputsNoTags()
+    {
+        $this->output->writeBlockWithTags('any block', []);
+
+        $output = [
+            $this->addTag(""),
+            $this->addTag(" ┌───────────┐"),
+            $this->addTag(" │ any block │"),
+            $this->addTag(" └───────────┘"),
+            $this->addTag(""),
+            "",
+        ];
+
+        $this->assertSame(
+            implode("\n", $output),
+            $this->getActualOutputAndClean()
+        );
+    }
+
     public function testParseTagsForRealThisTime()
     {
         $output = new \Parable\Console\Output();
@@ -256,5 +311,17 @@ class OutputTest extends \Parable\Tests\Base
             $this->addTag("\e[0;31m\e[47mred on lightgray", 3),
             $output->parseTags('<red><lightgray_bg>red on lightgray</lightgray_bg></red>')
         );
+    }
+
+    public function testGetTerminalWidth()
+    {
+        // Since Output::isInteractiveShell always returns false, assume default value
+        $this->assertSame(80, $this->output->getTerminalWidth());
+    }
+
+    public function testGetTerminalHeight()
+    {
+        // Since Output::isInteractiveShell always returns false, assume default value
+        $this->assertSame(25, $this->output->getTerminalHeight());
     }
 }

@@ -8,7 +8,7 @@ class LoggerTest extends \Parable\Tests\Base
     protected $logger;
 
     /** @var string */
-    protected $logFile = BASEDIR . '/tests/test.log';
+    protected $logFile;
 
     /** @var \Parable\Log\Writer\File|\PHPUnit_Framework_MockObject_MockObject */
     protected $fileWriter;
@@ -19,6 +19,8 @@ class LoggerTest extends \Parable\Tests\Base
     protected function setUp()
     {
         parent::setUp();
+
+        $this->logFile = $this->testPath->getDir('/tests/test.log');
 
         $this->logger = new \Parable\Log\Logger();
 
@@ -41,7 +43,7 @@ class LoggerTest extends \Parable\Tests\Base
 
     public function testLoggerWriteCanHandleAllTypes()
     {
-        $this->logger->setWriter(new \Parable\Log\Writer\Terminal());
+        $this->logger->setWriter(new \Parable\Log\Writer\Console());
         $this->logger->write('message');
 
         $this->assertSame("message\n", $this->getActualOutputAndClean());

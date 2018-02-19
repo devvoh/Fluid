@@ -114,6 +114,11 @@ class RequestTest extends \Parable\Tests\Base
         $this->assertFalse($this->request->isPatch());
     }
 
+    public function testIsOptions()
+    {
+        $this->assertFalse($this->request->isOptions());
+    }
+
     public function testGetHeader()
     {
         $this->assertSame('testvalue', $this->request->getHeader('testkey'));

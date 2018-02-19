@@ -21,8 +21,6 @@ class SessionTest extends \Parable\Tests\Base
 
     public function testGetSetOnResource()
     {
-        $this->getSet->reset();
-
         $this->getSet->set("stuff", "here");
 
         $this->assertSame(

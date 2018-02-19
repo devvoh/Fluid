@@ -4,6 +4,19 @@ namespace Parable\Tests;
 
 abstract class Base extends \PHPUnit\Framework\TestCase
 {
+    /** @var \Parable\Filesystem\Path */
+    protected $testPath;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        // This key might be handy to have
+        $GLOBALS['_SESSION'] = [];
+        $this->testPath = \Parable\DI\Container::create(\Parable\Filesystem\Path::class);
+        $this->testPath->setBaseDir(__DIR__ . DS . "..");
+    }
+
     /**
      * Set $value on $object->$propertyName, even if it's private
      * or protected.

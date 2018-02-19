@@ -21,7 +21,12 @@ class InputStream extends \Parable\GetSet\Base
         }
     }
 
-    public function extractAndSetData($data)
+    /**
+     * Attempt to get the data from a string, which can be either json or array data.
+     *
+     * @param string $data
+     */
+    protected function extractAndSetData($data)
     {
         // Attempt to load as Json first, as it's easier to recognise a failure on
         $data_parsed = json_decode($data, true);

@@ -11,7 +11,7 @@ class AppTest extends \Parable\Tests\Components\Framework\Base
     protected $config = [];
 
     /** @var \Parable\Routing\Router */
-    protected $mockRouter;
+    protected $router;
 
     /** @var \Parable\Http\Response|\PHPUnit_Framework_MockObject_MockObject */
     protected $mockResponse;
@@ -19,23 +19,12 @@ class AppTest extends \Parable\Tests\Components\Framework\Base
     /** @var \Parable\GetSet\Session|\PHPUnit_Framework_MockObject_MockObject */
     protected $mockSession;
 
-    /** @var \Parable\Filesystem\Path */
-    protected $mockPath;
-
-    /** @var \Parable\Framework\Config|\PHPUnit_Framework_MockObject_MockObject */
-    protected $mockConfig;
-
-    /** @var \Parable\Framework\Dispatcher */
-    protected $mockDispatcher;
+    /** @var bool */
+    protected $noRoutesFoundTriggered = false;
 
     protected function setUp()
     {
         parent::setUp();
-
-        // We need to 'prepare' some classes since they'll expect files elsewhere
-        $this->mockPath = new \Parable\Filesystem\Path();
-        $existingPath   = \Parable\DI\Container::get(\Parable\Filesystem\Path::class);
-        $this->mockPath->setBasedir(realpath($existingPath->getBaseDir() . '/structure'));
 
         /** @var \Parable\Http\Response $this->mockResponse */
         // Response should not actually terminate
@@ -51,26 +40,13 @@ class AppTest extends \Parable\Tests\Components\Framework\Base
 
         \Parable\DI\Container::store($this->mockSession, \Parable\GetSet\Session::class);
 
-        $this->mockDispatcher = new \Parable\Framework\Dispatcher(
-            \Parable\DI\Container::get(\Parable\Event\Hook::class),
-            $this->mockPath,
-            \Parable\DI\Container::get(\Parable\Framework\View::class),
-            \Parable\DI\Container::get(\Parable\Http\Response::class)
-        );
-
-        // Router is not a Framework class but does depend on other Parable Components
-        $this->mockRouter = new \Parable\Routing\Router(
-            \Parable\DI\Container::get(\Parable\Http\Request::class),
-            \Parable\DI\Container::get(\Parable\Http\Url::class),
-            $this->mockPath
-        );
-
-        $this->mockRouter->addRoute('index', [
+        $this->router = \Parable\DI\Container::get(\Parable\Routing\Router::class);
+        $this->router->addRouteFromArray('index', [
             'methods' => ['GET'],
             'url' => '/',
             'controller' => \Parable\Tests\TestClasses\Controller::class,
             'action' => 'index',
-            'template' => $this->path->getDir('tests/TestTemplates/index.phtml'),
+            'templatePath' => $this->testPath->getDir('tests/TestTemplates/index.phtml'),
         ]);
 
         $this->app = $this->createApp();
@@ -88,6 +64,24 @@ class AppTest extends \Parable\Tests\Components\Framework\Base
         $this->assertSame('OK', $this->mockResponse->getHttpCodeText());
     }
 
+    public function testAppRunWithoutRoutesTriggersHookNoRoutesFound()
+    {
+        $this->assertFalse($this->noRoutesFoundTriggered);
+
+        $hook = \Parable\DI\Container::get(\Parable\Event\Hook::class);
+        $hook->into(\Parable\Framework\App::HOOK_LOAD_ROUTES_NO_ROUTES_FOUND, function ($event) {
+            $this->assertSame(\Parable\Framework\App::HOOK_LOAD_ROUTES_NO_ROUTES_FOUND, $event);
+            $this->noRoutesFoundTriggered = true;
+        });
+
+        $app = $this->createApp(\Parable\Tests\TestClasses\Config\TestNoRouting::class);
+        $app->run();
+
+        $this->getActualOutputAndClean();
+
+        $this->assertTrue($this->noRoutesFoundTriggered);
+    }
+
     public function testAppRunWithUnknownUrlGives404()
     {
         $_GET['url'] = '/simple';
@@ -103,12 +97,12 @@ class AppTest extends \Parable\Tests\Components\Framework\Base
     public function testAppRunWithSimpleUrlWorks()
     {
         $_GET['url'] = '/simple';
-        $this->mockRouter->addRoute(
+        $this->router->addRouteFromArray(
             'simple',
             [
                 'methods' => ['GET'],
                 'url' => '/simple',
-                'callable' => function (\Parable\Routing\Route $route) {
+                'callable' => function () {
                     echo "callable route found";
                 }
             ]
@@ -121,20 +115,170 @@ class AppTest extends \Parable\Tests\Components\Framework\Base
         $this->assertSame('callable route found', $output);
     }
 
+    public function testAppWithAnyQuickRoute()
+    {
+        $_GET['url'] = '/any';
+        $this->app->get("any", function () {
+            return "any quickroute";
+        })->run();
+        $this->assertSame("any quickroute", $this->getActualOutputAndClean());
+    }
+
+    public function testAddQuickRouteWithoutNameGeneratesUniqueID()
+    {
+        $_GET['url'] = '/any';
+        $this->app->get("any", function () {
+            return "any quickroute";
+        })->run();
+
+        $dispatcher = \Parable\DI\Container::get(\Parable\Framework\Dispatcher::class);
+        $dispatchedRoute = $dispatcher->getDispatchedRoute();
+
+        $this->getActualOutputAndClean();
+
+        $this->assertSame(23, strlen($dispatchedRoute->getName()));
+        $this->assertContains(".", $dispatchedRoute->getName());
+    }
+
+    public function testAddQuickRouteWithNameActuallyHasName()
+    {
+        $_GET['url'] = '/any';
+        $this->app->get("any", function () {
+            return "any quickroute";
+        }, "this-is-a-named-route")->run();
+
+        $dispatcher = \Parable\DI\Container::get(\Parable\Framework\Dispatcher::class);
+        $dispatchedRoute = $dispatcher->getDispatchedRoute();
+
+        $this->getActualOutputAndClean();
+
+        $this->assertSame("this-is-a-named-route", $dispatchedRoute->getName());
+    }
+
+    public function testAppWithAnyQuickRouteAcceptsControllerActionCombination()
+    {
+        $_GET['url'] = '/any-controller-action';
+        $this->app->get(
+            "any-controller-action",
+            [\Parable\Tests\TestClasses\Controller::class, "simple"]
+        )->run();
+        $this->assertSame("simple action", $this->getActualOutputAndClean());
+
+        $dispatcher = \Parable\DI\Container::get(\Parable\Framework\Dispatcher::class);
+        $dispatchedRoute = $dispatcher->getDispatchedRoute();
+
+        $this->assertSame(\Parable\Tests\TestClasses\Controller::class, $dispatchedRoute->getController());
+        $this->assertSame("simple", $dispatchedRoute->getAction());
+        $this->assertNull($dispatchedRoute->getCallable());
+    }
+
+    public function testAppWithAnyQuickRouteAcceptsStaticControllerActionAsCallable()
+    {
+        $_GET['url'] = '/any-static-callable';
+        $this->app->get(
+            "any-static-callable",
+            [\Parable\Tests\TestClasses\Controller::class, "staticIndex"]
+        )->run();
+        $this->assertSame("static index here!", $this->getActualOutputAndClean());
+
+        $dispatcher = \Parable\DI\Container::get(\Parable\Framework\Dispatcher::class);
+        $dispatchedRoute = $dispatcher->getDispatchedRoute();
+
+        $this->assertNull($dispatchedRoute->getController());
+        $this->assertNull($dispatchedRoute->getAction());
+        $this->assertSame(
+            [\Parable\Tests\TestClasses\Controller::class, "staticIndex"],
+            $dispatchedRoute->getCallable()
+        );
+    }
+
+    /**
+     * @param $type
+     *
+     * @dataProvider dpMethods
+     */
+    public function testAppWithSpecificQuickRoute($type)
+    {
+        $_SERVER["REQUEST_METHOD"] = strtoupper($type);
+        $_GET['url'] = '/quickroute';
+        $this->app->{$type}("quickroute", function () use ($type) {
+            return "{$type} quickroute";
+        })->run();
+        $this->assertSame("{$type} quickroute", $this->getActualOutputAndClean());
+    }
+
+    /**
+     * @param $type
+     *
+     * @dataProvider dpMethods
+     */
+    public function testAppWithAnyQuickRouteAcceptsAnyMethod($type)
+    {
+        $_SERVER["REQUEST_METHOD"] = strtoupper($type);
+        $_GET['url'] = '/quickroute';
+        $this->app->any("quickroute", function () use ($type) {
+            return "any quickroute";
+        })->run();
+        $this->assertSame("any quickroute", $this->getActualOutputAndClean());
+    }
+
+    /**
+     * @param $type
+     *
+     * @dataProvider dpMethods
+     */
+    public function testAppWithMultipleQuickRouteAcceptsMultipleMethods($type)
+    {
+        $_SERVER["REQUEST_METHOD"] = strtoupper($type);
+        $_GET['url'] = '/quickroute';
+        $this->app->multiple(["GET", "PUT", "OPTIONS"], "quickroute", function () use ($type) {
+            return "multiple quickroute";
+        })->run();
+
+        if (in_array(strtoupper($type), ["GET", "PUT", "OPTIONS"])) {
+            $this->assertSame("multiple quickroute", $this->getActualOutputAndClean());
+        } else {
+            $this->assertEmpty($this->getActualOutputAndClean());
+        }
+    }
+
+    public function dpMethods()
+    {
+        return [
+            ["get"],
+            ["post"],
+            ["put"],
+            ["patch"],
+            ["delete"],
+            ["options"],
+        ];
+    }
+
+    public function testAppWithGetQuickRouteDoesNotAcceptPost()
+    {
+        $_SERVER["REQUEST_METHOD"] = "POST";
+        $_GET['url'] = '/quickroute';
+        $this->app->get("quickroute", function () {
+            return "get quickroute";
+        })->run();
+        // And now it should be empty
+        $this->assertSame("", $this->getActualOutputAndClean());
+
+        $this->assertSame(404, $this->mockResponse->getHttpCode());
+    }
+
     public function testAppRunWithTemplatedUrlWorks()
     {
-        $path = \Parable\DI\Container::get(\Parable\Filesystem\Path::class);
-
         $_GET['url'] = '/template';
-        $this->mockRouter->addRoute(
+        $this->router->addRouteFromArray(
             'template',
             [
                 'methods' => ['GET'],
                 'url' => '/template',
-                'callable' => function (\Parable\Routing\Route $route) {
+                'callable' => function () {
                     echo "Hello";
                 },
-                'template' => $path->getDir('tests/TestTemplates/app_test_template.phtml'),
+                'templatePath' => $this->testPath->getDir('tests/TestTemplates/app_test_template.phtml'),
             ]
         );
 
@@ -150,7 +294,7 @@ class AppTest extends \Parable\Tests\Components\Framework\Base
         $this->expectException(\Parable\Routing\Exception::class);
         $this->expectExceptionMessage("Either a controller/action combination or callable is required.");
 
-        $this->mockRouter->addRoute(
+        $this->router->addRouteFromArray(
             'simple',
             [
                 'methods' => ['GET'],
@@ -164,12 +308,12 @@ class AppTest extends \Parable\Tests\Components\Framework\Base
     public function testAppRunWithValuedUrlWorks()
     {
         $_GET['url'] = '/valued/985';
-        $this->mockRouter->addRoute(
+        $this->router->addRouteFromArray(
             'valued',
             [
                 'methods' => ['GET'],
                 'url' => '/valued/{id}',
-                'callable' => function (\Parable\Routing\Route $route, $id) {
+                'callable' => function ($id) {
                     echo "callable route found with id: {$id}";
                 }
             ]
@@ -187,7 +331,7 @@ class AppTest extends \Parable\Tests\Components\Framework\Base
         $this->expectException(\Parable\Routing\Exception::class);
         $this->expectExceptionMessage("Either a controller/action combination or callable is required.");
 
-        $this->mockRouter->addRoute('simple', [
+        $this->router->addRouteFromArray('simple', [
             'methods' => ['GET'],
             'url' => '/',
         ]);
@@ -202,10 +346,71 @@ class AppTest extends \Parable\Tests\Components\Framework\Base
     public function testAppThrowsExceptionOnWrongRouteInterface()
     {
         $this->expectException(\Parable\Framework\Exception::class);
-        $this->expectExceptionMessage("Routing\Wrong does not implement \Parable\Framework\Interfaces\Routing");
+        $this->expectExceptionMessage("Routing\Wrong does not extend \Parable\Framework\Routing\AbstractRouting");
 
         $app = $this->createApp(\Parable\Tests\TestClasses\Config\TestBrokenRouting::class);
         $app->run();
+    }
+
+    public function testEnableErrorReporting()
+    {
+        // get the original state
+        $errorReportingEnabledOriginally = $this->app->isErrorReportingEnabled();
+
+        $this->app->setErrorReportingEnabled(true);
+
+        $this->assertSame("1", ini_get('display_errors'));
+        $this->assertSame(E_ALL, error_reporting());
+
+        $this->app->setErrorReportingEnabled(false);
+
+        $this->assertSame("0", ini_get('display_errors'));
+        $this->assertSame(E_ALL | ~E_DEPRECATED, error_reporting());
+
+        // and reset to the original state
+        $this->app->setErrorReportingEnabled($errorReportingEnabledOriginally);
+    }
+
+    public function testDebugConfigOptionEnablesErrorReporting()
+    {
+        $config = \Parable\DI\Container::create(\Parable\Tests\TestClasses\SettableConfig::class);
+        $config->set([
+            "parable" => [
+                "debug" => true,
+            ],
+        ]);
+
+        $app = $this->createAppWithSpecificConfig($config);
+
+        $this->assertFalse($app->isErrorReportingEnabled());
+
+        $app->run();
+
+        $this->assertTrue($app->isErrorReportingEnabled());
+    }
+
+    public function testSetDefaultTimezoneFromConfig()
+    {
+        // get the original state
+        $timezone = date_default_timezone_get();
+
+        $config = \Parable\DI\Container::create(\Parable\Tests\TestClasses\SettableConfig::class);
+        $config->set([
+            "parable" => [
+                "timezone" => "Antarctica/McMurdo",
+            ],
+        ]);
+
+        $app = $this->createAppWithSpecificConfig($config);
+
+        $this->assertSame($timezone, date_default_timezone_get());
+
+        $app->run();
+
+        $this->assertSame("Antarctica/McMurdo", date_default_timezone_get());
+
+        // and reset to the original state
+        date_default_timezone_set($timezone);
     }
 
     /**
@@ -214,21 +419,37 @@ class AppTest extends \Parable\Tests\Components\Framework\Base
      */
     protected function createApp($mainConfigClassName = \Parable\Tests\TestClasses\Config\Test::class)
     {
-        /** @var \Parable\Framework\Config|\PHPUnit_Framework_MockObject_MockObject $config */
-        $config = new \Parable\Framework\Config($this->path);
+        $config = new \Parable\Framework\Config($this->testPath);
         $config->setMainConfigClassName($mainConfigClassName);
 
-        return new \Parable\Framework\App(
-            $this->mockPath,
-            $config,
-            $this->mockDispatcher,
-            \Parable\DI\Container::get(\Parable\Framework\Toolkit::class),
-            \Parable\DI\Container::get(\Parable\Event\Hook::class),
-            $this->mockRouter,
-            \Parable\DI\Container::get(\Parable\Http\Response::class),
-            \Parable\DI\Container::get(\Parable\Http\Url::class),
-            \Parable\DI\Container::get(\Parable\GetSet\Session::class),
-            \Parable\DI\Container::get(\Parable\ORM\Database::class)
-        );
+        \Parable\DI\Container::store($config);
+
+        $app = \Parable\DI\Container::create(\Parable\Framework\App::class);
+
+        \Parable\DI\Container::clear(\Parable\Framework\Config::class);
+
+        return $app;
+    }
+
+    protected function createAppWithSpecificConfig(\Parable\Framework\Interfaces\Config $specificConfig)
+    {
+        $config = new \Parable\Framework\Config($this->testPath);
+        $config->setMainConfigClassName(get_class($specificConfig));
+        $config->addConfig($specificConfig);
+
+        \Parable\DI\Container::store($config);
+
+        $app = \Parable\DI\Container::create(\Parable\Framework\App::class);
+
+        \Parable\DI\Container::clear(\Parable\Framework\Config::class);
+
+        return $app;
+    }
+
+    public function tearDown()
+    {
+        // Make sure we never echo nothin'
+        $this->getActualOutputAndClean();
+        parent::tearDown();
     }
 }

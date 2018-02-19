@@ -38,8 +38,11 @@ class Database
     /** @var int */
     protected $errorMode = \PDO::ERRMODE_SILENT;
 
+    /** @var bool */
+    protected $softQuoting = true;
+
     /**
-     * Returns the type, if any
+     * Returns the type, if any.
      *
      * @return null|string
      */
@@ -49,7 +52,7 @@ class Database
     }
 
     /**
-     * Set the type
+     * Set the type.
      *
      * @param string $type
      *
@@ -62,7 +65,7 @@ class Database
     }
 
     /**
-     * Returns the location, if any
+     * Returns the location, if any.
      *
      * @return null|string
      */
@@ -72,7 +75,7 @@ class Database
     }
 
     /**
-     * Set the location
+     * Set the location.
      *
      * @param string $location
      *
@@ -85,7 +88,7 @@ class Database
     }
 
     /**
-     * Return the username
+     * Return the username.
      *
      * @return null|string
      */
@@ -95,7 +98,7 @@ class Database
     }
 
     /**
-     * Set the username
+     * Set the username.
      *
      * @param string $username
      *
@@ -108,7 +111,7 @@ class Database
     }
 
     /**
-     * Return the password
+     * Return the password.
      *
      * @return null|string
      */
@@ -118,7 +121,7 @@ class Database
     }
 
     /**
-     * Set the password
+     * Set the password.
      *
      * @param string $password
      *
@@ -131,7 +134,7 @@ class Database
     }
 
     /**
-     * Return the database, if any
+     * Return the database, if any.
      *
      * @return null|string
      */
@@ -141,7 +144,7 @@ class Database
     }
 
     /**
-     * Set the database
+     * Set the database.
      *
      * @param string $database
      *
@@ -154,7 +157,7 @@ class Database
     }
 
     /**
-     * Return the charset, if set
+     * Return the charset, if set.
      *
      * @return null|string
      */
@@ -164,7 +167,7 @@ class Database
     }
 
     /**
-     * Set the charset for the database connection; if not set, database setting is used
+     * Set the charset for the database connection; if not set, database setting is used.
      *
      * @param null|string $charset
      *
@@ -177,6 +180,8 @@ class Database
     }
 
     /**
+     * Return the error mode.
+     *
      * @return int
      */
     public function getErrorMode()
@@ -185,6 +190,8 @@ class Database
     }
 
     /**
+     * Set the error mode.
+     *
      * @param int $errorMode
      *
      * @return $this
@@ -198,6 +205,31 @@ class Database
     }
 
     /**
+     * Return whether soft quoting is enabled or not.
+     *
+     * @return bool
+     */
+    public function getSoftQuoting()
+    {
+        return $this->softQuoting;
+    }
+
+    /**
+     * Set whether to allow soft quoting or not.
+     *
+     * @param bool $value
+     *
+     * @return $this
+     */
+    public function setSoftQuoting($value)
+    {
+        $this->softQuoting = (bool)$value;
+        return $this;
+    }
+
+    /**
+     * Return the instance, and start one if needed.
+     *
      * @return null|\PDO
      * @throws \Parable\ORM\Exception
      */
@@ -234,6 +266,8 @@ class Database
     }
 
     /**
+     * Create and return a sqlite PDO instance.
+     *
      * @param string $location
      * @param int    $errorMode
      *
@@ -250,6 +284,8 @@ class Database
     }
 
     /**
+     * Create and return a MySQL PDO instance.
+     *
      * @param string $location
      * @param string $database
      * @param string $username
@@ -275,7 +311,7 @@ class Database
     }
 
     /**
-     * Sets the instance
+     * Sets the instance.
      *
      * @param \PDO $instance
      *
@@ -288,7 +324,8 @@ class Database
     }
 
     /**
-     * If an instance is available, quote/escape the message through PDO's quote function
+     * If an instance is available, quote/escape the message through PDOs quote function.
+     * If not and soft quoting is enabled, fudge it.
      *
      * @param string $string
      *
@@ -298,7 +335,12 @@ class Database
     public function quote($string)
     {
         if (!$this->getInstance()) {
-            throw new \Parable\ORM\Exception("Can't quote value without a database instance.");
+            if (!$this->softQuoting) {
+                throw new \Parable\ORM\Exception("Can't quote without a database instance.");
+            }
+
+            $string = str_replace("'", "", $string);
+            return "'{$string}'";
         }
         return $this->getInstance()->quote($string);
     }
@@ -333,7 +375,8 @@ class Database
     }
 
     /**
-     * Use an array to pass multiple config values at the same time
+     * Use an array to pass multiple config values at the same time. The values must correspond to setters
+     * defined on this class. If not, an exception is thrown.
      *
      * @param array $config
      *
@@ -343,12 +386,16 @@ class Database
     public function setConfig(array $config)
     {
         foreach ($config as $type => $value) {
-            $method = 'set' . ucfirst($type);
+            $property = ucwords(str_replace("-", " ", $type));
+            $property = lcfirst(str_replace(" ", "", $property));
+
+            $method = "set" . ucfirst($property);
+
             if (method_exists($this, $method)) {
                 $this->$method($value);
             } else {
                 throw new \Parable\ORM\Exception(
-                    "Tried to set non-existing config value '{$type}' on " . get_class($this)
+                    "Tried to set non-existing config value '{$property}' on " . get_class($this)
                 );
             }
         }

@@ -8,7 +8,7 @@ class Autoloader
     protected $locations = [];
 
     /**
-     * Register the autoloader
+     * Register the autoloader.
      *
      * @return $this
      */
@@ -19,7 +19,7 @@ class Autoloader
     }
 
     /**
-     * Add a location to the stack
+     * Add a location to the stack.
      *
      * @param string $location
      *
@@ -32,7 +32,7 @@ class Autoloader
     }
 
     /**
-     * Returns the locations to look in
+     * Returns the locations to look in.
      *
      * @return array
      */
@@ -42,7 +42,7 @@ class Autoloader
     }
 
     /**
-     * Attempts to load the class if it exists
+     * Attempts to load the class if it exists.
      *
      * @param string $class
      *

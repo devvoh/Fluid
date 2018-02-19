@@ -3,7 +3,7 @@
   "type": "framework",
   "description": "Parable is a PHP micro framework",
   "keywords": ["framework", "micro"],
-  "homepage": "http://devvoh.com/parable",
+  "homepage": "https://devvoh.com/parable",
   "license": "MIT",
   "authors": [
     {
@@ -21,7 +21,10 @@
   "autoload": {
     "psr-4": {
       "Parable\\": "src/"
-    }
+    },
+    "files": [
+      "src/defines.php"
+    ]
   },
   "autoload-dev": {
     "psr-4": {

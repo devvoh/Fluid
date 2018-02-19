@@ -1,11 +1,11 @@
 <?php
-ini_set('display_errors', '1');
+$autoloaderPath = realpath(__DIR__ . "/../vendor/autoload.php");
 
-$bootstrapDirectory = __DIR__ . '/../vendor/devvoh/parable/src/Framework/Bootstrap.php';
-if (!file_exists($bootstrapDirectory)) {
-    die("<b>ERROR</b>: You need to run <pre style='display:inline-block;background:#e6e6e6;padding:2px 5px'>composer install</pre> before Parable will work.");
+if (!$autoloaderPath) {
+    die("<b>ERROR</b>: You need to run <code>composer install</code> before Parable will work.");
 }
 
-$app = require_once($bootstrapDirectory);
+require_once $autoloaderPath;
 
+$app = \Parable\DI\Container::create(\Parable\Framework\App::class);
 $app->run();
