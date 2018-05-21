@@ -196,7 +196,7 @@ class Command
             if ($argument->isRequired()) {
                 $string[] = $argument->getName();
             } else {
-                $string[] = "[" . $argument->getName() . "]";
+                $string[] = "[{$argument->getName()}]";
             }
         }
 
@@ -209,7 +209,7 @@ class Command
             $string[] = "[--{$optionString}]";
         }
 
-        return implode(" ", $string);
+        return implode(' ', $string);
     }
 
     /**

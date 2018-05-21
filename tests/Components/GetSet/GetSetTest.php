@@ -18,7 +18,7 @@ class GetSetTest extends \Parable\Tests\Base
     {
         $this->assertSame('test', $this->getSet->getResource());
 
-        $this->getSet->setResource("what");
+        $this->getSet->setResource('what');
 
         $this->assertSame('what', $this->getSet->getResource());
     }
@@ -90,7 +90,7 @@ class GetSetTest extends \Parable\Tests\Base
 
         $this->assertInstanceOf(
             \Parable\GetSet\Base::class,
-            $this->getSet->remove("stuff")
+            $this->getSet->remove('stuff')
         );
 
         $this->assertSame(3, $this->getSet->count());
@@ -171,30 +171,40 @@ class GetSetTest extends \Parable\Tests\Base
         $this->assertSame([], $getset->getAll());
     }
 
+    public function testGetAllThrowsExcpetionIfNoLocalResourceSetAndResourceIsNotValidGlobal()
+    {
+        $this->expectException(\Parable\GetSet\Exception::class);
+        $this->expectExceptionMessage("Attempting to use global resource 'test' but resource not available.");
+
+        $getset = new \Parable\Tests\TestClasses\TestGetSetNoResource();
+        $getset->setResource('test');
+        $getset->getAll();
+    }
+
     public function testGetSetAndRemoveWithHierarchalKeys()
     {
-        $this->getSet->set("one", ["this" => "should stay"]);
-        $this->getSet->set("one.two.three.four", "totally nested, yo");
+        $this->getSet->set('one', ['this' => 'should stay']);
+        $this->getSet->set('one.two.three.four', 'totally nested, yo');
 
         $this->assertSame(
             [
-                "this" => "should stay",
-                "two" => [
-                    "three" => [
-                        "four" => "totally nested, yo",
+                'this' => 'should stay',
+                'two' => [
+                    'three' => [
+                        'four' => 'totally nested, yo',
                     ],
                 ],
             ],
-            $this->getSet->get("one")
+            $this->getSet->get('one')
         );
 
         $this->assertSame(
             [
-                "one" => [
-                    "this" => "should stay",
-                    "two" => [
-                        "three" => [
-                            "four" => "totally nested, yo",
+                'one' => [
+                    'this' => 'should stay',
+                    'two' => [
+                        'three' => [
+                            'four' => 'totally nested, yo',
                         ],
                     ],
                 ],
@@ -202,14 +212,14 @@ class GetSetTest extends \Parable\Tests\Base
             $this->getSet->getAll()
         );
 
-        $this->getSet->remove("one.this");
+        $this->getSet->remove('one.this');
 
         $this->assertSame(
             [
-                "one" => [
-                    "two" => [
-                        "three" => [
-                            "four" => "totally nested, yo",
+                'one' => [
+                    'two' => [
+                        'three' => [
+                            'four' => 'totally nested, yo',
                         ],
                     ],
                 ],
@@ -219,16 +229,16 @@ class GetSetTest extends \Parable\Tests\Base
 
         $this->assertSame(
             [
-                "four" => "totally nested, yo",
+                'four' => 'totally nested, yo',
             ],
-            $this->getSet->getAndRemove("one.two.three")
+            $this->getSet->getAndRemove('one.two.three')
         );
 
-        // And since "three" is now removed, "two" will be empty.
+        // And since 'three' is now removed, 'two' will be empty.
         $this->assertSame(
             [
-                "one" => [
-                    "two" => [
+                'one' => [
+                    'two' => [
                     ],
                 ],
             ],
@@ -238,34 +248,34 @@ class GetSetTest extends \Parable\Tests\Base
 
     public function testRemoveHierarchalKey()
     {
-        $this->getSet->set("one.two.three", "totally");
-        $this->getSet->set("one.two.four", "also");
+        $this->getSet->set('one.two.three', 'totally');
+        $this->getSet->set('one.two.four', 'also');
 
-        $this->assertCount(2, $this->getSet->get("one.two"));
+        $this->assertCount(2, $this->getSet->get('one.two'));
 
-        $this->getSet->remove("one.two.three");
+        $this->getSet->remove('one.two.three');
 
-        $this->assertCount(1, $this->getSet->get("one.two"));
-        $this->assertTrue(is_array($this->getSet->get("one.two")));
+        $this->assertCount(1, $this->getSet->get('one.two'));
+        $this->assertTrue(is_array($this->getSet->get('one.two')));
 
-        $this->getSet->remove("one.two");
+        $this->getSet->remove('one.two');
 
-        $this->assertNull($this->getSet->get("one.two"));
+        $this->assertNull($this->getSet->get('one.two'));
 
         // But one should be untouched and still an array
-        $this->assertTrue(is_array($this->getSet->get("one")));
+        $this->assertTrue(is_array($this->getSet->get('one')));
     }
 
     public function testGetNonExistingKeyReturnsDefault()
     {
         // Test non-existing should still be null
-        $this->assertNull($this->getSet->get("nope"));
+        $this->assertNull($this->getSet->get('nope'));
 
         // But with default it should be default
-        $this->assertEquals("default", $this->getSet->get("nope", "default"));
+        $this->assertEquals('default', $this->getSet->get('nope', 'default'));
 
         // Same for nested
-        $this->getSet->set("this", ["totally" => "exists"]);
+        $this->getSet->set('this', ['totally' => 'exists']);
 
         $this->assertNull($this->getSet->get("this.doesn't"));
 

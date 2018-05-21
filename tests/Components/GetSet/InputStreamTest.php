@@ -7,13 +7,13 @@ class InputStreamTest extends \Parable\Tests\Base
     public function testRawDataParsedProperly()
     {
         $getSet = $this->setRawSource();
-        $this->assertSame("value-from-raw", $getSet->get("test"));
+        $this->assertSame('value-from-raw', $getSet->get('test'));
     }
 
     public function testJsonDataParsedProperly()
     {
         $getSet = $this->setJsonSource();
-        $this->assertSame("value-from-json", $getSet->get("test"));
+        $this->assertSame('value-from-json', $getSet->get('test'));
     }
 
     /**
@@ -21,7 +21,7 @@ class InputStreamTest extends \Parable\Tests\Base
      */
     protected function setRawSource()
     {
-        return $this->setSource(__DIR__ . "/Files/InputSourceRaw.txt");
+        return $this->setSource(__DIR__ . '/Files/InputSourceRaw.txt');
     }
 
     /**
@@ -29,7 +29,7 @@ class InputStreamTest extends \Parable\Tests\Base
      */
     protected function setJsonSource()
     {
-        return $this->setSource(__DIR__ . "/Files/InputSourceJson.txt");
+        return $this->setSource(__DIR__ . '/Files/InputSourceJson.txt');
     }
 
     /**
@@ -40,7 +40,7 @@ class InputStreamTest extends \Parable\Tests\Base
     protected function setSource($path)
     {
         $getSet = new \Parable\GetSet\InputStream();
-        $this->mockProperty($getSet, "inputSource", $path);
+        $this->mockProperty($getSet, 'inputSource', $path);
         $getSet->__construct();
 
         return $getSet;

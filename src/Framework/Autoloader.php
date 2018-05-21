@@ -57,7 +57,7 @@ class Autoloader
         foreach ($this->getLocations() as $subPath) {
             $actualPath = str_replace('##replace##', $subPath, $path);
             if (file_exists($actualPath)) {
-                require_once($actualPath);
+                require_once $actualPath;
                 return true;
             }
         }

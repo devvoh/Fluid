@@ -12,10 +12,10 @@ class RequestTest extends \Parable\Tests\Base
         parent::setUp();
 
         // We need to set up the $_SERVER array first
-        $_SERVER['REQUEST_METHOD'] = "GET";
-        $_SERVER['HTTP_HOST'] = "test.dev";
-        $_SERVER['REQUEST_URI'] = "/folder/being/requested";
-        $_SERVER['SCRIPT_NAME'] = "stuff";
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER['HTTP_HOST']      = 'test.dev';
+        $_SERVER['REQUEST_URI']    = '/folder/being/requested';
+        $_SERVER['SCRIPT_NAME']    = 'stuff';
 
         $this->request = new \Parable\Http\Request();
 
@@ -24,14 +24,14 @@ class RequestTest extends \Parable\Tests\Base
 
     public function testGetProtocol()
     {
-        // Default is HTTP/1.1, if, for example, SERVER_PROTOCOL is unset.
-        $this->assertSame("HTTP/1.1", $this->request->getProtocol());
+        // Default is HTTP/1.1, if, for example, SERVER_PROTOCOL is unset
+        $this->assertSame('HTTP/1.1', $this->request->getProtocol());
 
-        $_SERVER['SERVER_PROTOCOL'] = "HTTP/2.0";
+        $_SERVER['SERVER_PROTOCOL'] = 'HTTP/2.0';
 
-        $this->assertSame("HTTP/2.0", $this->request->getProtocol());
+        $this->assertSame('HTTP/2.0', $this->request->getProtocol());
 
-        // In CLI mode, this value shouldn't be here.x
+        // In CLI mode, this value shouldn't be here
         unset($_SERVER['SERVER_PROTOCOL']);
     }
 
@@ -160,7 +160,7 @@ class RequestTest extends \Parable\Tests\Base
         $_SERVER = ['HTTPS' => ($scheme == 'http' ? 'off' : 'on')];
         $this->assertSame($scheme, $this->request->getScheme());
 
-        $_SERVER = ['SERVER_PORT' => ($scheme == 'http' ? 80 : 443)];
+        $_SERVER = ['SERVER_PORT' => ($scheme == 'http' ? '80' : '443')];
         $this->assertSame($scheme, $this->request->getScheme());
 
         unset($_SERVER['SERVER_PORT']);

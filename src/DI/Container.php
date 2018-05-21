@@ -47,6 +47,7 @@ class Container
 
     /**
      * Instantiate a class and fulfill its dependency requirements, getting dependencies rather than creating.
+     * This does not store the created instance in the cache. It would have to be manually stored.
      *
      * @param string $className
      * @param string $parentClassName
@@ -88,19 +89,39 @@ class Container
         $className = self::cleanName($className);
 
         try {
-            $reflection = new \ReflectionClass($className);
-        } catch (\Exception $e) {
-            $message = "Could not create instance of '{$className}'";
+            $dependencies = self::getDependenciesFor($className, $createAll);
+        } catch (\Parable\DI\Exception $e) {
+            $message = $e->getMessage();
             if ($parentClassName) {
                 $message .= ", required by '{$parentClassName}'";
             }
+            throw new \Parable\DI\Exception($message);
+        }
+        return new $className(...$dependencies);
+    }
+
+    /**
+     * Retrieve and instantiate all dependencies for the provided $className
+     *
+     * @param string $className
+     * @param bool   $createAll
+     *
+     * @return array
+     * @throws \Parable\DI\Exception
+     */
+    public static function getDependenciesFor($className, $createAll = false)
+    {
+        try {
+            $reflection = new \ReflectionClass($className);
+        } catch (\Exception $e) {
+            $message = "Could not create instance of '{$className}'";
             throw new \Parable\DI\Exception($message);
         }
 
         $construct = $reflection->getConstructor();
 
         if (!$construct) {
-            return new $className();
+            return [];
         }
 
         $parameters = $construct->getParameters();
@@ -123,7 +144,7 @@ class Container
                 $dependencies[] = self::get($subClassName, $className);
             }
         }
-        return new $className(...$dependencies);
+        return $dependencies;
     }
 
     /**
@@ -162,8 +183,8 @@ class Container
      */
     protected static function cleanName($name)
     {
-        if (substr($name, 0, 1) == "\\") {
-            $name = ltrim($name, "\\");
+        if (substr($name, 0, 1) === '\\') {
+            $name = ltrim($name, '\\');
         }
         return $name;
     }

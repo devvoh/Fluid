@@ -24,7 +24,7 @@ class LoggerTest extends \Parable\Tests\Base
 
         $this->logger = new \Parable\Log\Logger();
 
-        $this->fileWriter = $this->createPartialMock(\Parable\Log\Writer\File::class, ['writeToFile']);
+        $this->fileWriter = $this->createPartialMock(\Parable\Log\Writer\File::class, ['writeToFile', 'createFile']);
     }
 
     public function testLoggerWithoutWriterThrowsExceptionCallingWrite()
@@ -71,11 +71,13 @@ class LoggerTest extends \Parable\Tests\Base
     {
         $this->fileWriter
             ->method('writeToFile')
-            ->withAnyParameters()
             ->willReturnCallback(function ($message) {
                 // To prevent having to actually write to a file, we just add everything to a property
                 $this->recentLogLines .= $message . PHP_EOL;
             });
+        $this->fileWriter
+            ->method('createFile')
+            ->willReturn(true);
 
         $this->fileWriter->setLogFile($this->logFile);
         $this->logger->setWriter($this->fileWriter);
@@ -95,11 +97,14 @@ class LoggerTest extends \Parable\Tests\Base
     {
         $this->fileWriter
             ->method('writeToFile')
-            ->withAnyParameters()
             ->willReturnCallback(function ($message) {
                 // To prevent having to actually write to a file, we just add everything to a property
                 $this->recentLogLines .= $message . PHP_EOL;
             });
+
+        $this->fileWriter
+            ->method('createFile')
+            ->willReturn(true);
 
         $this->fileWriter->setLogFile($this->logFile);
         $this->logger->setWriter($this->fileWriter);
@@ -123,6 +128,10 @@ class LoggerTest extends \Parable\Tests\Base
 
     public function testFileWriterLoggerThrowsExceptionIfLogfileUnwritable()
     {
+        $this->fileWriter
+            ->method('createFile')
+            ->willReturn(false);
+
         $this->expectException(\Parable\Log\Exception::class);
         $this->expectExceptionMessage("Log file is not writable.");
 

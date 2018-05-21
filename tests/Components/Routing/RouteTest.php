@@ -51,7 +51,9 @@ class RouteTest extends \Parable\Tests\Base
     public function testSetDataFromArrayThrowsExceptionOnInvalidProperty()
     {
         $this->expectException(\Parable\Routing\Exception::class);
-        $this->expectExceptionMessage("Tried to set non-existing property 'naww' with value 'index' on Route.");
+        $this->expectExceptionMessage(
+            "Tried to set non-existing property 'naww' with value 'index' on Parable\Routing\Route"
+        );
         $route = new \Parable\Routing\Route();
         $route->setDataFromArray([
             "methods" => ["get"],

@@ -1,47 +1,7 @@
 #!/usr/bin/env php
 <?php
-// We're going to want to display all errors.
-ini_set('display_errors', '1');
-
-// Require the Composer autoloader
 require_once realpath(__DIR__ . "/../../autoload.php");
 
-/** @var \Parable\Console\App $app */
-$app = \Parable\DI\Container::create(\Parable\Console\App::class);
-
-// Add the default location to the autoloader and register it
-$autoloader = \Parable\DI\Container::create(\Parable\Framework\Autoloader::class);
-$autoloader->addLocation(BASEDIR . DS . 'app');
-$autoloader->register();
-
-// Set the basedir on the path
-$path = \Parable\DI\Container::create(\Parable\Filesystem\Path::class);
-$path->setBaseDir(BASEDIR);
-
-$app->setName("Parable " . \Parable\Framework\App::PARABLE_VERSION);
-
-$helpCommand          = \Parable\DI\Container::get(\Parable\Console\Command\Help::class);
-$initStructureCommand = \Parable\DI\Container::get(\Parable\Framework\Command\InitStructure::class);
-
-// Always add Help & Init
-$app->addCommands([
-    $helpCommand,
-    $initStructureCommand,
-]);
-
-// Attempt to load commands set by the user
-if (file_exists($path->getDir('app'))) {
-    /** @var \Parable\Framework\Config $config */
-    $config = \Parable\DI\Container::get(\Parable\Framework\Config::class);
-    $config->load();
-
-    if ($config->get('parable.commands')) {
-        // We don't try/catch because the dev shouldn't add non-existing classes.
-        foreach ($config->get('parable.commands') as $commandClassName) {
-            $app->addCommand(\Parable\DI\Container::get($commandClassName));
-        }
-    }
-}
-
-$app->setDefaultCommand($helpCommand);
-$app->run();
+$consoleApp = \Parable\DI\Container::get(\Parable\Framework\ConsoleApp::class);
+$consoleApp->setErrorReportingEnabled(true);
+$consoleApp->run();

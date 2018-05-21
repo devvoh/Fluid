@@ -2,23 +2,21 @@
 
 namespace Parable\Tests\Components\ORM;
 
-use \Parable\Tests\TestClasses\Model;
-
 class ModelTest extends \Parable\Tests\Components\ORM\Base
 {
-    /** @var Model */
+    /** @var \Parable\Tests\TestClasses\Model */
     protected $model;
 
     protected function setUp()
     {
         parent::setUp();
 
-        $this->model = new Model($this->database);
+        $this->model = new \Parable\Tests\TestClasses\Model($this->database);
     }
 
     public function testCreate()
     {
-        $model = Model::create();
+        $model = \Parable\Tests\TestClasses\Model::create();
 
         // Two different instances are not the same.
         $this->assertNotSame($model, $this->model);
@@ -171,6 +169,36 @@ class ModelTest extends \Parable\Tests\Components\ORM\Base
 
         $this->assertSame('testuser', $modelArray['username']);
         $this->assertArrayNotHasKey('password', $modelArray);
+    }
+
+    public function testExportToArrayWithoutExportablePropertyExportsAll()
+    {
+        $this->model->username   = 'testuser';
+        $this->model->password   = 'password';
+        $this->model->created_at = null;
+
+        $this->assertSame(
+            [
+                'username'   => 'testuser',
+                'email'      => null,
+            ],
+            $this->model->exportToArray()
+        );
+
+        // Now empty exportable
+        $this->mockProperty($this->model, "exportable", []);
+
+        $this->assertSame(
+            [
+                'username'   => 'testuser',
+                'password'   => 'password',
+                'email'      => null,
+                'created_at' => null,
+                'updated_at' => null,
+                'id'         => null,
+            ],
+            $this->model->exportToArray()
+        );
     }
 
     public function testSetTableKey()

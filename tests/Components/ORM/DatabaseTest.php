@@ -118,7 +118,9 @@ class DatabaseTest extends \Parable\Tests\Components\ORM\Base
     public function testSetConfigThrowsExceptionOnNonExistingKeys()
     {
         $this->expectException(\Parable\ORM\Exception::class);
-        $this->expectExceptionMessage("Tried to set non-existing config value 'stuff' on Parable\ORM\Database");
+        $this->expectExceptionMessage(
+            "Tried to set non-existing property 'stuff' with value 'yay' on Parable\ORM\Database"
+        );
 
         $this->database->setConfig(['stuff' => 'yay']);
     }

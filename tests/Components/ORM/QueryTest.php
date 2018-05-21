@@ -111,6 +111,17 @@ class QueryTest extends \Parable\Tests\Components\ORM\Base
         );
     }
 
+    public function testWhereCondition()
+    {
+        $this->query->whereCondition("id", "=", 1);
+        $this->query->whereCondition("updated_at", "is null");
+
+        $this->assertSame(
+            "SELECT * FROM `user` WHERE (`user`.`id` = '1') AND (`user`.`updated_at` IS NULL);",
+            (string)$this->query
+        );
+    }
+
     public function testSelectWhereValueTypes()
     {
         $this->query->where($this->query->buildAndSet([

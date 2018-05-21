@@ -48,6 +48,33 @@ class AuthenticationTest extends \Parable\Tests\Components\Framework\Base
         $this->authentication->setUser([]);
     }
 
+    public function testSetGetUserIdProperty()
+    {
+        $this->authenticateUser();
+
+        // Assert the default situation
+        $this->assertSame(
+            ["user_id" => $this->user->id],
+            $this->authentication->getAuthenticationData()
+        );
+
+        $this->authentication->setUserIdProperty("other_id");
+        $this->authentication->reset();
+        $this->authenticateUser();
+
+        // It'll be empty because we're looking for the wrong property at this point
+        $this->assertEmpty($this->authentication->getAuthenticationData());
+
+        $this->user->other_id = 1337;
+        $this->authenticateUser();
+
+        // The value now exists, so it should match
+        $this->assertSame(
+            ["user_id" => 1337],
+            $this->authentication->getAuthenticationData()
+        );
+    }
+
     public function testSetUserClassNameThrowsExceptionIfClassDoesntExist()
     {
         $this->expectException(\Parable\Framework\Exception::class);
@@ -70,6 +97,11 @@ class AuthenticationTest extends \Parable\Tests\Components\Framework\Base
         $this->assertSame($this->user, $this->authentication->getUser());
 
         $this->assertTrue($this->authentication->initialize());
+
+        $this->assertSame(
+            ["user_id" => $this->user->id],
+            $this->authentication->getAuthenticationData()
+        );
     }
 
     public function testInitializeExpectsCertainAuthenticationData()
@@ -90,6 +122,36 @@ class AuthenticationTest extends \Parable\Tests\Components\Framework\Base
         // Overwrite the auth data so 'something' went wrong, or it was implemented incorrectly.
         $this->user->delete();
         $this->assertFalse($this->authentication->initialize());
+    }
+
+    public function testResetUserWorks()
+    {
+        $this->authenticateUser();
+
+        $this->assertNotNull($this->authentication->getUser());
+        $this->assertNotEmpty($this->authentication->getAuthenticationData());
+
+        $this->authentication->resetUser();
+
+        $this->assertNull($this->authentication->getUser());
+        $this->assertEmpty($this->authentication->getAuthenticationData());
+    }
+
+    public function testResetRevokesAuthAndUnsetsUser()
+    {
+        $this->authenticateUser();
+
+        $this->assertNotNull($this->authentication->getUser());
+        $this->assertNotNull($this->session->get('auth'));
+        $this->assertTrue($this->authentication->initialize());
+        $this->assertNotEmpty($this->authentication->getAuthenticationData());
+
+        $this->authentication->reset();
+
+        $this->assertNull($this->authentication->getUser());
+        $this->assertNull($this->session->get('auth'));
+        $this->assertFalse($this->authentication->initialize());
+        $this->assertEmpty($this->authentication->getAuthenticationData());
     }
 
     /**

@@ -28,7 +28,7 @@ class Config extends \Parable\GetSet\Base
      * @param string $className
      *
      * @return $this
-     * @throws Exception
+     * @throws \Parable\Framework\Exception
      */
     public function setMainConfigClassName($className)
     {
@@ -53,8 +53,8 @@ class Config extends \Parable\GetSet\Base
             return $this;
         }
 
-        if ($this->get("parable.configs")) {
-            foreach ($this->get("parable.configs") as $configClass) {
+        if ($this->get('parable.configs')) {
+            foreach ($this->get('parable.configs') as $configClass) {
                 $this->addConfig(\Parable\DI\Container::get($configClass));
             }
         }

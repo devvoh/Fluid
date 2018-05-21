@@ -4,7 +4,7 @@ namespace Parable\Framework;
 
 class SessionMessage
 {
-    const SESSION_KEY = "parable_session_messages";
+    const SESSION_KEY = 'parable_session_messages';
 
     /** @var \Parable\GetSet\Session */
     protected $session;

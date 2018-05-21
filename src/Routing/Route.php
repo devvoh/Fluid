@@ -36,6 +36,7 @@ class Route
      *
      * @param array $data
      *
+     * @return $this
      * @throws \Parable\Routing\Exception
      */
     public function setDataFromArray(array $data)
@@ -43,22 +44,24 @@ class Route
         foreach ($data as $property => $value) {
             $method = 'set' . ucfirst($property);
             if (method_exists($this, $method)) {
-                $this->$method($value);
+                $this->{$method}($value);
             } else {
                 throw new \Parable\Routing\Exception(
-                    "Tried to set non-existing property '{$property}' with value '{$value}' on Route."
+                    "Tried to set non-existing property '{$property}' with value '{$value}' on " . get_class($this)
                 );
             }
         }
 
         $this->checkValidProperties();
         $this->parseUrlParameters();
+
+        return $this;
     }
 
     /**
      * Set the methods accepted by this Route (POST, GET, PUT, etc.) and make sure they're uppercase.
      *
-     * @param stringp[ $methods
+     * @param string[] $methods
      *
      * @return $this
      */
@@ -90,8 +93,8 @@ class Route
      */
     public function setUrl($url)
     {
-        if (strpos($url, "/") !== 0) {
-            $url = "/" . $url;
+        if (strpos($url, '/') !== 0) {
+            $url = '/' . $url;
         }
         $this->url = $url;
         return $this;
@@ -225,6 +228,7 @@ class Route
     /**
      * Check whether a valid set of properties is set.
      *
+     * @return $this
      * @throws \Parable\Routing\Exception
      */
     public function checkValidProperties()
@@ -235,6 +239,7 @@ class Route
         if (empty($this->methods)) {
             throw new \Parable\Routing\Exception('Methods are required and must be passed as an array.');
         }
+        return $this;
     }
 
     /**

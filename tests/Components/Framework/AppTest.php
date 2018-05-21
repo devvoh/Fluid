@@ -413,6 +413,36 @@ class AppTest extends \Parable\Tests\Components\Framework\Base
         date_default_timezone_set($timezone);
     }
 
+    public function testLoadLayoutPicksUpCorrectLayoutContent()
+    {
+        $headerPath = $this->testPath->getDir('tests/TestTemplates/layout/header.phtml');
+        $footerPath = $this->testPath->getDir('tests/TestTemplates/layout/footer.phtml');
+
+        $config = \Parable\DI\Container::create(\Parable\Tests\TestClasses\SettableConfig::class);
+        $config->set([
+            "parable" => [
+                "layout" => [
+                    "header" => $headerPath,
+                    "footer" => $footerPath,
+                ],
+            ],
+        ]);
+
+        $app = $this->createAppWithSpecificConfig($config);
+        $app->run();
+
+        $output = $this->getActualOutputAndClean();
+
+        $this->assertContains("HEADER FROM FILE", $output);
+        $this->assertContains("FOOTER FROM FILE", $output);
+
+        $this->assertSame(0, strpos($output, "HEADER FROM FILE"));
+
+        $footerPosition = strlen($output) - strlen("FOOTER FROM FILE");
+
+        $this->assertSame($footerPosition, strpos($output, "FOOTER FROM FILE"));
+    }
+
     /**
      * @param string $mainConfigClassName
      * @return \Parable\Framework\App

@@ -72,11 +72,11 @@ class View
         $magicProperties = $docComment ? explode(PHP_EOL, $docComment) : [];
 
         foreach ($magicProperties as $magicProperty) {
-            if (strpos($magicProperty, "@property") === false) {
+            if (strpos($magicProperty, '@property') === false) {
                 continue;
             }
 
-            $partsString = trim(str_replace("* @property", "", $magicProperty));
+            $partsString = trim(str_replace('* @property', '', $magicProperty));
             $parts       = explode('$', $partsString);
 
             list($className, $property) = $parts;
@@ -87,15 +87,17 @@ class View
     }
 
     /**
-     * Register a class with the View for ->property lazyloading.
+     * Register a class with the View for property lazy-loading.
      *
      * @param string $property
      * @param string $className
+     *
+     * @return $this
      */
     public function registerClass($property, $className)
     {
         // Make sure the $className is prefixed with a backslash
-        $className = "\\" . ltrim($className, "\\");
+        $className = '\\' . ltrim($className, '\\');
 
         $this->classes[$property] = $className;
         return $this;
@@ -150,7 +152,7 @@ class View
     {
         $templatePath = $this->path->getDir($templatePath);
         if (file_exists($templatePath)) {
-            require($templatePath);
+            require $templatePath;
         }
         return $this;
     }

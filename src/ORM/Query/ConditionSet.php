@@ -45,6 +45,9 @@ abstract class ConditionSet
             if (isset($condition[2])) {
                 $conditionObject->setValue($condition[2]);
             }
+            if (isset($condition[3])) {
+                $conditionObject->setTableName($condition[3]);
+            }
             $this->conditions[] = $conditionObject;
         }
     }

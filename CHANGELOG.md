@@ -1,5 +1,50 @@
 # Parable PHP Framework Changelog
 
+### 1.1.0
+
+__Changes__
+
+- The `parable` command has been fixed up massively. There's now a `\Parable\Framework\ConsoleApp` class, which handles the actual logic. By using this, you can offer your own command instead of `parable`.
+- `defines.php` now sets a global constant `APP_CONTEXT` to either `web` or `cli`. This can help you figure out what context you're running in.
+- `defines.php` now also defines a new function: `register_parable_package()`. This can be used by external Parable Packages to register themselves with Parable at the soonest possible moment. See below for details.
+- `\Parable\Console\App` now also adds the command you set through `setDefaultCommand()`. It's now also possible to `removeCommandByName()`.
+- `\Parable\DI\Container` gained `getDependenciesFor()` so it's possible to get just an array of instantiated dependencies.
+- `\Parable\Framework\App` gained multiple hooks: `HOOK_LOAD_CONFIG_BEFORE`/`AFTER`, `HOOK_LOAD_INITS_BEFORE`/`AFTER`, `HOOK_LOAD_LAYOUT_BEFORE`/`AFTER`.
+- `\Parable\Framework\App` now supports layouts, which are loaded just before the response is sent. See the `Response` changes below for details. The config values used to load the templates are `parable.layout.header` and `parable.layout.footer`. They're expected to be `.phtml` files.
+- `\Parable\Framework\Loader` has been added, containing `InitLoader` and `CommandLoader`, easing the use of either and separating that logic away nicely.
+- `\Parable\Framework\Package\PackageManager` was added, allowing external packages to register themselves with Parable before Parable is actually completely set up. Packages are loaded _before_ config and anything else. They get to use the hooks mentioned above.
+- `\Parable\Framework\Package\PackageInterface` is an interface used to define a Parable Package.
+- `\Parable\Framework\Authentication` has gained `resetUser()` and `reset()`, which calls it and `revokeAuthentication()` both. This makes it possible to unset the user as well.
+- `\Parable\Framework\Authentication` has also gained `setUserIdProperty()` and `getUserIdProperty()`, for more control over how to load users.
+- `\Parable\Http\Output\OutputInterface` has gained `acceptsContent($content)`, which will return a boolean for whether it accepts a type of content or not.
+- `\Parable\Http\Output\OutputInterface::prepare()` now has to return a string value. Always. Exception thrown if not. This makes Output behavior expected.D 
+- `\Parable\Http\Output\AbstractOutput` was added, which implements `acceptsContent()` to return default `true`.
+- `\Parable\Http\Output\Html` overrides `acceptsContent()` to only accept `string` or `null` types. `Json` accepts all types.
+- `\Parable\Http\Response` has gained `setHeaderContent()` and `setFooterContent`, which are pre/appended to the content when sending. This is used by `App`'s layout logic. Also there's getters for both.
+- `\Parable\Http\Response` also gained `stopOutputBuffer()`, which does the same as `returnOutputBuffer()` but doesn't return anything. `stopAllOutputBuffers()` pretty much does what it says.
+- `\Parable\ORM\Query`'s join methods now all accept a new optional parameter, `$tableName`. Normally, the table name is set to the table already set on the query. But now you can override it. This makes it possible to join tables with other tables, neither of which are forced to be the main table.
+- `\Parable\ORM\Query` has gained `whereCondition()`, taking the standard `$key`, `$comparator` and optional `$value` (default `null`)  and `$tableName`. This was added to ease adding simple wheres, without having to _always_ build a condition set.
+- `\Parable\ORM\Query\ConditionSet` now accepts a 4th parameter, which is `$tableName`, in case you want to check against a different table's values.
+- `\Parable\Rights\Rights` has gained `getRightsNames()`, which will return the names of all rights configured. 
+
+__Bugfixes__
+
+- `\Parable\Console\Output` has had its tags fixed up. It's now possible to combine fore- and background colors, as was always intended. Some small typo fixes in the tag names, but they're easy to fix.
+- `\Parable\Framework\App` has lost some classes from its constructor. They're now loaded on an as-needed basis. So if you don't need the session, it won't be loaded, for example.
+- `\Parable\Framework\App` now loads the database immediately after loading the Config, instead of much later.
+- `\Parable\Framework\Dispatcher` didn't check route return values and blindly attempted to string-concatenate them.  With the help of the `Output` changes, it now checks what kind of data it is and handles it accordingly.
+- `\Parable\GetSet\Base` now throws an exception when `getAll()` is called for a global resource type, but the resource doesn't exist. Example case: attempting to use session data before the session is started.
+- `\Parable\Http\Response` now checks whether it's possible to append output buffers to content, and uses `acceptsContent` to make sure only valid content is set using the available output method.
+- `\Parable\ORM\Model` now returns all fields when `exportToArray()` is called and no `$model->exportable` values are actually available. Remember, Parable's not here to hold your hand. You're responsible for only exporting the right data!
+
+__Parable Packages Information__
+
+Parable Packages are rather simple. Say you want to build something that relies on and extends Parable. If so, just create a class that implements `PackageInterface`, implement the methods defined there, and in your composer.json, make sure that under `autoload`/`files` it loads a php file (_after_ `defines.php` itself is loaded) that calls `register_parable_package()` (as defined in Parable's own `defines.php`) and passes the name of your package file.
+
+Parable will attempt to load the commands and inits defined in your parable package file, and they'll be available from the start of the application's runtime. The commands _will_ be available from the default `parable` command as well.
+
+More details will be added to the documentation once released.
+
 ### 1.0.0
 
 Considering the 0.11.x branch as Release Candidate 1 and the 0.12.x branch as RC2, it's time to ship final Parable. This release brings a major clean-up, documentation, and some useful additions.
@@ -7,6 +52,7 @@ Considering the 0.11.x branch as Release Candidate 1 and the 0.12.x branch as RC
 If you're new to Parable, welcome! None of this is relevant for you :)
 
 __Changes__
+
 - All method doc blocks now have explanatory text, even if it's superfluous, for documentation purposes.
 - `\Parable\Console\App` now supports adding multiple commands in one go, using `addCommands([...])`.
 - `\Parable\Console\Command\Help` now can generate a string for the usage of a command. Try it yourself: `vendor/bin/parable help init-structure`. Usage is also added to any exception caught by `\Parable\Console\App`'s exception handler.
@@ -58,6 +104,7 @@ __Changes__
 - It's now possible to set a new config value - `parable.database.soft-quotes` - to either `true` (default) or `false`. If `true`, Parable will fake quotes for values if there's no database instance available. If set to `false`, it'll refuse to quote instead.
 
 __Backwards-incompatible Changes__
+
 - `Bootstrap.php` has been removed. `\Parable\Framework\App` handles its own setup now. This makes it easier to implement App without much hassle.
 - `SessionMessage` has been moved from the `GetSet` component into `Framework`, as it isn't a `GetSet` instance itself but merely uses the `Session` instance.
 - `\Parable\Console` no longer accepts options in the format `--option value`, but only in the following: `--option=value`. This is because if you had an option which didn't require a value, and was followed by an argument, the argument would be seen as the option's value instead.
@@ -81,6 +128,7 @@ __Backwards-incompatible Changes__
 - Two config keys were renamed: `parable.session.autoEnable` has become `parable.session.auto-enable` and `parable.app.homeDir` has become `parable.app.homedir`. The option for `init-structure` has also become `--homedir`.
 
 __Bugfixes__
+
 - `\Parable\Console\Output` had a bug where moving the cursors would mess with the functionality of `clearLine()`. Line length is no longer kept track of, but whether or not the line is clearable is a boolean value. Moving the cursor up/down or placing it disables line clearing, writing anything enables it again. When you clear the line, the line gets cleared using the terminal width.
 - `\Parable\Console\Parameter` had a bug where providing an argument after an option with an `=` sign in it (so `script.php command option=value arg`) would see the argument as the option value and overwrite the actual value. Fixed by @dmvdbrugge in PR #31. Thanks!
 - `\Parable\Console\Parameter` had a bug, where false-equivalent values passed to an option would be seen as the option being provided without a value, making the returned value `true`. Fixed by @dmvdbrugge in PR #37. Thanks!

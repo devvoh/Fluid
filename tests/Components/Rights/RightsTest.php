@@ -99,4 +99,17 @@ class RightsTest extends \Parable\Tests\Base
             $this->rights->getRightsFromNames(["create", "update", "hello", "destroy_humanity"])
         );
     }
+
+    public function testGetRightsNames()
+    {
+        $this->assertSame(
+            [
+                'create',
+                'read',
+                'update',
+                'delete',
+            ],
+            $this->rights->getRightsNames()
+        );
+    }
 }

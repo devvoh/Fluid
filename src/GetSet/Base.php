@@ -40,6 +40,7 @@ abstract class Base
      * Return all from resource if resource is set.
      *
      * @return array
+     * @throws \Parable\GetSet\Exception
      */
     public function getAll()
     {
@@ -49,6 +50,14 @@ abstract class Base
         if ($this->useLocalResource) {
             return $this->localResource;
         }
+
+        // If we're attempting to use a global resource but it doesn't exist, we've got a problem.
+        if (!isset($GLOBALS[$this->getResource()])) {
+            throw new \Parable\GetSet\Exception(
+                "Attempting to use global resource '{$this->getResource()}' but resource not available."
+            );
+        }
+
         return $GLOBALS[$this->getResource()];
     }
 
@@ -66,7 +75,7 @@ abstract class Base
     {
         $resource = $this->getAll();
 
-        $keys = explode(".", $key);
+        $keys = explode('.', $key);
         foreach ($keys as $key) {
             if (!isset($resource[$key])) {
                 $resource = $default;
@@ -128,7 +137,7 @@ abstract class Base
      */
     public function set($key, $value)
     {
-        $keys = explode(".", $key);
+        $keys = explode('.', $key);
 
         $data = $this->getAll();
 
@@ -191,7 +200,7 @@ abstract class Base
      */
     public function remove($key)
     {
-        $keys = explode(".", $key);
+        $keys = explode('.', $key);
 
         $data = $this->getAll();
 

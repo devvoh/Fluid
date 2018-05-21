@@ -276,7 +276,7 @@ class Condition
         // If we don't have IN/NOT IN, IS/NOT IS, and we shouldn't quote, we assume we're checking fields.
         if ($this->shouldCompareFields()) {
             $valueBuild = [
-                $this->query->getQuotedTableName(),
+                $this->query->quoteIdentifier($this->getTableName()),
                 '.',
                 $this->query->quoteIdentifier($value),
             ];

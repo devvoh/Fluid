@@ -28,7 +28,7 @@ class Rights
     public function addRight($name)
     {
         $rights = $this->getRights();
-        if (count($rights) == 0) {
+        if (count($rights) === 0) {
             $value = 1;
         } else {
             $value = 2 * end($rights);
@@ -45,6 +45,16 @@ class Rights
     public function getRights()
     {
         return $this->rights;
+    }
+
+    /**
+     * Return all rights' names.
+     *
+     * @return string[]
+     */
+    public function getRightsNames()
+    {
+        return array_keys($this->rights);
     }
 
     /**
@@ -103,9 +113,9 @@ class Rights
      */
     public function getRightsFromNames(array $names)
     {
-        $rights_string = "";
+        $rights_string = '';
         foreach ($this->getRights() as $right => $value) {
-            $rights_string .= in_array($right, $names) ? "1" : "0";
+            $rights_string .= in_array($right, $names) ? '1' : '0';
         }
         return strrev($rights_string);
     }

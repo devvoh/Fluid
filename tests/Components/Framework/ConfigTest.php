@@ -46,7 +46,7 @@ class ConfigTest extends \Parable\Tests\Components\Framework\Base
     public function testGetConfig()
     {
         $this->config->addConfig($this->config1);
-        $this->assertSame("primary value", $this->config->get('setting'));
+        $this->assertSame('primary value', $this->config->get('setting'));
     }
 
     public function testGetConfigNonExistingValueReturnsNull()
@@ -80,9 +80,9 @@ class ConfigTest extends \Parable\Tests\Components\Framework\Base
     public function testGetConfigSetsDataBasedOnAddConfigTiming()
     {
         $this->config->addConfig($this->config1);
-        $this->assertSame("primary value", $this->config->get('setting'));
+        $this->assertSame('primary value', $this->config->get('setting'));
 
         $this->config->addConfig($this->config2);
-        $this->assertSame("secondary value", $this->config->get('setting'));
+        $this->assertSame('secondary value', $this->config->get('setting'));
     }
 }

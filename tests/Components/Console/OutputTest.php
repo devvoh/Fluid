@@ -302,14 +302,14 @@ class OutputTest extends \Parable\Tests\Base
         $this->assertSame($this->addTag('<tag>unknown</tag>'), $output->parseTags('<tag>unknown</tag>'));
 
         // Since tags are escaped with the defaultTag at the end, we'll need 2
-        $this->assertSame($this->addTag("\e[0;32mgreen", 2), $output->parseTags('<green>green</green>'));
-        $this->assertSame($this->addTag("\e[0;31mred", 2), $output->parseTags('<red>red</red>'));
+        $this->assertSame($this->addTag("\e[;32mgreen", 2), $output->parseTags('<green>green</green>'));
+        $this->assertSame($this->addTag("\e[;31mred", 2), $output->parseTags('<red>red</red>'));
 
         // And a more complex one, with both a fore- and a background color
         // Since tags are escaped with the defaultTag at the end and there's two tags, we'll need 3
         $this->assertSame(
-            $this->addTag("\e[0;31m\e[47mred on lightgray", 3),
-            $output->parseTags('<red><lightgray_bg>red on lightgray</lightgray_bg></red>')
+            $this->addTag("\e[;31m\e[47mred on lightgray", 3),
+            $output->parseTags('<red><bg_light_gray>red on lightgray</bg_light_gray></red>')
         );
     }
 

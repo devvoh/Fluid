@@ -107,7 +107,6 @@ class Repository
      * @param mixed|null $value
      *
      * @return \Parable\ORM\Model[]|\Parable\ORM\Model
-     * @throws \Parable\ORM\Exception
      */
     public function getByCondition($key, $comparator, $value = null)
     {
@@ -227,7 +226,7 @@ class Repository
     }
 
     /**
-     * Set a model on the repository. Reset it so there's no unwanted values stored on it..
+     * Set a model on the repository. Reset it so there's no unwanted values stored on it.
      *
      * @param \Parable\ORM\Model $model
      *
@@ -240,7 +239,7 @@ class Repository
     }
 
     /**
-     * Return model.
+     * Return the model instance.
      *
      * @return null|\Parable\ORM\Model
      */
@@ -313,11 +312,12 @@ class Repository
      * @param string $modelName
      *
      * @return \Parable\ORM\Repository
+     * @throws \Parable\ORM\Exception
      */
     public static function createForModelName($modelName)
     {
         if (!class_exists($modelName)) {
-            throw new Exception("Model '{$modelName}' does not exist.");
+            throw new \Parable\ORM\Exception("Model '{$modelName}' does not exist.");
         }
         return self::createForModel($modelName::create());
     }
@@ -327,7 +327,7 @@ class Repository
      *
      * @param \Parable\ORM\Model $model
      *
-     * @return Repository
+     * @return \Parable\ORM\Repository
      */
     public static function createForModel(\Parable\ORM\Model $model)
     {

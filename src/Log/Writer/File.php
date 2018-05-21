@@ -34,16 +34,30 @@ class File implements \Parable\Log\Writer\WriterInterface
      */
     public function setLogFile($logFile)
     {
-        if (!file_exists($logFile)) {
-            // At least attempt to create the file.
-            @touch($logFile);
-        }
-        if (!file_exists($logFile)) {
+        if (!$this->createfile($logFile)) {
             throw new \Parable\Log\Exception("Log file is not writable.");
         }
 
         $this->logFile = $logFile;
         return $this;
+    }
+
+    /**
+     * Attempt to create the log file if it doesn't exist yet.
+     *
+     * @param string $logFile
+     *
+     * @return bool
+     *
+     * @codeCoverageIgnore
+     */
+    protected function createFile($logFile)
+    {
+        if (!file_exists($logFile)) {
+            // At least attempt to create the file.
+            @touch($logFile);
+        }
+        return file_exists($logFile);
     }
 
     /**

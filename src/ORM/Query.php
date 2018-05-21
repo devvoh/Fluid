@@ -142,6 +142,7 @@ class Query
      * Add a where condition set.
      *
      * @param \Parable\ORM\Query\ConditionSet $set
+     *
      * @return $this
      */
     public function where(\Parable\ORM\Query\ConditionSet $set)
@@ -154,12 +155,32 @@ class Query
      * Add an array of where condition sets.
      *
      * @param \Parable\ORM\Query\ConditionSet[] $sets
+     *
+     * @return $this
      */
     public function whereMany(array $sets)
     {
         foreach ($sets as $set) {
             $this->where($set);
         }
+        return $this;
+    }
+
+    /**
+     * Add a condition based on key/comparator/value, with an optional $tableName.
+     *
+     * @param string      $key
+     * @param string      $comparator
+     * @param string|null $value
+     * @param string|null $tableName
+     *
+     * @return $this
+     */
+    public function whereCondition($key, $comparator, $value = null, $tableName = null)
+    {
+        return $this->where($this->buildAndSet([
+            [$key, $comparator, $value, $tableName]
+        ]));
     }
 
     /**
@@ -179,12 +200,15 @@ class Query
      * Add an array of having condition sets.
      *
      * @param \Parable\ORM\Query\ConditionSet[] $sets
+     *
+     * @return $this
      */
     public function havingMany(array $sets)
     {
         foreach ($sets as $set) {
             $this->having($set);
         }
+        return $this;
     }
 
     /**
@@ -214,31 +238,37 @@ class Query
     /**
      * Add a join to the query.
      *
-     * @param int    $type
-     * @param string $tableName
-     * @param string $key
-     * @param string $comparator
-     * @param mixed  $value
-     * @param bool   $shouldCompareFields
+     * @param int         $type
+     * @param string      $joinTableName
+     * @param string      $key
+     * @param string      $comparator
+     * @param mixed       $value
+     * @param bool        $shouldCompareFields
+     * @param string|null $tableName
      *
      * @return $this
      */
     protected function join(
         $type,
-        $tableName,
+        $joinTableName,
         $key,
         $comparator,
         $value = null,
-        $shouldCompareFields = true
+        $shouldCompareFields = true,
+        $tableName = null
     ) {
+        if (!$tableName) {
+            $tableName = $this->getTableName();
+        }
+
         $condition = new \Parable\ORM\Query\Condition();
         $condition
-            ->setTableName($this->getTableName())
-            ->setJoinTableName($tableName)
+            ->setQuery($this)
+            ->setTableName($tableName)
+            ->setJoinTableName($joinTableName)
             ->setKey($key)
             ->setComparator($comparator)
             ->setValue($value)
-            ->setQuery($this)
             ->setShouldCompareFields($shouldCompareFields);
 
         $this->joins[$type][] = $condition;
@@ -248,65 +278,125 @@ class Query
     /**
      * Add an inner join to the query.
      *
-     * @param string $tableName
-     * @param string $key
-     * @param string $comparator
-     * @param mixed  $value
-     * @param bool   $shouldCompareFields
+     * @param string      $joinTableName
+     * @param string      $key
+     * @param string      $comparator
+     * @param mixed       $value
+     * @param bool        $shouldCompareFields
+     * @param string|null $tableName
      *
      * @return $this
      */
-    public function innerJoin($tableName, $key, $comparator, $value = null, $shouldCompareFields = true)
-    {
-        return $this->join(self::JOIN_INNER, $tableName, $key, $comparator, $value, $shouldCompareFields);
+    public function innerJoin(
+        $joinTableName,
+        $key,
+        $comparator,
+        $value = null,
+        $shouldCompareFields = true,
+        $tableName = null
+    ) {
+        return $this->join(
+            self::JOIN_INNER,
+            $joinTableName,
+            $key,
+            $comparator,
+            $value,
+            $shouldCompareFields,
+            $tableName
+        );
     }
 
     /**
      * Add a left join to the query.
      *
-     * @param string $tableName
-     * @param string $key
-     * @param string $comparator
-     * @param mixed  $value
-     * @param bool   $shouldCompareFields
+     * @param string      $joinTableName
+     * @param string      $key
+     * @param string      $comparator
+     * @param mixed       $value
+     * @param bool        $shouldCompareFields
+     * @param string|null $tableName
      *
      * @return $this
      */
-    public function leftJoin($tableName, $key, $comparator, $value = null, $shouldCompareFields = true)
-    {
-        return $this->join(self::JOIN_LEFT, $tableName, $key, $comparator, $value, $shouldCompareFields);
+    public function leftJoin(
+        $joinTableName,
+        $key,
+        $comparator,
+        $value = null,
+        $shouldCompareFields = true,
+        $tableName = null
+    ) {
+        return $this->join(
+            self::JOIN_LEFT,
+            $joinTableName,
+            $key,
+            $comparator,
+            $value,
+            $shouldCompareFields,
+            $tableName
+        );
     }
 
     /**
      * Add a right join to the query.
      *
-     * @param string $tableName
-     * @param string $key
-     * @param string $comparator
-     * @param mixed  $value
-     * @param bool   $shouldCompareFields
+     * @param string      $joinTableName
+     * @param string      $key
+     * @param string      $comparator
+     * @param mixed       $value
+     * @param bool        $shouldCompareFields
+     * @param string|null $tableName
      *
      * @return $this
      */
-    public function rightJoin($tableName, $key, $comparator, $value = null, $shouldCompareFields = true)
-    {
-        return $this->join(self::JOIN_RIGHT, $tableName, $key, $comparator, $value, $shouldCompareFields);
+    public function rightJoin(
+        $joinTableName,
+        $key,
+        $comparator,
+        $value = null,
+        $shouldCompareFields = true,
+        $tableName = null
+    ) {
+        return $this->join(
+            self::JOIN_RIGHT,
+            $joinTableName,
+            $key,
+            $comparator,
+            $value,
+            $shouldCompareFields,
+            $tableName
+        );
     }
 
     /**
      * Add a full join to the query.
      *
-     * @param string $tableName
-     * @param string $key
-     * @param string $comparator
-     * @param mixed  $value
-     * @param bool   $shouldCompareFields
+     * @param string      $joinTableName
+     * @param string      $key
+     * @param string      $comparator
+     * @param mixed       $value
+     * @param bool        $shouldCompareFields
+     * @param string|null $tableName
      *
      * @return $this
      */
-    public function fullJoin($tableName, $key, $comparator, $value = null, $shouldCompareFields = true)
-    {
-        return $this->join(self::JOIN_FULL, $tableName, $key, $comparator, $value, $shouldCompareFields);
+    public function fullJoin(
+        $joinTableName,
+        $key,
+        $comparator,
+        $value = null,
+        $shouldCompareFields = true,
+        $tableName = null
+    ) {
+        return $this->join(
+            self::JOIN_FULL,
+            $joinTableName,
+            $key,
+            $comparator,
+            $value,
+            $shouldCompareFields,
+            $tableName
+        );
     }
 
     /**
@@ -436,7 +526,7 @@ class Query
                 $selects[] = $select;
             }
         }
-        return implode(', ', $selects);
+        return 'SELECT ' . implode(', ', $selects);
     }
 
     /**
@@ -450,17 +540,17 @@ class Query
         foreach ($this->joins as $type => $joins) {
             if (count($joins) > 0) {
                 foreach ($joins as $join) {
-                    if ($type == self::JOIN_INNER) {
-                        $builtJoins[] = "INNER JOIN";
-                    } elseif ($type == self::JOIN_LEFT) {
-                        $builtJoins[] = "LEFT JOIN";
-                    } elseif ($type == self::JOIN_RIGHT) {
-                        $builtJoins[] = "RIGHT JOIN";
-                    } elseif ($type == self::JOIN_FULL) {
-                        $builtJoins[] = "FULL JOIN";
+                    if ($type === self::JOIN_INNER) {
+                        $builtJoins[] = 'INNER JOIN';
+                    } elseif ($type === self::JOIN_LEFT) {
+                        $builtJoins[] = 'LEFT JOIN';
+                    } elseif ($type === self::JOIN_RIGHT) {
+                        $builtJoins[] = 'RIGHT JOIN';
+                    } elseif ($type === self::JOIN_FULL) {
+                        $builtJoins[] = 'FULL JOIN';
                     }
 
-                    $builtJoins[] = $this->quoteIdentifier($join->getJoinTableName()) . " ON";
+                    $builtJoins[] = $this->quoteIdentifier($join->getJoinTableName()) . ' ON';
 
                     // Use a ConditionSet to build the joins
                     $conditionSet = new Query\Condition\AndSet($this, [$join]);
@@ -469,7 +559,7 @@ class Query
             }
         }
 
-        return implode(" ", $builtJoins);
+        return implode(' ', $builtJoins);
     }
 
     /**
@@ -517,10 +607,10 @@ class Query
 
         $orders = [];
         foreach ($this->orderBy as $orderBy) {
-            $key = $this->quoteIdentifier($orderBy["tableName"]) . "." . $this->quoteIdentifier($orderBy["key"]);
+            $key = $this->quoteIdentifier($orderBy['tableName']) . '.' . $this->quoteIdentifier($orderBy['key']);
             $orders[] = $key . ' ' . $orderBy['direction'];
         }
-        return "ORDER BY " . implode(', ', $orders);
+        return 'ORDER BY ' . implode(', ', $orders);
     }
 
     /**
@@ -536,10 +626,10 @@ class Query
 
         $groups = [];
         foreach ($this->groupBy as $groupBy) {
-            $groupBy = $this->quoteIdentifier($groupBy["tableName"]) . "." . $this->quoteIdentifier($groupBy["key"]);
+            $groupBy = $this->quoteIdentifier($groupBy['tableName']) . '.' . $this->quoteIdentifier($groupBy['key']);
             $groups[] = $groupBy;
         }
-        return "GROUP BY " . implode(', ', $groups);
+        return 'GROUP BY ' . implode(', ', $groups);
     }
 
     /**
@@ -553,16 +643,16 @@ class Query
             return '';
         }
 
-        $limitOffset = "";
-        if ($this->limitOffset["limit"] && $this->limitOffset["offset"]) {
+        $limitOffset = '';
+        if ($this->limitOffset['limit'] && $this->limitOffset['offset']) {
             $limitOffset = $this->limitOffset['offset'] . ',' . $this->limitOffset['limit'];
-        } elseif ($this->limitOffset["limit"]) {
-            $limitOffset = $this->limitOffset["limit"];
-        } elseif ($this->limitOffset["offset"]) {
-            $limitOffset = $this->limitOffset["offset"];
+        } elseif ($this->limitOffset['limit']) {
+            $limitOffset = $this->limitOffset['limit'];
+        } elseif ($this->limitOffset['offset']) {
+            $limitOffset = $this->limitOffset['offset'];
         }
 
-        return "LIMIT " . $limitOffset;
+        return 'LIMIT ' . $limitOffset;
     }
 
     /**
@@ -589,8 +679,8 @@ class Query
                 return '';
             }
 
-            $query[] = "SELECT " . $this->buildSelect();
-            $query[] = "FROM " . $this->getQuotedTableName();
+            $query[] = $this->buildSelect();
+            $query[] = 'FROM ' . $this->getQuotedTableName();
             $query[] = $this->buildJoins();
             $query[] = $this->buildWheres();
             $query[] = $this->buildGroupBy();
@@ -602,14 +692,14 @@ class Query
                 return '';
             }
 
-            $query[] = "DELETE FROM " . $this->getQuotedTableName();
+            $query[] = 'DELETE FROM ' . $this->getQuotedTableName();
             $query[] = $this->buildWheres();
         } elseif ($this->action === 'update') {
             if (count($this->values) === 0 || count($this->where) === 0) {
                 return '';
             }
 
-            $query[] = "UPDATE " . $this->getQuotedTableName();
+            $query[] = 'UPDATE ' . $this->getQuotedTableName();
 
             $values = [];
             foreach ($this->values as $key => $value) {
@@ -619,16 +709,16 @@ class Query
                     $correctValue = $this->quote($value);
                 }
                 $key = $this->quoteIdentifier($key);
-                $values[] = $key . " = " . $correctValue;
+                $values[] = $key . ' = ' . $correctValue;
             }
-            $query[] = "SET " . implode(', ', $values);
+            $query[] = 'SET ' . implode(', ', $values);
             $query[] = $this->buildWheres();
         } elseif ($this->action === 'insert') {
             if (count($this->values) === 0) {
                 return '';
             }
 
-            $query[] = "INSERT INTO " . $this->getQuotedTableName();
+            $query[] = 'INSERT INTO ' . $this->getQuotedTableName();
 
             $keys = [];
             $values = [];
@@ -643,9 +733,9 @@ class Query
                 $values[] = $correctValue;
             }
 
-            $query[] = "(" . implode(', ', $keys) . ")";
-            $query[] = "VALUES";
-            $query[] = "(" . implode(', ', $values) . ")";
+            $query[] = '(' . implode(', ', $keys) . ')';
+            $query[] = 'VALUES';
+            $query[] = '(' . implode(', ', $values) . ')';
         }
 
 
@@ -657,7 +747,7 @@ class Query
         }
 
         // Now make it nice.
-        $queryString = implode(" ", $query);
+        $queryString = implode(' ', $query);
         $queryString = trim($queryString) . ';';
 
         // Since we got here, we've got a query to output

@@ -87,6 +87,12 @@ class Response
     /** @var bool */
     protected $shouldTerminate = true;
 
+    /** @var string */
+    protected $headerContent;
+
+    /** @var string */
+    protected $footerContent;
+
     public function __construct(
         \Parable\Http\Request $request
     ) {
@@ -171,29 +177,13 @@ class Response
     }
 
     /**
-     * Send the response.
+     * Return the output class.
+     *
+     * @return Output\OutputInterface
      */
-    public function send()
+    public function getOutput()
     {
-        $buffered_content = $this->returnAllOutputBuffers();
-        if (!empty($buffered_content) && is_string($this->content)) {
-            $this->content = $buffered_content . $this->content;
-        }
-
-        $this->output->prepare($this);
-
-        if (!headers_sent()) {
-            // @codeCoverageIgnoreStart
-            header("{$this->request->getProtocol()} {$this->getHttpCode()} {$this->getHttpCodeText()}");
-            header("Content-type: {$this->getContentType()}");
-            foreach ($this->getHeaders() as $key => $value) {
-                header("{$key}: {$value}");
-            }
-            // @codeCoverageIgnoreEnd
-        }
-
-        echo $this->getContent();
-        $this->terminate();
+        return $this->output;
     }
 
     /**
@@ -269,6 +259,52 @@ class Response
     }
 
     /**
+     * Set content to use as header.
+     *
+     * @param string $content
+     *
+     * @return $this
+     */
+    public function setHeaderContent($content)
+    {
+        $this->headerContent = $content;
+        return $this;
+    }
+
+    /**
+     * Return header content.
+     *
+     * @return string
+     */
+    public function getHeaderContent()
+    {
+        return $this->headerContent ?: "";
+    }
+
+    /**
+     * Set content to use as header.
+     *
+     * @param string $content
+     *
+     * @return $this
+     */
+    public function setFooterContent($content)
+    {
+        $this->footerContent = $content;
+        return $this;
+    }
+
+    /**
+     * Return header content.
+     *
+     * @return string
+     */
+    public function getFooterContent()
+    {
+        return $this->footerContent ?: "";
+    }
+
+    /**
      * Start a new output buffer, upping the internal outputBufferLevel.
      *
      * @return $this
@@ -281,6 +317,28 @@ class Response
     }
 
     /**
+     * Stop the current output buffer but do not return the output.
+     *
+     * @return $this
+     */
+    public function stopOutputBuffer()
+    {
+        $this->returnOutputBuffer();
+        return $this;
+    }
+
+    /**
+     * Stop all output buffers but do not return the output.
+     *
+     * @return $this
+     */
+    public function stopAllOutputBuffers()
+    {
+        $this->returnAllOutputBuffers();
+        return $this;
+    }
+
+    /**
      * Return and end the current output buffer if output buffering was started with startOutputBuffer().
      *
      * @return string
@@ -288,7 +346,7 @@ class Response
     public function returnOutputBuffer()
     {
         if (!$this->isOutputBufferingEnabled()) {
-            return "";
+            return '';
         }
 
         $this->outputBufferLevel--;
@@ -302,7 +360,7 @@ class Response
      */
     public function returnAllOutputBuffers()
     {
-        $content = "";
+        $content = '';
 
         if ($this->isOutputBufferingEnabled()) {
             while ($this->isOutputBufferingEnabled()) {
@@ -407,14 +465,46 @@ class Response
      * Redirect to given url and stop processing.
      *
      * @param string $url
-     *
-     * @throws \Parable\Http\Exception
      */
     public function redirect($url)
     {
         if (!headers_sent()) {
             header("location: {$url}"); // @codeCoverageIgnore
         }
+        $this->terminate();
+    }
+
+    /**
+     * Build and send the response.
+     */
+    public function send()
+    {
+        $buffered_content = $this->returnAllOutputBuffers();
+        if (!empty($buffered_content) && is_string($this->content)) {
+            $this->content = $buffered_content . $this->content;
+        }
+
+        $this->content = $this->output->prepare($this);
+
+        if (!is_string($this->content) && $this->content !== null) {
+            $output = get_class($this->output);
+            throw new \Parable\Http\Exception("Output class '{$output}' did not result in string or null content.");
+        }
+
+        if (!headers_sent()) {
+            // @codeCoverageIgnoreStart
+            header("{$this->request->getProtocol()} {$this->getHttpCode()} {$this->getHttpCodeText()}");
+            header("Content-type: {$this->getContentType()}");
+            foreach ($this->getHeaders() as $key => $value) {
+                header("{$key}: {$value}");
+            }
+            // @codeCoverageIgnoreEnd
+        }
+
+        echo $this->getHeaderContent();
+        echo $this->getContent();
+        echo $this->getFooterContent();
+
         $this->terminate();
     }
 

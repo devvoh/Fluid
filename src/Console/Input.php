@@ -135,7 +135,6 @@ class Input
      * Request input from the user, while hiding the actual input. Use this to request passwords, for example.
      *
      * @return string
-     *
      * @throws \Parable\Console\Exception
      */
     public function getHidden()
@@ -165,14 +164,14 @@ class Input
         $value = strtolower($this->get());
 
         // Y/N values are ALWAYS directly returned as true/false
-        if ($value == 'y') {
+        if ($value === 'y') {
             return true;
-        } elseif ($value == 'n') {
+        } elseif ($value === 'n') {
             return false;
         }
 
         // If no value, we return the default value
-        if ($value == '') {
+        if (empty($value)) {
             return (bool)$default;
         }
 

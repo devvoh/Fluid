@@ -32,9 +32,12 @@ class Argument extends Base
     {
         if (!in_array(
             $required,
-            [\Parable\Console\Parameter::PARAMETER_REQUIRED, \Parable\Console\Parameter::PARAMETER_OPTIONAL])
-        ) {
-            throw new \Parable\Console\Exception("Required must be one of the PARAMETER_* constants.");
+            [
+                \Parable\Console\Parameter::PARAMETER_REQUIRED,
+                \Parable\Console\Parameter::PARAMETER_OPTIONAL,
+            ]
+        )) {
+            throw new \Parable\Console\Exception('Required must be one of the PARAMETER_* constants.');
         }
         $this->required = $required;
         return $this;

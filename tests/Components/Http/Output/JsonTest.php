@@ -35,9 +35,9 @@ class JsonTest extends \Parable\Tests\Base
             'secondary' => 'what now',
         ]);
 
-        $this->json->prepare($response);
+        $content = $this->json->prepare($response);
 
-        $this->assertSame('{"value":"stuff","secondary":"what now"}', $response->getContent());
+        $this->assertSame('{"value":"stuff","secondary":"what now"}', $content);
     }
 
     public function testInvalidJsonStringStaysString()
@@ -47,8 +47,28 @@ class JsonTest extends \Parable\Tests\Base
 
         $response->setContent("{[{[}]}]");
 
-        $this->json->prepare($response);
+        $content = $this->json->prepare($response);
 
-        $this->assertSame('"{[{[}]}]"', $response->getContent());
+        $this->assertSame('"{[{[}]}]"', $content);
+    }
+
+    /**
+     * @dataProvider dpDataTypes
+     */
+    public function testAcceptsContentSaysYesToEverything($type)
+    {
+        $this->assertTrue($this->json->acceptsContent($type));
+    }
+
+    public function dpDataTypes()
+    {
+        return [
+            [null],
+            ["string"],
+            [1337],
+            [true],
+            [new \stdClass()],
+            [["array"]],
+        ];
     }
 }

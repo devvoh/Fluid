@@ -86,8 +86,7 @@ class Mailer
      */
     public function addTo($email, $name = null)
     {
-        $this->addAddress('to', $email, $name);
-        return $this;
+        return $this->addAddress('to', $email, $name);
     }
 
     /**
@@ -100,8 +99,7 @@ class Mailer
      */
     public function addCc($email, $name = null)
     {
-        $this->addAddress('cc', $email, $name);
-        return $this;
+        return $this->addAddress('cc', $email, $name);
     }
 
     /**
@@ -114,8 +112,7 @@ class Mailer
      */
     public function addBcc($email, $name = null)
     {
-        $this->addAddress('bcc', $email, $name);
-        return $this;
+        return $this->addAddress('bcc', $email, $name);
     }
 
     /**
@@ -125,6 +122,7 @@ class Mailer
      * @param string      $email
      * @param null|string $name
      *
+     * @return $this
      * @throws \Parable\Mail\Exception
      */
     protected function addAddress($type, $email, $name = null)
@@ -136,6 +134,7 @@ class Mailer
             'email' => $email,
             'name'  => $name,
         ];
+        return $this;
     }
 
     /**

@@ -30,6 +30,21 @@ class AndOrSetTest extends \Parable\Tests\Components\ORM\Base
         $this->assertSame("`user`.`id` = '1' AND `user`.`active` IN ('0','1')", $andSet->buildWithoutParentheses());
     }
 
+    public function testCreateNewAndConditionSetWithArrayConditionsAndTableName()
+    {
+        $conditions = [
+            ['id', '=', 1],
+            ['active', 'in', [0, 1]],
+            ['user_id', '=', 1, 'othertable']
+        ];
+        $andSet = new \Parable\ORM\Query\Condition\AndSet($this->query, $conditions);
+
+        $this->assertSame(
+            "(`user`.`id` = '1' AND `user`.`active` IN ('0','1') AND `othertable`.`user_id` = '1')",
+            $andSet->buildWithParentheses()
+        );
+    }
+
     public function testCreateNewAndConditionSetWithConditionObjects()
     {
         $conditions = [

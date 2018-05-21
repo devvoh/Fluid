@@ -14,11 +14,20 @@ interface OutputInterface
     public function init(\Parable\Http\Response $response);
 
     /**
-     * Prepare the content for output according to the output type.
+     * Prepare and return the content for output according to the output type.
      *
      * @param \Parable\Http\Response $response
      *
-     * @return $this
+     * @return string|null
      */
     public function prepare(\Parable\Http\Response $response);
+
+    /**
+     * Check whether the outputter accepts the type of content.
+     *
+     * @param mixed $content
+     *
+     * @return bool
+     */
+    public function acceptsContent($content);
 }

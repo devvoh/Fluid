@@ -2,7 +2,7 @@
 
 namespace Parable\Http\Output;
 
-class Json implements \Parable\Http\Output\OutputInterface
+class Json extends \Parable\Http\Output\AbstractOutput
 {
     /** @var string */
     protected $contentType = 'application/json';
@@ -33,8 +33,7 @@ class Json implements \Parable\Http\Output\OutputInterface
             throw new \Parable\Http\Exception("Json encode error: '" . json_last_error_msg() . "'"); // @codeCoverageIgnore
         }
 
-        $response->setContent($content);
-        return $this;
+        return $content ?: null;
     }
 
     /**

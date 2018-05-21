@@ -12,7 +12,7 @@ class Help extends \Parable\Console\Command
 
     public function __construct()
     {
-        $this->addArgument("command_name");
+        $this->addArgument('command_name');
     }
 
     /**
@@ -27,9 +27,9 @@ class Help extends \Parable\Console\Command
             $this->output->newline();
         }
 
-        $commandName = $this->parameter->getArgument("command_name");
+        $commandName = $this->parameter->getArgument('command_name');
         if ($commandName) {
-            $this->showCommandHelp($this->parameter->getArgument("command_name"));
+            $this->showCommandHelp($this->parameter->getArgument('command_name'));
         } else {
             $this->showGeneralHelp();
         }

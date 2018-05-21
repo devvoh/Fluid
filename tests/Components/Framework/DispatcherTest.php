@@ -98,4 +98,27 @@ class DispatcherTest extends \Parable\Tests\Components\Framework\Base
 
         $this->assertSame($route, $this->dispatcher->getDispatchedRoute());
     }
+
+    public function testExceptionIsThrownIfCallableReturnsUnacceptableContent()
+    {
+        $this->expectException(\Parable\Framework\Exception::class);
+        $this->expectExceptionMessage(
+            "Route returned value of type 'array', which output class 'Parable\Http\Output\Html' cannot handle."
+        );
+
+        $this->response->setOutput(new \Parable\Http\Output\Html());
+
+        $route = new \Parable\Routing\Route();
+        $route->setDataFromArray([
+            'methods' => ['GET'],
+            'url' => '/',
+            'callable' => function () {
+                return ["array data" => "bad"];
+            }
+        ]);
+
+        $this->dispatcher->dispatch($route);
+
+        $this->assertSame($route, $this->dispatcher->getDispatchedRoute());
+    }
 }

@@ -11,10 +11,10 @@ class Url
     protected $baseUrl;
 
     /** @var string */
-    protected $basePath = "/public";
+    protected $basePath   = '/public';
 
     /** @var string */
-    protected $scriptName = "/index.php";
+    protected $scriptName = '/index.php';
 
     public function __construct(
         \Parable\Http\Request $request
@@ -32,7 +32,7 @@ class Url
     public function setBasePath($basePath)
     {
         if ($basePath) {
-            $basePath = "/" . trim($basePath, "/");
+            $basePath = '/' . trim($basePath, '/');
         }
         $this->basePath = $basePath;
         return $this;
@@ -73,7 +73,7 @@ class Url
         if ($this->getBasePath()) {
             $basePathPos = strpos($url, $this->getBasePath());
             if ($basePathPos !== false) {
-                $url = substr_replace($url, "", $basePathPos, strlen($this->getBasePath()));
+                $url = substr_replace($url, '', $basePathPos, strlen($this->getBasePath()));
             }
         }
 

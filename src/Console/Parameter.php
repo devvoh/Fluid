@@ -78,13 +78,13 @@ class Parameter
         foreach ($this->parameters as $parameter) {
             if (substr($parameter, 0, 2) === "--") {
                 // For options, we need to see if it has a value (x=y) or not.
-                $optionParts = explode("=", $parameter);
+                $optionParts = explode('=', $parameter);
 
                 if (count($optionParts) > 1) {
                     list($key, $value) = $optionParts;
-                    $this->options[ltrim($key, "-")] = $value;
+                    $this->options[ltrim($key, '-')] = $value;
                 } else {
-                    $this->options[ltrim($parameter, "-")] = true;
+                    $this->options[ltrim($parameter, '-')] = true;
                 }
             } else {
                 // For arguments, we need to see if the first one is the command name or not.
@@ -124,6 +124,7 @@ class Parameter
      * @param \Parable\Console\Parameter\Option[] $options
      *
      * @return $this
+     * @throws \Parable\Console\Exception
      */
     public function setCommandOptions(array $options)
     {
@@ -200,6 +201,7 @@ class Parameter
      * @param \Parable\Console\Parameter\Argument[] $arguments
      *
      * @return $this
+     * @throws \Parable\Console\Exception
      */
     public function setCommandArguments(array $arguments)
     {

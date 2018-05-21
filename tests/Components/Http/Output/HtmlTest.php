@@ -47,9 +47,9 @@ class HtmlTest extends \Parable\Tests\Base
 
         $response->setContent("this is content");
 
-        $this->html->prepare($response);
+        $content = $this->html->prepare($response);
 
-        $this->assertSame("this is content", $response->getContent());
+        $this->assertSame("this is content", $content);
     }
 
     /**
@@ -76,6 +76,26 @@ class HtmlTest extends \Parable\Tests\Base
             [new \stdClass()],
             [700],
             [true],
+        ];
+    }
+
+    /**
+     * @dataProvider dpDataTypes
+     */
+    public function testAcceptsContentSaysYesStringAndNullOnly($type, $expectedBoolValue)
+    {
+        $this->assertSame($expectedBoolValue, $this->html->acceptsContent($type));
+    }
+
+    public function dpDataTypes()
+    {
+        return [
+            [null, true],
+            ["string", true],
+            [1337, false],
+            [true, false],
+            [new \stdClass(), false],
+            [["array"], false],
         ];
     }
 }

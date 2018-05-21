@@ -4,12 +4,12 @@ namespace Parable\Http;
 
 class Request
 {
-    const METHOD_GET     = "GET";
-    const METHOD_POST    = "POST";
-    const METHOD_PUT     = "PUT";
-    const METHOD_PATCH   = "PATCH";
-    const METHOD_DELETE  = "DELETE";
-    const METHOD_OPTIONS = "OPTIONS";
+    const METHOD_GET     = 'GET';
+    const METHOD_POST    = 'POST';
+    const METHOD_PUT     = 'PUT';
+    const METHOD_PATCH   = 'PATCH';
+    const METHOD_DELETE  = 'DELETE';
+    const METHOD_OPTIONS = 'OPTIONS';
 
     const VALID_METHODS  = [
         self::METHOD_GET,
@@ -37,7 +37,7 @@ class Request
      */
     public function __construct()
     {
-        if (PHP_SAPI !== "cli") {
+        if (APP_CONTEXT === 'web') {
             $this->headers = getallheaders() ?: []; // @codeCoverageIgnore
         }
     }
@@ -49,7 +49,7 @@ class Request
      */
     public function getCurrentUrl()
     {
-        return $this->getScheme() . "://" . $this->getHttpHost() . "/" . ltrim($this->getRequestUrl(), "/");
+        return $this->getScheme() . '://' . $this->getHttpHost() . '/' . ltrim($this->getRequestUrl(), '/');
     }
 
     /**
@@ -59,7 +59,7 @@ class Request
      */
     public function getProtocol()
     {
-        return isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : "HTTP/1.1";
+        return isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.1';
     }
 
     /**
@@ -79,7 +79,7 @@ class Request
      */
     public function getRequestUrl()
     {
-        return isset($_SERVER["REQUEST_URI"]) ? $_SERVER["REQUEST_URI"] : null;
+        return isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : null;
     }
 
     /**
@@ -89,7 +89,7 @@ class Request
      */
     public function getScriptName()
     {
-        return isset($_SERVER["SCRIPT_NAME"]) ? $_SERVER["SCRIPT_NAME"] : null;
+        return isset($_SERVER['SCRIPT_NAME']) ? $_SERVER['SCRIPT_NAME'] : null;
     }
 
     /**
@@ -187,7 +187,7 @@ class Request
     public function getHeader($key)
     {
         foreach ($this->headers as $header => $content) {
-            if (strtolower($key) == strtolower($header)) {
+            if (strtolower($key) === strtolower($header)) {
                 return $content;
             }
         }
@@ -213,26 +213,26 @@ class Request
      */
     public function getScheme()
     {
-        if (isset($_SERVER["REQUEST_SCHEME"])) {
+        if (isset($_SERVER['REQUEST_SCHEME'])) {
             // Apache 2.4+
-            return $_SERVER["REQUEST_SCHEME"];
+            return $_SERVER['REQUEST_SCHEME'];
         }
-        if (isset($_SERVER["REDIRECT_REQUEST_SCHEME"])) {
-            return $_SERVER["REDIRECT_REQUEST_SCHEME"];
+        if (isset($_SERVER['REDIRECT_REQUEST_SCHEME'])) {
+            return $_SERVER['REDIRECT_REQUEST_SCHEME'];
         }
-        if (isset($_SERVER["HTTP_X_FORWARDED_PROTO"])) {
+        if (isset($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
             // Sometimes available in proxy-forwarded requests
-            return $_SERVER["HTTP_X_FORWARDED_PROTO"];
+            return $_SERVER['HTTP_X_FORWARDED_PROTO'];
         }
-        if (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] !== "off") {
+        if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
             // Old-style but compatible with IIS
-            return "https";
+            return 'https';
         }
         if (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443) {
             // This doesn't say much, but this is our last attempt, so why not try
-            return "https";
+            return 'https';
         }
-        return "http";
+        return 'http';
     }
 
     /**
@@ -242,19 +242,20 @@ class Request
      */
     public function getHttpHost()
     {
-        if (isset($_SERVER["HTTP_HOST"]) && isset($_SERVER["SERVER_NAME"])
-            && $_SERVER["HTTP_HOST"] === $_SERVER["SERVER_NAME"]
+        if (isset($_SERVER['HTTP_HOST'])
+            && isset($_SERVER['SERVER_NAME'])
+            && $_SERVER['HTTP_HOST'] === $_SERVER['SERVER_NAME']
         ) {
-            return $_SERVER["HTTP_HOST"];
+            return $_SERVER['HTTP_HOST'];
         }
 
-        if (isset($_SERVER["HTTP_HOST"])) {
-            return $_SERVER["HTTP_HOST"];
+        if (isset($_SERVER['HTTP_HOST'])) {
+            return $_SERVER['HTTP_HOST'];
         }
 
         // This is the least reliable, due to the ability to spoof it
-        if (isset($_SERVER["SERVER_NAME"])) {
-            return $_SERVER["SERVER_NAME"];
+        if (isset($_SERVER['SERVER_NAME'])) {
+            return $_SERVER['SERVER_NAME'];
         }
 
         return null;

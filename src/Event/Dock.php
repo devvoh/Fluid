@@ -67,7 +67,7 @@ class Dock
             // outside means like through the session or \Parable\GetSet or one of its sub-types.
             if ($dock['templatePath'] && file_exists($dock['templatePath'])) {
                 ob_start();
-                require($dock['templatePath']);
+                require $dock['templatePath'];
                 $return = ob_get_clean();
                 echo $return;
             }

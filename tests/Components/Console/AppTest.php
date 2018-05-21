@@ -23,8 +23,6 @@ class AppTest extends \Parable\Tests\Base
     {
         parent::setUp();
 
-        $_SERVER["argv"] = [];
-
         $this->parameter = new \Parable\Console\Parameter();
         \Parable\DI\Container::store($this->parameter);
 
@@ -94,6 +92,12 @@ class AppTest extends \Parable\Tests\Base
         $this->assertSame('OK2', $commandGot->run());
     }
 
+    public function testHasCommand()
+    {
+        $this->assertTrue($this->app->hasCommand('test1'));
+        $this->assertFalse($this->app->hasCommand('nope not this one'));
+    }
+
     public function testAppGetCommandsReturnsAll()
     {
         $commands = $this->app->getCommands();
@@ -144,6 +148,21 @@ class AppTest extends \Parable\Tests\Base
         $this->parameter->setParameters(['./test.php', 'test1']);
 
         $this->assertSame("OK1", $app->run());
+    }
+
+    public function testRemoveCommandbyName()
+    {
+        $app = new \Parable\Console\App(new \Parable\Console\Output(), new \Parable\Console\Input(), $this->parameter);
+        $app->addCommand($this->command1);
+        $app->addCommand($this->command2);
+
+        $this->assertCount(2, $app->getCommands());
+
+        $app->removeCommandByName($this->command1->getName());
+
+        $this->assertCount(1, $app->getCommands());
+
+        $this->assertSame($this->command2, $app->getCommand($this->command2->getName()));
     }
 
     /**

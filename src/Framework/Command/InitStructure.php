@@ -20,9 +20,9 @@ class InitStructure extends \Parable\Console\Command
         \Parable\Filesystem\Path $path
     ) {
         $this->addOption(
-            "homedir",
+            'homedir',
             \Parable\Console\Parameter::OPTION_VALUE_REQUIRED,
-            "public"
+            'public'
         );
 
         $this->path = $path;
@@ -39,7 +39,7 @@ class InitStructure extends \Parable\Console\Command
      */
     public function run()
     {
-        $homedir = $this->parameter->getOption("homedir");
+        $homedir = $this->parameter->getOption('homedir');
         $homedir = ltrim($homedir, DS);
 
         $homedir_actual = $this->path->getDir($homedir);
@@ -59,17 +59,17 @@ class InitStructure extends \Parable\Console\Command
         ]);
 
         if (file_exists($this->path->getDir('app')) && file_exists($this->path->getDir('public'))) {
-            $this->output->writeBlock("Note: It looks like you already have a structure initialized!", "info");
+            $this->output->writeBlock('Note: It looks like you already have a structure initialized!', 'info');
         } else {
             $this->output->newline();
         }
 
         for (;;) {
-            $this->output->write("Do you want to continue? [y/N] ");
+            $this->output->write('Do you want to continue? [y/N] ');
             if ($this->input->getYesNo(false)) {
                 break;
             } else {
-                $this->output->writeln(["", "<red>You chose not to continue.</red>", ""]);
+                $this->output->writeln(['', '<red>You chose not to continue.</red>', '']);
                 return $this;
             }
         }
@@ -78,15 +78,15 @@ class InitStructure extends \Parable\Console\Command
         $this->output->write('Creating folder structure: ');
 
         $dirs = [
-            "app",
-            "app/Command",
-            "app/Config",
-            "app/Controller",
-            "app/Init",
-            "app/Model",
-            "app/Routing",
-            "app/View",
-            "app/View/Home",
+            'app',
+            'app/Command',
+            'app/Config',
+            'app/Controller',
+            'app/Init',
+            'app/Model',
+            'app/Routing',
+            'app/View',
+            'app/View/Home',
             $homedir,
         ];
 
@@ -169,10 +169,10 @@ class InitStructure extends \Parable\Console\Command
         $this->output->write('.');
 
         // If the homedir isn't 'public', change the values in Config\App.php and .htaccess.
-        if ($homedir !== "public") {
-            $config = file_get_contents($this->path->getDir("app/Config/App.php"));
+        if ($homedir !== 'public') {
+            $config = file_get_contents($this->path->getDir('app/Config/App.php'));
             $config = str_replace('"homedir" => "public"', '"homedir" => "' . $homedir . '"', $config);
-            file_put_contents($this->path->getDir("app/Config/App.php"), $config);
+            file_put_contents($this->path->getDir('app/Config/App.php'), $config);
             $this->output->write('.');
 
             $htaccess = file_get_contents($this->path->getDir('.htaccess'));
@@ -181,9 +181,9 @@ class InitStructure extends \Parable\Console\Command
         }
         $this->output->write('.');
 
-        $this->output->writeln(" <green>OK</green>");
+        $this->output->writeln(' <green>OK</green>');
 
-        $this->output->writeln(["", "<green>Completed!</green>", ""]);
+        $this->output->writeln(['', '<green>Completed!</green>', '']);
         return $this;
     }
 }

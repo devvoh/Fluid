@@ -39,10 +39,12 @@ class App
 
         set_exception_handler(function ($e) {
             // @codeCoverageIgnoreStart
+
+            /** @var \Exception $e */
             $this->output->writeErrorBlock($e->getMessage());
 
             if ($this->activeCommand) {
-                $this->output->writeln("<yellow>Usage</yellow>: " . $this->activeCommand->getUsage());
+                $this->output->writeln('<yellow>Usage</yellow>: ' . $this->activeCommand->getUsage());
             }
             // @codeCoverageIgnoreEnd
         });
@@ -109,12 +111,13 @@ class App
      */
     public function setDefaultCommandByName($commandName)
     {
-        $this->defaultCommand     = $commandName;
+        $this->defaultCommand = $commandName;
         return $this;
     }
 
     /**
-     * Set the default command to use if no command is given.
+     * Set the default command to use if no command is given. Also
+     * adds the command.
      *
      * @param \Parable\Console\Command $command
      *
@@ -122,6 +125,7 @@ class App
      */
     public function setDefaultCommand(\Parable\Console\Command $command)
     {
+        $this->addCommand($command);
         $this->setDefaultCommandByName($command->getName());
         return $this;
     }
@@ -150,6 +154,18 @@ class App
     }
 
     /**
+     * Returns whether the $commandName is registered.
+     *
+     * @param string $commandName
+     *
+     * @return bool
+     */
+    public function hasCommand($commandName)
+    {
+        return isset($this->commands[$commandName]);
+    }
+
+    /**
      * Return the command by name if it's set on the application.
      *
      * @param string $commandName
@@ -158,7 +174,7 @@ class App
      */
     public function getCommand($commandName)
     {
-        if (isset($this->commands[$commandName])) {
+        if ($this->hasCommand($commandName)) {
             return $this->commands[$commandName];
         }
         return null;
@@ -172,6 +188,21 @@ class App
     public function getCommands()
     {
         return $this->commands;
+    }
+
+    /**
+     * Remove a command by name.
+     *
+     * @param string $commandName
+     *
+     * @return $this
+     */
+    public function removeCommandByName($commandName)
+    {
+        if ($this->hasCommand($commandName)) {
+            unset($this->commands[$commandName]);
+        }
+        return $this;
     }
 
     /**

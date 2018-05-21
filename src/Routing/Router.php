@@ -17,7 +17,6 @@ class Router
      */
     public function addRoute($name, \Parable\Routing\Route $route)
     {
-        // Call checkValidProperties because invalid Routes have no place here.
         $route->checkValidProperties();
 
         $this->routes[$name] = $route;

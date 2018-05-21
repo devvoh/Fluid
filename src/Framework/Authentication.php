@@ -7,6 +7,9 @@ class Authentication
     /** @var string */
     protected $userClassName = '\Model\User';
 
+    /** @var string */
+    protected $userIdProperty = 'id';
+
     /** @var object|null */
     protected $user;
 
@@ -74,7 +77,7 @@ class Authentication
      */
     protected function checkAuthentication()
     {
-        $authSession = $this->session->get('auth');
+        $authSession = $this->readFromSession();
         if ($authSession) {
             if (isset($authSession['authenticated'])) {
                 $this->setAuthenticated($authSession['authenticated']);
@@ -170,6 +173,29 @@ class Authentication
     }
 
     /**
+     * Set the property to read to get the user id.
+     *
+     * @param string $property
+     *
+     * @return $this
+     */
+    public function setUserIdProperty($property)
+    {
+        $this->userIdProperty = $property;
+        return $this;
+    }
+
+    /**
+     * Return the property to read to get the user id.
+     *
+     * @return string
+     */
+    public function getUserIdProperty()
+    {
+        return $this->userIdProperty;
+    }
+
+    /**
      * Set the user and check whether it's of the right type.
      *
      * @param $user
@@ -189,7 +215,7 @@ class Authentication
     /**
      * Return the user entity, if it exists.
      *
-     * @return null
+     * @return mixed
      */
     public function getUser()
     {
@@ -209,12 +235,13 @@ class Authentication
         if (password_verify($passwordProvided, $passwordHash)) {
             $this->setAuthenticated(true);
 
-            if ($this->getUser()) {
-                $this->setAuthenticationData(['user_id' => $this->user->id]);
+            if ($this->getUser() && property_exists($this->getUser(), $this->getUserIdProperty())) {
+                $userId = $this->getUser()->{$this->getUserIdProperty()};
+                $this->setAuthenticationData(['user_id' => $userId]);
             }
-            $this->session->set('auth', [
+            $this->writeToSession([
                 'authenticated' => true,
-                'data' => $this->authenticationData,
+                'data'          => $this->getAuthenticationData(),
             ]);
         } else {
             $this->revokeAuthentication();
@@ -223,15 +250,72 @@ class Authentication
     }
 
     /**
-     * Revoke an existing authentication.
+     * Write data array to the session.
+     *
+     * @param array $data
+     *
+     * @return $this
+     */
+    protected function writeToSession(array $data)
+    {
+        $this->session->set('auth', $data);
+        return $this;
+    }
+
+    /**
+     * Return the session data, if it exists.
+     *
+     * @return array|null
+     */
+    protected function readFromSession()
+    {
+        return $this->session->get('auth');
+    }
+
+    /**
+     * Clear the session data.
+     *
+     * @return $this
+     */
+    protected function clearSession()
+    {
+        $this->session->remove('auth');
+        return $this;
+    }
+
+    /**
+     * Revoke an existing authentication and clear the session.
      *
      * @return $this
      */
     public function revokeAuthentication()
     {
         $this->setAuthenticated(false);
-        $this->session->remove('auth');
+        $this->clearSession();
+        return $this;
+    }
 
+    /**
+     * Reset the user currently stored and remove authentication data.
+     *
+     * @return $this
+     */
+    public function resetUser()
+    {
+        $this->setAuthenticationData([]);
+        $this->user = null;
+        return $this;
+    }
+
+    /**
+     * Revoke authentication and reset user.
+     *
+     * @return $this
+     */
+    public function reset()
+    {
+        $this->revokeAuthentication();
+        $this->resetUser();
         return $this;
     }
 }

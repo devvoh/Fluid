@@ -89,6 +89,22 @@ class ResponseTest extends \Parable\Tests\Base
         $this->assertSame("New!", $this->response->getContent());
     }
 
+    public function testHeaderAndFooterContent()
+    {
+        $this->assertEmpty($this->response->getHeaderContent());
+
+        $this->response->setHeaderContent("<html>");
+        $this->response->setFooterContent("</html>");
+
+        $this->response->setContent("Stuff goes here.");
+
+        $this->assertSame("Stuff goes here.", $this->response->getContent());
+
+        $this->response->send();
+
+        $this->assertSame("<html>Stuff goes here.</html>", $this->getActualOutputAndClean());
+    }
+
     public function testAppendAndPrependContent()
     {
         $this->response->setContent('yo2');
@@ -161,6 +177,38 @@ class ResponseTest extends \Parable\Tests\Base
         $this->response->returnOutputBuffer();
 
         $this->assertSame(null, $this->response->getContent());
+    }
+
+    public function testStopOutputBuffering()
+    {
+        $this->response->startOutputBuffer();
+
+        $this->assertTrue($this->response->isOutputBufferingEnabled());
+
+        $this->response->stopOutputBuffer();
+
+        $this->assertFalse($this->response->isOutputBufferingEnabled());
+    }
+
+    public function testStopAllOutputBuffering()
+    {
+        $this->response->startOutputBuffer();
+        $this->response->startOutputBuffer();
+        $this->response->startOutputBuffer();
+        $this->response->startOutputBuffer();
+        $this->response->startOutputBuffer();
+
+        $this->assertTrue($this->response->isOutputBufferingEnabled());
+
+        $this->response->stopOutputBuffer();
+
+        // One output buffer stop isn't enough
+        $this->assertTrue($this->response->isOutputBufferingEnabled());
+
+        // But this one is.
+        $this->response->stopAllOutputBuffers();
+
+        $this->assertFalse($this->response->isOutputBufferingEnabled());
     }
 
     public function testReturnOutputBufferReturnsEmptyStringIfNotStarted()
@@ -264,5 +312,16 @@ class ResponseTest extends \Parable\Tests\Base
         // The only way to test this is to see if terminate is called
         $this->responseMock->expects($this->once())->method('terminate');
         $this->responseMock->redirect('http://www.test.dev/redirected');
+    }
+
+    public function testOutputPrepareReturningNonStringValueThrowsException()
+    {
+        $this->expectException(\Parable\Http\Exception::class);
+        $this->expectExceptionMessage(
+            "Output class 'Parable\Tests\TestClasses\Http\FaultyOutput' did not result in string or null content."
+        );
+
+        $this->response->setOutput(new \Parable\Tests\TestClasses\Http\FaultyOutput());
+        $this->response->send();
     }
 }

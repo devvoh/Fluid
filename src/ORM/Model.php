@@ -207,6 +207,7 @@ class Model
      * @param bool $keepNullValue
      *
      * @return array
+     * @throws \ReflectionException
      */
     public function toArray($keepNullValue = false)
     {
@@ -277,6 +278,11 @@ class Model
     public function exportToArray()
     {
         $data = $this->toArray();
+
+        if (count($this->exportable) === 0) {
+            return $data;
+        }
+
         $exportData = [];
         foreach ($data as $key => $value) {
             if (in_array($key, $this->exportable)) {
@@ -316,6 +322,7 @@ class Model
      * Reset all public properties to null.
      *
      * @return $this
+     * @throws \ReflectionException
      */
     public function reset()
     {
