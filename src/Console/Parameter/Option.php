@@ -5,49 +5,55 @@ namespace Parable\Console\Parameter;
 class Option extends Base
 {
     /** @var int|null */
-    protected $valueRequired;
+    protected $optionType;
 
     public function __construct(
         $name,
-        $valueRequired = \Parable\Console\Parameter::OPTION_VALUE_OPTIONAL,
+        $optionType = \Parable\Console\Parameter::OPTION_VALUE_OPTIONAL,
         $defaultValue = null
     ) {
         $this->setName($name);
-        $this->setValueRequired($valueRequired);
+        $this->setOptionType($optionType);
         $this->setDefaultValue($defaultValue);
     }
 
     /**
-     * Set whether the option's value is required.
+     * Set whether the option is a flag or has an optional or required value.
      *
-     * @param int $valueRequired
+     * @param int $optionType
      *
      * @return $this
      * @throws \Parable\Console\Exception
      */
-    public function setValueRequired($valueRequired)
+    public function setOptionType($optionType)
     {
         if (!in_array(
-            $valueRequired,
+            $optionType,
             [
+                \Parable\Console\Parameter::OPTION_FLAG,
                 \Parable\Console\Parameter::OPTION_VALUE_REQUIRED,
                 \Parable\Console\Parameter::OPTION_VALUE_OPTIONAL,
             ]
         )) {
-            throw new \Parable\Console\Exception('Value required must be one of the OPTION_VALUE_* constants.');
+            throw new \Parable\Console\Exception('Value required must be one of the OPTION_* constants.');
         }
-        $this->valueRequired = $valueRequired;
+        $this->optionType = $optionType;
         return $this;
     }
 
+    public function isFlag()
+    {
+        return $this->optionType === \Parable\Console\Parameter::OPTION_FLAG;
+    }
+
     /**
-     * Return whether the option's value is required.
+     * Return whether the option is not a flag and the option's value is required.
      *
      * @return bool
      */
     public function isValueRequired()
     {
-        return $this->valueRequired === \Parable\Console\Parameter::OPTION_VALUE_REQUIRED;
+        return $this->optionType === \Parable\Console\Parameter::OPTION_VALUE_REQUIRED;
     }
 
     /**
