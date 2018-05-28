@@ -66,17 +66,21 @@ class Parameter
 
     /**
      * Split the parameters into script name, command name, options and arguments.
-     * According to the guidelines, flags (options without values) can be passed
-     * in a single set preceded by a dash:
+     *
+     * Flags (options without values) can be passed in a single set preceded by a dash:
      *   -a -b -c
      * is the same as:
      *   -abc
+     *
      * When an option is encountered that can have a value (even an optional value),
-     * the rest of the parameter is used as the option value:
+     * the rest of the parameter is used as the option value (no more flags can follow):
      *   -a -b -c=def
      * is the same as:
      *   -abcdef
-     * even if -d is a valid option.
+     *
+     * Double dash ("--") means the end op options, so in:
+     *   --option1 value1 --option2 -- argument1 --something=else
+     * the "--something=else" is interpreted as an argument, not an option named "something"
      *
      * @return $this
      */
@@ -91,62 +95,76 @@ class Parameter
         $endOfOptions = false;
 
         foreach ($this->parameters as $parameter) {
+            // No more options after the '--' parameter
             if ($parameter === '--') {
-                // no more options after '--', only arguments
                 $endOfOptions = true;
+                $previousOptionValueName = '';
                 continue;
             }
 
-            if (!$endOfOptions && preg_match('/-(?!-)(.+)/', $parameter, $matches)) {
-                // check for single character options
-                $optionString = $matches[1];
-                for ($i = 0; $i < strlen($optionString); $i++) {
-                    // all characters following a single '-' are regarded as flags, until the first option-argument
-                    $optionChar = substr($optionString, $i, 1);
-                    if (array_key_exists($optionChar, $this->commandOptions)) {
-                        $this->commandOptions[$optionChar]->setHasBeenProvided(true);
-                        if ($this->commandOptions[$optionChar]->isFlag()) {
-                            // flag options are set to true, then the next option char is parsed
-                            $this->options[$optionChar] = true;
-                            continue;
-                        } else {
-                            // value options take the rest of the options string, except for the optional '='
-                            $optionParts = explode('=', substr($optionString, $i + 1));
-                            if (count($optionParts) > 1) {
-                                $this->options[$optionChar] = $optionParts[1];
-                            } else {
-                                $this->options[$optionChar] = true;
-                            }
-                            continue 2;
-                        }
-                    }
-                }
-            } elseif (!$endOfOptions && substr($parameter, 0, 2) === "--") {
-                // Check for long options, passed as --abc, --abc def, or --abc=def
-                $optionParts = explode('=', $parameter);
+            // Long options: --abc, --abc def, or --abc=def
+            if (!$endOfOptions && substr($parameter, 0, 2) === "--") {
+                $parameter = ltrim($parameter, '-');
+                $previousOptionValueName = '';
 
+                $optionParts = explode('=', $parameter);
                 if (count($optionParts) > 1) {
                     list($key, $value) = $optionParts;
                     $this->options[$key] = $value;
                 } else {
-                    $parameter = ltrim($parameter, '-');
+                    // no value given, set option to true
                     $this->options[$parameter] = true;
-                    if ($this->commandOptions[$parameter]->isFlag()) {
-                        $previousOptionValueName = $parameter;
+                    if (array_key_exists($parameter, $this->commandOptions)) {
+                        if (!$this->commandOptions[$parameter]->isFlag()) {
+                            // next parameter might be value
+                            $previousOptionValueName = $parameter;
+                        }
                     }
                 }
-            } else {
-                // For arguments, we need to see if the first one is the command name or not.
-                if ($this->commandNameEnabled && !$this->commandName) {
-                    $this->commandName = $parameter;
-                } else {
-                    if ($previousOptionValueName) {
-                        $this->options[$previousOptionValueName] = $parameter;
-                        $previousOptionValueName = '';
+                continue;
+            }
+
+            // Short options: -p -q -r or -pqr for combined flags
+            if (!$endOfOptions && substr($parameter, 0, 1) === "-") {
+                $previousOptionValueName = '';
+
+                $optionString = ltrim($parameter, '-');
+                for ($i = 0; $i < strlen($optionString); $i++) {
+                    // All characters following a single '-' are flags, until the first option-argument
+                    $optionChar = substr($optionString, $i, 1);
+                    if (!array_key_exists($optionChar, $this->commandOptions)) {
+                        // Option was not pre-defined, so accept as undefined flag option
+                        $this->options[$optionChar] = true;
                     } else {
-                        $this->arguments[] = $parameter;
+                        if ($this->commandOptions[$optionChar]->isFlag()) {
+                            // Flag options are set to true
+                            $this->options[$optionChar] = true;
+                        } else {
+                            // Value options take the rest of the options string, except for the optional '='
+                            $optionParts = explode('=', substr($optionString, $i + 1));
+                            if (count($optionParts) > 1) {
+                                $this->options[$optionChar] = $optionParts[1];
+                            } else {
+                                $this->options[$optionChar] = substr($optionString, $i + 1);
+                            }
+                            break;
+                        }
                     }
                 }
+                continue;
+            }
+
+            // For arguments, we need to see if the first one is the command name or not.
+            if ($this->commandNameEnabled && !$this->commandName) {
+                $this->commandName = $parameter;
+            } else {
+                if ($previousOptionValueName) {
+                    // If the previous parameter was a long option without a '=', this parameter is its value
+                    $this->options[$previousOptionValueName] = $parameter;
+                } else {
+                    $this->arguments[] = $parameter;
+                }
+                $previousOptionValueName = '';
             }
         }
         return $this;
